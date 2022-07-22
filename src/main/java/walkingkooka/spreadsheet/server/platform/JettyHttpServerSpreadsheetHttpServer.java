@@ -21,6 +21,7 @@ import javaemul.internal.annotations.GwtIncompatible;
 import walkingkooka.Cast;
 import walkingkooka.Either;
 import walkingkooka.collect.map.Maps;
+import walkingkooka.collect.set.Sets;
 import walkingkooka.convert.Converters;
 import walkingkooka.math.Fraction;
 import walkingkooka.net.HostAddress;
@@ -61,12 +62,14 @@ import walkingkooka.spreadsheet.store.SpreadsheetColumnStores;
 import walkingkooka.spreadsheet.store.SpreadsheetRowStores;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepositories;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepository;
+import walkingkooka.text.CaseSensitivity;
 import walkingkooka.text.Indentation;
 import walkingkooka.text.LineEnding;
 import walkingkooka.tree.expression.ExpressionEvaluationContext;
 import walkingkooka.tree.expression.ExpressionNumberKind;
 import walkingkooka.tree.expression.FunctionExpressionName;
 import walkingkooka.tree.expression.function.ExpressionFunction;
+import walkingkooka.tree.expression.function.ExpressionFunctions;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
@@ -77,8 +80,8 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -263,23 +266,21 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     }
 
     private static Function<SpreadsheetId, Function<FunctionExpressionName, ExpressionFunction<?, ExpressionEvaluationContext>>> idToFunctions() {
-        final Map<String, ExpressionFunction<?, SpreadsheetExpressionEvaluationContext>> nameToFunctions = Maps.sorted(String.CASE_INSENSITIVE_ORDER);
-        SpreadsheetServerExpressionFunctions.visit(
-                (f -> nameToFunctions.put(
-                        f.name().value(),
-                        f
-                )
-                )
+        final Set<ExpressionFunction<?, SpreadsheetExpressionEvaluationContext>> functions = Sets.hash();
+        SpreadsheetServerExpressionFunctions.visit(functions::add);
+
+        final Function<FunctionExpressionName, Optional<ExpressionFunction<?, SpreadsheetExpressionEvaluationContext>>> lookup = ExpressionFunctions.lookup(
+                functions,
+                CaseSensitivity.INSENSITIVE
         );
-        final Function<FunctionExpressionName, ExpressionFunction<?, ExpressionEvaluationContext>> nameToFunction = (n) -> {
-            Objects.requireNonNull(n, "name");
-            final ExpressionFunction<?, ?> function = nameToFunctions.get(n.value());
-            if (null == function) {
-                throw new IllegalArgumentException("Unknown function " + n);
-            }
-            return Cast.to(function);
-        };
-        return (id) -> nameToFunction;
+
+        return (id) ->
+                (n) -> Cast.to(
+                lookup.apply(n)
+                        .orElseThrow(
+                                () -> new IllegalArgumentException("Unknown function " + n)
+                        )
+        );
     }
 
     /**
