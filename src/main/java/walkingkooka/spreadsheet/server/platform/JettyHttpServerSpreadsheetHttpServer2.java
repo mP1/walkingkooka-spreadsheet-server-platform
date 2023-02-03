@@ -28,7 +28,7 @@ public final class JettyHttpServerSpreadsheetHttpServer2 {
                         "localhost",
                         "12345",
                         "EN-GB",
-                        "./src/main/resources"
+                        "./target/classes" // walkingkooka-spreadsheet-domino will place its files here.
                 }
         );
     }
