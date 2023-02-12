@@ -20,6 +20,7 @@ package walkingkooka.spreadsheet.server.platform;
 import javaemul.internal.annotations.GwtIncompatible;
 import walkingkooka.Cast;
 import walkingkooka.Either;
+import walkingkooka.collect.list.Lists;
 import walkingkooka.collect.map.Maps;
 import walkingkooka.collect.set.Sets;
 import walkingkooka.convert.Converters;
@@ -63,6 +64,7 @@ import walkingkooka.spreadsheet.store.SpreadsheetRowStores;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepositories;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepository;
 import walkingkooka.text.CaseSensitivity;
+import walkingkooka.text.CharSequences;
 import walkingkooka.text.Indentation;
 import walkingkooka.text.LineEnding;
 import walkingkooka.tree.expression.ExpressionEvaluationContext;
@@ -70,14 +72,19 @@ import walkingkooka.tree.expression.ExpressionNumberKind;
 import walkingkooka.tree.expression.FunctionExpressionName;
 import walkingkooka.tree.expression.function.ExpressionFunction;
 import walkingkooka.tree.expression.function.ExpressionFunctions;
+import walkingkooka.util.SystemProperty;
 
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.nio.file.FileSystem;
+import java.nio.file.FileSystems;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -94,7 +101,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     /**
      * Starts a server on the scheme/host/port passed as arguments, serving files from the current directory.
      */
-    public static void main(final String[] args) {
+    public static void main(final String[] args) throws Exception {
         switch (args.length) {
             case 0:
                 throw new IllegalArgumentException("Missing scheme, host, port, defaultLocale, file server root for jetty HttpServer");
@@ -112,12 +119,12 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         }
     }
 
-    private static void startJettyHttpServer(final String[] args) {
+    private static void startJettyHttpServer(final String[] args) throws IOException {
         final UrlScheme scheme = urlScheme(args[0]);
         final HostAddress host = hostAddress(args[1]);
         final IpPort port = port(args[2]);
         final Locale defaultLocale = locale(args[3]);
-        final Path fileServerRoot = fileServer(args[4]);
+        final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer = fileServer(args[4]);
 
         final SpreadsheetMetadataStore metadataStore = SpreadsheetMetadataStores.treeMap();
 
@@ -131,7 +138,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 fractioner(),
                 idToFunctions(),
                 idToRepository(Maps.concurrent(), storeRepositorySupplier(metadataStore)),
-                urlPathFileServer(fileServerRoot),
+                fileServer,
                 jettyHttpServer(host, port),
                 JettyHttpServerSpreadsheetHttpServer::spreadsheetMetadataStamper,
                 SpreadsheetContexts::jsonHateosContentType,
@@ -184,17 +191,122 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         return defaultLocale;
     }
 
-    private static Path fileServer(final String string) {
-        final Path fileServer = Paths.get(string);
+    /**
+     * A factory that takes a string with uris (currently only a file and jar) creating a function that
+     * returns a {@link WebFile} for a {@link UrlPath}.
+     */
+    private static Function<UrlPath, Either<WebFile, HttpStatus>> fileServer(final String string) throws IOException {
+        final List<Function<UrlPath, Either<WebFile, HttpStatus>>> fileSystems = Lists.array();
 
-        if (!Files.isDirectory(fileServer)) {
-            final String message = "Invalid path not a directory: " + string;
+        for (final String uri : string.split(",")) {
+            if (uri.startsWith("file://")) {
+                fileSystems.add(
+                        fileFileServer(uri)
+                );
+                continue;
+            }
+            if (uri.startsWith("jar:file://")) {
+                fileSystems.add(
+                        jarFileServer(uri)
+                );
+                continue;
+            }
 
-            System.err.println(message);
-            throw new IllegalArgumentException(message);
+            throw new IllegalArgumentException("Unsupported uri: " + CharSequences.quoteAndEscape(uri));
         }
 
-        return fileServer;
+        return (p) -> {
+            Either<WebFile, HttpStatus> result = NOT_FOUND;
+
+            for (final Function<UrlPath, Either<WebFile, HttpStatus>> possible : fileSystems) {
+                result = possible.apply(p);
+                if (result.isLeft()) {
+                    break;
+                }
+            }
+
+            return result;
+        };
+    }
+
+    /**
+     * Creates a function which uses the path within the file uri as the base directory for file requests.
+     */
+    private static Function<UrlPath, Either<WebFile, HttpStatus>> fileFileServer(final String uri) {
+        final String basePath = uri.substring("file://".length());
+        if (false == Files.isDirectory(Paths.get(basePath))) {
+            throw new IllegalArgumentException("Base directory is not a directory " + CharSequences.quoteAndEscape(basePath));
+        }
+
+        final String pathSeparator = SystemProperty.FILE_SEPARATOR.requiredPropertyValue();
+
+        final String base = basePath.endsWith(pathSeparator) ?
+                basePath :
+                basePath + pathSeparator;
+
+        return (p) -> {
+            Either<WebFile, HttpStatus> result = NOT_FOUND;
+
+            final String urlPath = p.value();
+            final String path = base +
+                    (urlPath.startsWith("/") ?
+                            urlPath.substring(1) :
+                            urlPath
+                    );
+
+            final Path file = Paths.get(path);
+            if (Files.isRegularFile(file)) {
+                result = Either.left(webFile(file));
+            }
+
+            return result;
+        };
+    }
+
+    /**
+     * Creates a function which sources files from within the jar within the file URI.
+     */
+    private static Function<UrlPath, Either<WebFile, HttpStatus>> jarFileServer(final String uri) throws IOException {
+        final int endOfJar = uri.indexOf('!');
+        if (-1 == endOfJar) {
+            throw new IllegalArgumentException("Missing end of jar file from " + CharSequences.quoteAndEscape(uri));
+        }
+
+        final FileSystem fileSystem = FileSystems.newFileSystem(
+                Paths.get(
+                        uri.substring(
+                                "jar:file://".length(),
+                                endOfJar
+                        )
+                ),
+                ClassLoader.getSystemClassLoader()
+        );
+
+        final String base = uri.substring(endOfJar + 1);
+
+        return (p) -> {
+            Either<WebFile, HttpStatus> result = NOT_FOUND;
+
+            final String path = base + p.value().substring(1);
+
+            final Path file = fileSystem.getPath(path);
+            if (Files.isRegularFile(file)) {
+                result = Either.left(webFile(file));
+            }
+
+            return result;
+        };
+    }
+
+
+    private final static Either<WebFile, HttpStatus> NOT_FOUND = Either.right(HttpStatusCode.NOT_FOUND.status());
+
+    private static WebFile webFile(final Path file) {
+        return WebFiles.file(
+                file,
+                ApacheTikas.fileContentTypeDetector(),
+                (b) -> Optional.empty()
+        );
     }
 
     /**
@@ -319,24 +431,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 SpreadsheetRowStores.treeMap(),
                 SpreadsheetUserStores.treeMap()
         );
-    }
-
-    /**
-     * Creates a file server which serves files from the given {@link Path path}.
-     */
-    private static Function<UrlPath, Either<WebFile, HttpStatus>> urlPathFileServer(final Path path) {
-        return (p) -> {
-            final Path file = Paths.get(path.toString(), p.value());
-            return Files.isRegularFile(file) ?
-                    Either.left(webFile(file)) :
-                    Either.right(HttpStatusCode.NOT_FOUND.status());
-        };
-    }
-
-    private static WebFile webFile(final Path file) {
-        return WebFiles.file(file,
-                ApacheTikas.fileContentTypeDetector(),
-                (b) -> Optional.empty());
     }
 
     /**
