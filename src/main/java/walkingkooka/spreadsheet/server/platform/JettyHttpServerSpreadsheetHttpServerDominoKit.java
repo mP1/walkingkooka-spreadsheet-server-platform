@@ -28,7 +28,6 @@ public final class JettyHttpServerSpreadsheetHttpServerDominoKit {
                         "localhost",
                         "12345",
                         "EN-GB",
-                        //"./target/classes" // walkingkooka-spreadsheet-domino will place its files here.
                         fileSystemUris(
                                 "file:///Users/miroslav/repos-github/walkingkooka-spreadsheet-server-platform/src/main/resources/", // api-doc etc
                                 "file:///Users/miroslav/repos-github/walkingkooka-spreadsheet-dominokit/target/gwt/out/walkingkooka.spreadsheet.dominokit.App/", // gwt output
