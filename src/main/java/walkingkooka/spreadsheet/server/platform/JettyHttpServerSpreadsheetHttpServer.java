@@ -292,7 +292,16 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                              final IpPort port,
                                              final Locale defaultLocale,
                                              final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer) {
-        final SpreadsheetMetadataStore metadataStore = SpreadsheetMetadataStores.treeMap();
+
+        final Function<SpreadsheetId, SpreadsheetStoreRepository> idToStoreRepository = idToStoreRepository(
+                Maps.concurrent(),
+                storeRepositorySupplier()
+        );
+
+        metadataStore = SpreadsheetMetadataStores.spreadsheetCellStoreAction(
+                SpreadsheetMetadataStores.treeMap(),
+                (id) -> idToStoreRepository.apply(id).cells()
+        );
 
         final SpreadsheetHttpServer server = SpreadsheetHttpServer.with(
                 scheme,
@@ -303,7 +312,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 createMetadata(defaultLocale, metadataStore),
                 fractioner(),
                 idToFunctions(),
-                idToStoreRepository(Maps.concurrent(), storeRepositorySupplier(metadataStore)),
+                idToStoreRepository,
                 fileServer,
                 jettyHttpServer(host, port),
                 JettyHttpServerSpreadsheetHttpServer::spreadsheetMetadataStamper,
@@ -312,6 +321,11 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         );
         server.start();
     }
+
+    /**
+     * Shared global singleton {@link SpreadsheetMetadataStore}.
+     */
+    private static SpreadsheetMetadataStore metadataStore;
 
     /**
      * Creates a function which merges the given {@link Locale} and then saves it to the {@link SpreadsheetMetadataStore}.
@@ -421,7 +435,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     /**
      * Creates a new {@link SpreadsheetStoreRepository} on demand
      */
-    private static Supplier<SpreadsheetStoreRepository> storeRepositorySupplier(final SpreadsheetMetadataStore metadataStore) {
+    private static Supplier<SpreadsheetStoreRepository> storeRepositorySupplier() {
         return () -> SpreadsheetStoreRepositories.basic(
                 SpreadsheetCellStores.treeMap(),
                 SpreadsheetExpressionReferenceStores.treeMap(),
