@@ -114,37 +114,15 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             case 4:
                 throw new IllegalArgumentException("Missing file server root for jetty HttpServer");
             default:
-                startJettyHttpServer(args);
+                startJettyHttpServer(
+                        urlScheme(args[0]),
+                        hostAddress(args[1]),
+                        port(args[2]),
+                        locale(args[3]),
+                        fileServer(args[4])
+                );
                 break;
         }
-    }
-
-    private static void startJettyHttpServer(final String[] args) throws IOException {
-        final UrlScheme scheme = urlScheme(args[0]);
-        final HostAddress host = hostAddress(args[1]);
-        final IpPort port = port(args[2]);
-        final Locale defaultLocale = locale(args[3]);
-        final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer = fileServer(args[4]);
-
-        final SpreadsheetMetadataStore metadataStore = SpreadsheetMetadataStores.treeMap();
-
-        final SpreadsheetHttpServer server = SpreadsheetHttpServer.with(
-                scheme,
-                host,
-                port,
-                Indentation.with("  "),
-                LineEnding.SYSTEM,
-                createMetadata(defaultLocale, metadataStore),
-                fractioner(),
-                idToFunctions(),
-                idToStoreRepository(Maps.concurrent(), storeRepositorySupplier(metadataStore)),
-                fileServer,
-                jettyHttpServer(host, port),
-                JettyHttpServerSpreadsheetHttpServer::spreadsheetMetadataStamper,
-                SpreadsheetContexts::jsonHateosContentType,
-                LocalDateTime::now
-        );
-        server.start();
     }
 
     private static UrlScheme urlScheme(final String string) {
@@ -307,6 +285,32 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 ApacheTikas.fileContentTypeDetector(),
                 (b) -> Optional.empty()
         );
+    }
+
+    private static void startJettyHttpServer(final UrlScheme scheme,
+                                             final HostAddress host,
+                                             final IpPort port,
+                                             final Locale defaultLocale,
+                                             final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer) {
+        final SpreadsheetMetadataStore metadataStore = SpreadsheetMetadataStores.treeMap();
+
+        final SpreadsheetHttpServer server = SpreadsheetHttpServer.with(
+                scheme,
+                host,
+                port,
+                Indentation.with("  "),
+                LineEnding.SYSTEM,
+                createMetadata(defaultLocale, metadataStore),
+                fractioner(),
+                idToFunctions(),
+                idToStoreRepository(Maps.concurrent(), storeRepositorySupplier(metadataStore)),
+                fileServer,
+                jettyHttpServer(host, port),
+                JettyHttpServerSpreadsheetHttpServer::spreadsheetMetadataStamper,
+                SpreadsheetContexts::jsonHateosContentType,
+                LocalDateTime::now
+        );
+        server.start();
     }
 
     /**
