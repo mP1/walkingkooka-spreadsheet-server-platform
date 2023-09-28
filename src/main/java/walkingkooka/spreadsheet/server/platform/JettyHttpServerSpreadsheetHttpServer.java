@@ -137,7 +137,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 createMetadata(defaultLocale, metadataStore),
                 fractioner(),
                 idToFunctions(),
-                idToRepository(Maps.concurrent(), storeRepositorySupplier(metadataStore)),
+                idToStoreRepository(Maps.concurrent(), storeRepositorySupplier(metadataStore)),
                 fileServer,
                 jettyHttpServer(host, port),
                 JettyHttpServerSpreadsheetHttpServer::spreadsheetMetadataStamper,
@@ -398,8 +398,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     /**
      * Retrieves from the cache or lazily creates a {@link SpreadsheetStoreRepository} for the given {@link SpreadsheetId}.
      */
-    private static Function<SpreadsheetId, SpreadsheetStoreRepository> idToRepository(final Map<SpreadsheetId, SpreadsheetStoreRepository> idToRepository,
-                                                                                      final Supplier<SpreadsheetStoreRepository> repositoryFactory) {
+    private static Function<SpreadsheetId, SpreadsheetStoreRepository> idToStoreRepository(final Map<SpreadsheetId, SpreadsheetStoreRepository> idToRepository,
+                                                                                           final Supplier<SpreadsheetStoreRepository> repositoryFactory) {
         return (id) -> {
             SpreadsheetStoreRepository repository = idToRepository.get(id);
             if (null == repository) {
