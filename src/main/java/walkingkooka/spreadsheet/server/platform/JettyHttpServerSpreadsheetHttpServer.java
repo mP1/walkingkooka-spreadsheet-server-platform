@@ -48,8 +48,8 @@ import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataPropertyName;
 import walkingkooka.spreadsheet.meta.store.SpreadsheetMetadataStore;
 import walkingkooka.spreadsheet.meta.store.SpreadsheetMetadataStores;
-import walkingkooka.spreadsheet.reference.SpreadsheetCellReference;
 import walkingkooka.spreadsheet.reference.SpreadsheetSelection;
+import walkingkooka.spreadsheet.reference.SpreadsheetViewport;
 import walkingkooka.spreadsheet.reference.store.SpreadsheetCellRangeStores;
 import walkingkooka.spreadsheet.reference.store.SpreadsheetExpressionReferenceStores;
 import walkingkooka.spreadsheet.reference.store.SpreadsheetLabelStores;
@@ -371,7 +371,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 .set(SpreadsheetMetadataPropertyName.MODIFIED_DATE_TIME, now)
                 .set(SpreadsheetMetadataPropertyName.SPREADSHEET_NAME, DEFAULT_NAME)
                 .set(SpreadsheetMetadataPropertyName.LOCALE, localeOrDefault)
-                .set(SpreadsheetMetadataPropertyName.VIEWPORT_CELL, INITIAL_VIEWPORT_CELL)
+                .set(SpreadsheetMetadataPropertyName.VIEWPORT, INITIAL_VIEWPORT)
                 .setDefaults(
                         SpreadsheetMetadata.NON_LOCALE_DEFAULTS
                                 .set(SpreadsheetMetadataPropertyName.LOCALE, localeOrDefault)
@@ -387,7 +387,12 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 );
     }
 
-    private final static SpreadsheetCellReference INITIAL_VIEWPORT_CELL = SpreadsheetSelection.parseCell("A1");
+    private final static SpreadsheetViewport INITIAL_VIEWPORT = SpreadsheetViewport.with(
+            SpreadsheetSelection.A1.viewportRectangle(
+                    1,
+                    1
+            )
+    );
 
     private static Function<BigDecimal, Fraction> fractioner() {
         return (n) -> {
