@@ -1035,61 +1035,6 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/format": {
-      "post": {
-        "tags": [
-          "format & parse"
-        ],
-        "operationId": "format",
-        "summary": "Formats pairs of values and patterns.",
-        "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MultiFormatRequest"
-              },
-              "examples": {
-                "example": {
-                  "value": "[{\"type\":\"spreadsheet-format-request\",\"value\":{\"value\":{\"type\":\"local-date-time\",\"value\":\"2022-02-06T17:25:06.239061\"},\"pattern\":{\"type\":\"spreadsheet-locale-default-date-time-format\",\"value\":1}}},{\"type\":\"spreadsheet-format-request\",\"value\":{\"value\":{\"type\":\"local-date-time\",\"value\":\"2022-02-06T17:54:30.711930\"},\"pattern\":{\"type\":\"spreadsheet-locale-default-date-time-format\",\"value\":1}}}]"
-                }
-              }
-            }
-          }
-        },
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MultiFormatResponse"
-                },
-                "examples": {
-                  "application/json": "[\"6 February 2022, 5:25:06 pm\", \"6 February 2022, 5:54:30 pm\"]"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
     "/api/spreadsheet/{spreadsheet-id}/label/": {
       "post": {
         "tags": [
@@ -1253,59 +1198,6 @@
             "404": {
               "description": "Not Found"
             }
-          }
-        }
-      }
-    },
-    "/api/spreadsheet/{spreadsheet-id}/parse": {
-      "post": {
-        "tags": [
-          "format & parse"
-        ],
-        "operationId": "format",
-        "summary": "Formats pairs of text and patterns into values.",
-        "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/MultiParseRequest"
-              },
-              "examples": {
-                "application/json": "MULTIPARSEREQUEST"
-              }
-            }
-          }
-        },
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MultiParseResponse"
-                },
-                "examples": {
-                  "application/json": "$MULTIPARSERESPONSE"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
           }
         }
       }
@@ -1599,18 +1491,6 @@
   },
   "components": {
     "schemas": {
-      "MultiFormatRequest": {
-        "type": "object"
-      },
-      "MultiFormatResponse": {
-        "type": "object"
-      },
-      "MultiParseRequest": {
-        "type": "object"
-      },
-      "MultiParseResponse": {
-        "type": "object"
-      },
       "SpreadsheetDelta": {
         "type": "object"
       },
