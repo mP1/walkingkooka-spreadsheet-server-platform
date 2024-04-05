@@ -803,7 +803,7 @@
       },
       "patch": {
         "tags": [
-          "spreadsheet"
+          "columns"
         ],
         "operationId": "spreadsheet",
         "summary": "Updates the column of the given spreadsheet.",
