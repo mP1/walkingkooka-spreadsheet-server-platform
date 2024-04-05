@@ -13,11 +13,7 @@
         "operationId": "spreadsheet",
         "summary": "Creates a new empty spreadsheet",
         "requestBody": {
-          "required": false,
-          "content": {
-            "application/json": {
-            }
-          }
+          "required": false
         },
         "produces": [
           "application/json"
@@ -1249,7 +1245,8 @@
             "in": "query",
             "required": true,
             "schema": {
-              "type": "integer"
+              "type": "integer",
+              "format": "int32"
             }
           }
         ],
