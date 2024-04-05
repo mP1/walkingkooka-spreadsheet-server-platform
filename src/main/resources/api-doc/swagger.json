@@ -35,6 +35,55 @@
         }
       }
     },
+    "/api/spreadsheet/*?from={from}&count={count}": {
+      "get": {
+        "tags": [
+          "spreadsheet"
+        ],
+        "operationId": "spreadsheet",
+        "summary": "Gets all the metadata entries for the given range",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetMetadataList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}": {
       "get": {
         "tags": [
@@ -1339,6 +1388,9 @@
         "type": "object"
       },
       "SpreadsheetMetadata": {
+        "type": "object"
+      },
+      "SpreadsheetMetadataList": {
         "type": "object"
       }
     }
