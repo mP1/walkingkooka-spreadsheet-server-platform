@@ -1256,10 +1256,10 @@
       },
       "patch": {
         "tags": [
-          "spreadsheet"
+          "rows"
         ],
         "operationId": "spreadsheet",
-        "summary": "Updates a row of the given spreadsheet.",
+        "summary": "Updates a rows within the given spreadsheet.",
         "parameters": [
           {
             "name": "spreadsheet-id",
