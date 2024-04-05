@@ -31,9 +31,6 @@
                   "$ref": "#/components/schemas/SpreadsheetMetadata"
                 }
               }
-            },
-            "examples": {
-              "application/json": "$SPREADSHEETMETADATA"
             }
           },
           "400": {
@@ -71,9 +68,6 @@
                   "$ref": "#/components/schemas/SpreadsheetMetadata"
                 }
               }
-            },
-            "examples": {
-              "application/json": "$SPREADSHEETMETADATA"
             }
           },
           "400": {
@@ -106,11 +100,6 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SpreadsheetMetadata"
-              },
-              "examples": {
-                "example": {
-                  "value": "$SPREADSHEETMETADATA"
-                }
               }
             }
           }
@@ -125,11 +114,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SpreadsheetMetadata"
-                },
-                "examples": {
-                  "example": {
-                    "value": "$SPREADSHEETMETADATA"
-                  }
                 }
               }
             }
@@ -164,11 +148,6 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SpreadsheetMetadata"
-              },
-              "examples": {
-                "example": {
-                  "value": "{\"spreadsheet-name\":\"Different-spreadsheet-name\"}"
-                }
               }
             }
           }
@@ -183,11 +162,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SpreadsheetMetadata"
-                },
-                "examples": {
-                  "example": {
-                    "value": "$SPREADSHEETMETADATA"
-                  }
                 }
               }
             }
@@ -306,11 +280,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SpreadsheetDelta"
-                },
-                "examples": {
-                  "example": {
-                    "value": "$SPREADSHEETDELTA"
-                  }
                 }
               }
             }
@@ -373,11 +342,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SpreadsheetDelta"
-                },
-                "examples": {
-                  "example": {
-                    "value": "$SPREADSHEETDELTA"
-                  }
                 }
               }
             }
@@ -422,11 +386,6 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SpreadsheetDelta"
-              },
-              "examples": {
-                "default": {
-                  "value": "{\"cells\":{\"A1\":{\"formula\":{\"text\":\"=1+2+3\"}}}}"
-                }
               }
             }
           }
@@ -441,11 +400,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SpreadsheetDelta"
-                },
-                "examples": {
-                  "example": {
-                    "value": "$SPREADSHEETDELTA"
-                  }
                 }
               }
             }
@@ -488,11 +442,6 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SpreadsheetDelta"
-              },
-              "examples": {
-                "example": {
-                  "value": "$SPREADSHEETDELTA"
-                }
               }
             }
           }
@@ -507,11 +456,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SpreadsheetDelta"
-                },
-                "examples": {
-                  "example": {
-                    "value": "$SPREADSHEETDELTA"
-                  }
                 }
               }
             }
@@ -558,11 +502,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SpreadsheetDelta"
-                },
-                "examples": {
-                  "example": {
-                    "value": "$SPREADSHEETDELTA"
-                  }
                 }
               }
             }
@@ -607,11 +546,6 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SpreadsheetDelta"
-              },
-              "examples": {
-                "example": {
-                  "value": "$SPREADSHEETDELTA"
-                }
               }
             }
           }
@@ -626,11 +560,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SpreadsheetDelta"
-                },
-                "examples": {
-                  "example": {
-                    "value": "$SPREADSHEETDELTA"
-                  }
                 }
               }
             }
@@ -731,11 +660,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SpreadsheetDelta"
-                },
-                "examples": {
-                  "example": {
-                    "value": "$SPREADSHEETDELTA"
-                  }
                 }
               }
             }
@@ -784,11 +708,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SpreadsheetDelta"
-                },
-                "examples": {
-                  "example": {
-                    "value": "$SPREADSHEETDELTA"
-                  }
                 }
               }
             }
@@ -823,11 +742,6 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SpreadsheetDelta"
-              },
-              "examples": {
-                "example": {
-                  "value": "$SPREADSHEETMETADATA"
-                }
               }
             }
           }
@@ -842,11 +756,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SpreadsheetDelta"
-                },
-                "examples": {
-                  "example": {
-                    "value": "$SPREADSHEETMETADATA"
-                  }
                 }
               }
             }
@@ -895,11 +804,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SpreadsheetDelta"
-                },
-                "examples": {
-                  "example": {
-                    "value": "$SPREADSHEETDELTA"
-                  }
                 }
               }
             }
@@ -956,11 +860,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SpreadsheetDelta"
-                },
-                "examples": {
-                  "example": {
-                    "value": "$SPREADSHEETDELTA"
-                  }
                 }
               }
             }
@@ -1017,11 +916,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SpreadsheetDelta"
-                },
-                "examples": {
-                  "example": {
-                    "value": "$SPREADSHEETDELTA"
-                  }
                 }
               }
             }
@@ -1062,11 +956,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SpreadsheetLabelMapping"
-                },
-                "examples": {
-                  "example": {
-                    "value": "{\"label\":\"Label123\",\"reference\":\"A1\"}\n"
-                  }
                 }
               }
             }
@@ -1112,11 +1001,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SpreadsheetLabelMapping"
-                },
-                "examples": {
-                  "example": {
-                    "value": "{\"label\":\"Label123\",\"reference\":\"A1\"}\n"
-                  }
                 }
               }
             }
@@ -1141,11 +1025,6 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SpreadsheetLabelMapping"
-              },
-              "examples": {
-                "example": {
-                  "value": "{\"label\":\"Label123\",\"reference\":\"A1\"}\n"
-                }
               }
             }
           },
@@ -1157,11 +1036,6 @@
               "description": "200 OK",
               "schema": {
                 "$ref": "#/components/schemas/SpreadsheetLabelMapping"
-              },
-              "examples": {
-                "example": {
-                  "value": "{\"label\":\"Label123\",\"reference\":\"A1\"}\n"
-                }
               }
             },
             "400": {
@@ -1237,11 +1111,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SpreadsheetDelta"
-                },
-                "examples": {
-                  "example": {
-                    "value": "$SPREADSHEETDELTA"
-                  }
                 }
               }
             }
@@ -1276,11 +1145,6 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/SpreadsheetDelta"
-              },
-              "examples": {
-                "example": {
-                  "value": "$SPREADSHEETMETADATA"
-                }
               }
             }
           }
@@ -1295,11 +1159,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SpreadsheetDelta"
-                },
-                "examples": {
-                  "example": {
-                    "value": "$SPREADSHEETMETADATA"
-                  }
                 }
               }
             }
@@ -1348,11 +1207,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SpreadsheetDelta"
-                },
-                "examples": {
-                  "example": {
-                    "value": "$SPREADSHEETDELTA"
-                  }
                 }
               }
             }
@@ -1409,11 +1263,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SpreadsheetDelta"
-                },
-                "examples": {
-                  "example": {
-                    "value": "$SPREADSHEETDELTA"
-                  }
                 }
               }
             }
@@ -1470,11 +1319,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SpreadsheetDelta"
-                },
-                "examples": {
-                  "example": {
-                    "value": "$SPREADSHEETDELTA"
-                  }
                 }
               }
             }
