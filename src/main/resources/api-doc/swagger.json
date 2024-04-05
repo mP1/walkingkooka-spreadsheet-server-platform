@@ -913,7 +913,7 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/column/{column-OR-column-range}/after": {
+    "/api/spreadsheet/{spreadsheet-id}/column/{column-OR-column-range}/after?count={count}": {
       "post": {
         "tags": [
           "columns"
