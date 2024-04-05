@@ -85,6 +85,37 @@
       }
     },
     "/api/spreadsheet/{spreadsheet-id}": {
+      "delete": {
+        "tags": [
+          "spreadsheet"
+        ],
+        "operationId": "spreadsheet",
+        "summary": "Deletes an existing spreadsheet using its ID",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
       "get": {
         "tags": [
           "spreadsheet"
