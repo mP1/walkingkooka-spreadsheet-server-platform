@@ -12,8 +12,18 @@
         ],
         "operationId": "spreadsheet",
         "summary": "Creates a new empty spreadsheet",
+        "description": "Note the request BODY must be empty",
         "requestBody": {
-          "required": false
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "nullable": true
+              },
+              "example": ""
+            }
+          }
         },
         "produces": [
           "application/json"
