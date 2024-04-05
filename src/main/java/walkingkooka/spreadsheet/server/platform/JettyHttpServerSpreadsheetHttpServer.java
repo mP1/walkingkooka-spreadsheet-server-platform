@@ -310,6 +310,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 Indentation.with("  "),
                 LineEnding.SYSTEM,
                 createMetadata(defaultLocale, metadataStore),
+                metadataStore,
                 fractioner(),
                 idToFunctions(),
                 idToStoreRepository,
