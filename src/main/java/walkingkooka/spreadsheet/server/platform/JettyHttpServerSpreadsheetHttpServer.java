@@ -42,6 +42,9 @@ import walkingkooka.net.http.server.jetty.JettyHttpServer;
 import walkingkooka.reflect.PublicStaticHelper;
 import walkingkooka.spreadsheet.SpreadsheetId;
 import walkingkooka.spreadsheet.SpreadsheetName;
+import walkingkooka.spreadsheet.compare.SpreadsheetComparator;
+import walkingkooka.spreadsheet.compare.SpreadsheetComparatorName;
+import walkingkooka.spreadsheet.compare.SpreadsheetComparators;
 import walkingkooka.spreadsheet.expression.SpreadsheetExpressionEvaluationContext;
 import walkingkooka.spreadsheet.format.pattern.SpreadsheetPattern;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
@@ -312,6 +315,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 createMetadata(defaultLocale, metadataStore),
                 metadataStore,
                 fractioner(),
+                spreadsheetIdNameToComparator(),
                 idToFunctions(),
                 idToStoreRepository,
                 fileServer,
@@ -399,6 +403,10 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         return (n) -> {
             throw new UnsupportedOperationException();
         };
+    }
+
+    private static Function<SpreadsheetId, Function<SpreadsheetComparatorName, SpreadsheetComparator<?>>> spreadsheetIdNameToComparator() {
+        return (id) -> SpreadsheetComparators.nameToSpreadsheetComparator();
     }
 
     private static Function<SpreadsheetId, Function<FunctionExpressionName, ExpressionFunction<?, ExpressionEvaluationContext>>> idToFunctions() {
