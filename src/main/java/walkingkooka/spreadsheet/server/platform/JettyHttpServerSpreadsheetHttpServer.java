@@ -312,17 +312,17 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 port,
                 Indentation.with("  "),
                 LineEnding.SYSTEM,
+                LocalDateTime::now,
                 createMetadata(defaultLocale, metadataStore),
                 metadataStore,
+                JettyHttpServerSpreadsheetHttpServer::spreadsheetMetadataStamper,
                 fractioner(),
                 spreadsheetIdNameToComparator(),
                 idToFunctions(),
                 idToStoreRepository,
-                fileServer,
-                jettyHttpServer(host, port),
-                JettyHttpServerSpreadsheetHttpServer::spreadsheetMetadataStamper,
                 SpreadsheetContexts::jsonHateosContentType,
-                LocalDateTime::now
+                fileServer,
+                jettyHttpServer(host, port)
         );
         server.start();
     }
@@ -399,6 +399,13 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             )
     );
 
+    private static SpreadsheetMetadata spreadsheetMetadataStamper(final SpreadsheetMetadata metadata) {
+        return metadata.set(
+                SpreadsheetMetadataPropertyName.MODIFIED_DATE_TIME,
+                LocalDateTime.now()
+        );
+    }
+
     private static Function<BigDecimal, Fraction> fractioner() {
         return (n) -> {
             throw new UnsupportedOperationException();
@@ -472,13 +479,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     private static Function<BiConsumer<HttpRequest, HttpResponse>, HttpServer> jettyHttpServer(final HostAddress host,
                                                                                                final IpPort port) {
         return (handler) -> JettyHttpServer.with(host, port, handler);
-    }
-
-    private static SpreadsheetMetadata spreadsheetMetadataStamper(final SpreadsheetMetadata metadata) {
-        return metadata.set(
-                SpreadsheetMetadataPropertyName.MODIFIED_DATE_TIME,
-                LocalDateTime.now()
-        );
     }
 
     private JettyHttpServerSpreadsheetHttpServer() {
