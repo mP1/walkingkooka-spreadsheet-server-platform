@@ -296,14 +296,14 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                              final Locale defaultLocale,
                                              final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer) {
 
-        final Function<SpreadsheetId, SpreadsheetStoreRepository> idToStoreRepository = idToStoreRepository(
+        final Function<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository = spreadsheetIdToStoreRepository(
                 Maps.concurrent(),
                 storeRepositorySupplier()
         );
 
         metadataStore = SpreadsheetMetadataStores.spreadsheetCellStoreAction(
                 SpreadsheetMetadataStores.treeMap(),
-                (id) -> idToStoreRepository.apply(id).cells()
+                (id) -> spreadsheetIdToStoreRepository.apply(id).cells()
         );
 
         final SpreadsheetHttpServer server = SpreadsheetHttpServer.with(
@@ -319,7 +319,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 fractioner(),
                 spreadsheetIdNameToComparator(),
                 spreadsheetdToExpressionFunctions(),
-                idToStoreRepository,
+                spreadsheetIdToStoreRepository,
                 SpreadsheetContexts::jsonHateosContentType,
                 fileServer,
                 jettyHttpServer(host, port)
@@ -437,7 +437,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     /**
      * Retrieves from the cache or lazily creates a {@link SpreadsheetStoreRepository} for the given {@link SpreadsheetId}.
      */
-    private static Function<SpreadsheetId, SpreadsheetStoreRepository> idToStoreRepository(final Map<SpreadsheetId, SpreadsheetStoreRepository> idToRepository,
+    private static Function<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository(final Map<SpreadsheetId, SpreadsheetStoreRepository> idToRepository,
                                                                                            final Supplier<SpreadsheetStoreRepository> repositoryFactory) {
         return (id) -> {
             SpreadsheetStoreRepository repository = idToRepository.get(id);
