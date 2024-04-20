@@ -759,6 +759,63 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/cell/{cell-OR-cell-range-OR-label}/sort?comparators={comparators}": {
+      "get": {
+        "tags": [
+          "cell"
+        ],
+        "operationId": "cell",
+        "summary": "Sorts the selected cells using the provided comparators",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "cell-OR-cell-range-OR-label",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "comparators",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "column | row EQUALS-SIGN comparator-name COMMA last-comparator-name SEMI-COLON next column/row EQUALS-SIGN etc"
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetDelta"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/column/{column-OR-column-range}": {
       "delete": {
         "tags": [
