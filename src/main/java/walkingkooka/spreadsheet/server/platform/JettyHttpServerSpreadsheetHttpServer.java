@@ -27,6 +27,7 @@ import walkingkooka.convert.Converters;
 import walkingkooka.math.Fraction;
 import walkingkooka.net.HostAddress;
 import walkingkooka.net.IpPort;
+import walkingkooka.net.Url;
 import walkingkooka.net.UrlPath;
 import walkingkooka.net.UrlScheme;
 import walkingkooka.net.email.EmailAddress;
@@ -74,6 +75,9 @@ import walkingkooka.tree.expression.ExpressionNumberKind;
 import walkingkooka.tree.expression.FunctionExpressionName;
 import walkingkooka.tree.expression.function.ExpressionFunction;
 import walkingkooka.tree.expression.function.ExpressionFunctions;
+import walkingkooka.tree.expression.function.provider.ExpressionFunctionInfo;
+import walkingkooka.tree.expression.function.provider.ExpressionFunctionProvider;
+import walkingkooka.tree.expression.function.provider.FakeExpressionFunctionProvider;
 import walkingkooka.util.SystemProperty;
 
 import java.io.IOException;
@@ -94,6 +98,7 @@ import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * Creates a {@link SpreadsheetHttpServer} with memory stores using a Jetty server using the scheme/host/port from cmd line arguments.
@@ -415,7 +420,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         return (id) -> SpreadsheetComparatorProviders.builtIn();
     }
 
-    private static Function<SpreadsheetId, Function<FunctionExpressionName, ExpressionFunction<?, ExpressionEvaluationContext>>> spreadsheetIdToExpressionFunctions() {
+    private static Function<SpreadsheetId, ExpressionFunctionProvider> spreadsheetIdToExpressionFunctions() {
         final Set<ExpressionFunction<?, SpreadsheetExpressionEvaluationContext>> functions = Sets.hash();
         SpreadsheetServerExpressionFunctions.visit(functions::add);
 
@@ -424,13 +429,28 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 CaseSensitivity.INSENSITIVE
         );
 
-        return (id) ->
-                (n) -> Cast.to(
-                lookup.apply(n)
+        return (id) -> new FakeExpressionFunctionProvider() {
+            @Override
+            public ExpressionFunction<?, ExpressionEvaluationContext> function(final FunctionExpressionName name) {
+                return Cast.to(
+                        lookup.apply(name)
                         .orElseThrow(
-                                () -> new IllegalArgumentException("Unknown function " + n)
+                                () -> new IllegalArgumentException("Unknown function " + name)
                         )
-        );
+                );
+            }
+
+            @Override
+            public Set<ExpressionFunctionInfo> expressionFunctionInfos() {
+                return functions.stream()
+                        .map(f ->
+                                ExpressionFunctionInfo.with(
+                                        Url.parseAbsolute("https://github.com/mP1/walkingkooka-spreadsheet-server-expression-function/" + f.name()),
+                                        f.name().get()
+                                )
+                        ).collect(Collectors.toCollection(Sets::sorted));
+            }
+        };
     }
 
     /**
