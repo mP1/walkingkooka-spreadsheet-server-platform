@@ -322,7 +322,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 JettyHttpServerSpreadsheetHttpServer::spreadsheetMetadataStamper,
                 fractioner(),
                 spreadsheetIdSpreadsheetComparatorProvider(),
-                spreadsheetIdToExpressionFunctions(),
+                spreadsheetIdToExpressionFunctionProvider(),
                 spreadsheetIdToStoreRepository,
                 SpreadsheetContexts::jsonHateosContentType,
                 fileServer,
@@ -420,7 +420,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         return (id) -> SpreadsheetComparatorProviders.builtIn();
     }
 
-    private static Function<SpreadsheetId, ExpressionFunctionProvider> spreadsheetIdToExpressionFunctions() {
+    private static Function<SpreadsheetId, ExpressionFunctionProvider> spreadsheetIdToExpressionFunctionProvider() {
         final Set<ExpressionFunction<?, SpreadsheetExpressionEvaluationContext>> functions = Sets.hash();
         SpreadsheetServerExpressionFunctions.visit(functions::add);
 
