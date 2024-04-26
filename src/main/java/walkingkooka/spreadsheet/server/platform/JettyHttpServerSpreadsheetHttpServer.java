@@ -18,16 +18,13 @@
 package walkingkooka.spreadsheet.server.platform;
 
 import javaemul.internal.annotations.GwtIncompatible;
-import walkingkooka.Cast;
 import walkingkooka.Either;
 import walkingkooka.collect.list.Lists;
 import walkingkooka.collect.map.Maps;
-import walkingkooka.collect.set.Sets;
 import walkingkooka.convert.Converters;
 import walkingkooka.math.Fraction;
 import walkingkooka.net.HostAddress;
 import walkingkooka.net.IpPort;
-import walkingkooka.net.Url;
 import walkingkooka.net.UrlPath;
 import walkingkooka.net.UrlScheme;
 import walkingkooka.net.email.EmailAddress;
@@ -45,7 +42,6 @@ import walkingkooka.spreadsheet.SpreadsheetId;
 import walkingkooka.spreadsheet.SpreadsheetName;
 import walkingkooka.spreadsheet.compare.SpreadsheetComparatorProvider;
 import walkingkooka.spreadsheet.compare.SpreadsheetComparatorProviders;
-import walkingkooka.spreadsheet.expression.SpreadsheetExpressionEvaluationContext;
 import walkingkooka.spreadsheet.format.pattern.SpreadsheetPattern;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataPropertyName;
@@ -70,14 +66,8 @@ import walkingkooka.text.CaseSensitivity;
 import walkingkooka.text.CharSequences;
 import walkingkooka.text.Indentation;
 import walkingkooka.text.LineEnding;
-import walkingkooka.tree.expression.ExpressionEvaluationContext;
 import walkingkooka.tree.expression.ExpressionNumberKind;
-import walkingkooka.tree.expression.FunctionExpressionName;
-import walkingkooka.tree.expression.function.ExpressionFunction;
-import walkingkooka.tree.expression.function.ExpressionFunctions;
-import walkingkooka.tree.expression.function.provider.ExpressionFunctionInfo;
 import walkingkooka.tree.expression.function.provider.ExpressionFunctionProvider;
-import walkingkooka.tree.expression.function.provider.FakeExpressionFunctionProvider;
 import walkingkooka.util.SystemProperty;
 
 import java.io.IOException;
@@ -94,11 +84,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * Creates a {@link SpreadsheetHttpServer} with memory stores using a Jetty server using the scheme/host/port from cmd line arguments.
@@ -421,43 +409,14 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     }
 
     private static Function<SpreadsheetId, ExpressionFunctionProvider> spreadsheetIdToExpressionFunctionProvider() {
-        final Set<ExpressionFunction<?, SpreadsheetExpressionEvaluationContext>> functions = Sets.hash();
-        SpreadsheetServerExpressionFunctions.visit(functions::add);
-
-        final Function<FunctionExpressionName, Optional<ExpressionFunction<?, SpreadsheetExpressionEvaluationContext>>> lookup = ExpressionFunctions.lookup(
-                functions,
-                CaseSensitivity.INSENSITIVE
-        );
-
-        return (id) -> new FakeExpressionFunctionProvider() {
-            @Override
-            public ExpressionFunction<?, ExpressionEvaluationContext> function(final FunctionExpressionName name) {
-                return Cast.to(
-                        lookup.apply(name)
-                        .orElseThrow(
-                                () -> new IllegalArgumentException("Unknown function " + name)
-                        )
-                );
-            }
-
-            @Override
-            public Set<ExpressionFunctionInfo> expressionFunctionInfos() {
-                return functions.stream()
-                        .map(f ->
-                                ExpressionFunctionInfo.with(
-                                        Url.parseAbsolute("https://github.com/mP1/walkingkooka-spreadsheet-server-expression-function/" + f.name()),
-                                        f.name().get()
-                                )
-                        ).collect(Collectors.toCollection(Sets::sorted));
-            }
-        };
+        return (id) -> SpreadsheetServerExpressionFunctions.expressionFunctionProvider(CaseSensitivity.INSENSITIVE);
     }
 
     /**
      * Retrieves from the cache or lazily creates a {@link SpreadsheetStoreRepository} for the given {@link SpreadsheetId}.
      */
     private static Function<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository(final Map<SpreadsheetId, SpreadsheetStoreRepository> idToRepository,
-                                                                                           final Supplier<SpreadsheetStoreRepository> repositoryFactory) {
+                                                                                                      final Supplier<SpreadsheetStoreRepository> repositoryFactory) {
         return (id) -> {
             SpreadsheetStoreRepository repository = idToRepository.get(id);
             if (null == repository) {
