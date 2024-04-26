@@ -1072,43 +1072,6 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/label/": {
-      "post": {
-        "tags": [
-          "label"
-        ],
-        "operationId": "label",
-        "summary": "Creates a new label.",
-        "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "201 CREATED",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SpreadsheetLabelMapping"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
     "/api/spreadsheet/{spreadsheet-id}/comparator": {
       "get": {
         "tags": [
@@ -1145,6 +1108,83 @@
           },
           "404": {
             "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/spreadsheet/{spreadsheet-id}/expression-function": {
+      "get": {
+        "tags": [
+          "expression functions"
+        ],
+        "operationId": "expression-functions",
+        "summary": "Returns ALL ExpressionFunction(s) available to the enclosing Spreadsheet",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpressionFunctionInfoList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/spreadsheet/{spreadsheet-id}/label/": {
+      "post": {
+        "tags": [
+          "label"
+        ],
+        "operationId": "label",
+        "summary": "Creates a new label.",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "201 CREATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetLabelMapping"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       }
@@ -1565,6 +1605,9 @@
   },
   "components": {
     "schemas": {
+      "ExpressionFunctionInfoList": {
+        "type": "object"
+      },
       "SpreadsheetComparatorInfoList": {
         "type": "object"
       },
