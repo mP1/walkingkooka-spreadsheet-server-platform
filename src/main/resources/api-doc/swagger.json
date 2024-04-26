@@ -1265,6 +1265,46 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/comparator": {
+      "get": {
+        "tags": [
+          "comparators"
+        ],
+        "operationId": "comparator",
+        "summary": "Returns ALL SpreadsheetComparator available to the enclosing Spreadsheet",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetComparatorInfoList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/row/{row-OR-row-range}": {
       "delete": {
         "tags": [
@@ -1525,6 +1565,9 @@
   },
   "components": {
     "schemas": {
+      "SpreadsheetComparatorInfoList": {
+        "type": "object"
+      },
       "SpreadsheetDelta": {
         "type": "object"
       },
