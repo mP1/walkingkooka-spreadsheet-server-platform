@@ -31,8 +31,7 @@ import walkingkooka.net.email.EmailAddress;
 import walkingkooka.net.header.apache.tika.ApacheTikas;
 import walkingkooka.net.http.HttpStatus;
 import walkingkooka.net.http.HttpStatusCode;
-import walkingkooka.net.http.server.HttpRequest;
-import walkingkooka.net.http.server.HttpResponse;
+import walkingkooka.net.http.server.HttpHandler;
 import walkingkooka.net.http.server.HttpServer;
 import walkingkooka.net.http.server.WebFile;
 import walkingkooka.net.http.server.WebFiles;
@@ -84,7 +83,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.BiConsumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -454,8 +452,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
      * Creates a {@link JettyHttpServer} given the given host and port.
      */
     @GwtIncompatible
-    private static Function<BiConsumer<HttpRequest, HttpResponse>, HttpServer> jettyHttpServer(final HostAddress host,
-                                                                                               final IpPort port) {
+    private static Function<HttpHandler, HttpServer> jettyHttpServer(final HostAddress host,
+                                                                     final IpPort port) {
         return (handler) -> JettyHttpServer.with(host, port, handler);
     }
 
