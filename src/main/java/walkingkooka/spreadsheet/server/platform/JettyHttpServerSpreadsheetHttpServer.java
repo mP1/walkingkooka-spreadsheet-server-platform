@@ -206,7 +206,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     private static Function<UrlPath, Either<WebFile, HttpStatus>> fileFileServer(final String uri) {
         final String basePath = uri.substring("file://".length());
         if (false == Files.isDirectory(Paths.get(basePath))) {
-            throw new IllegalArgumentException("Base directory is not a directory " + CharSequences.quoteAndEscape(basePath));
+            throw new IllegalArgumentException("GWT codesrvr files directory not found: " + CharSequences.quoteAndEscape(basePath));
         }
 
         final String pathSeparator = SystemProperty.FILE_SEPARATOR.requiredPropertyValue();
