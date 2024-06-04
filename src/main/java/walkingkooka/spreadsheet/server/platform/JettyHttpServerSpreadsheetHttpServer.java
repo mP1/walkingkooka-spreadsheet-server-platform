@@ -41,6 +41,8 @@ import walkingkooka.spreadsheet.SpreadsheetId;
 import walkingkooka.spreadsheet.SpreadsheetName;
 import walkingkooka.spreadsheet.compare.SpreadsheetComparatorProvider;
 import walkingkooka.spreadsheet.compare.SpreadsheetComparatorProviders;
+import walkingkooka.spreadsheet.format.SpreadsheetFormatterProvider;
+import walkingkooka.spreadsheet.format.SpreadsheetFormatterProviders;
 import walkingkooka.spreadsheet.format.pattern.SpreadsheetPattern;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataPropertyName;
@@ -307,7 +309,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 metadataStore,
                 JettyHttpServerSpreadsheetHttpServer::spreadsheetMetadataStamper,
                 fractioner(),
-                spreadsheetIdSpreadsheetComparatorProvider(),
+                spreadsheetIdToSpreadsheetComparatorProvider(),
+                spreadsheetIdToSpreadsheetFormatterProvider(),
                 spreadsheetIdToExpressionFunctionProvider(),
                 spreadsheetIdToStoreRepository,
                 SpreadsheetContexts::jsonHateosContentType,
@@ -402,8 +405,12 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         };
     }
 
-    private static Function<SpreadsheetId, SpreadsheetComparatorProvider> spreadsheetIdSpreadsheetComparatorProvider() {
+    private static Function<SpreadsheetId, SpreadsheetComparatorProvider> spreadsheetIdToSpreadsheetComparatorProvider() {
         return (id) -> SpreadsheetComparatorProviders.builtIn();
+    }
+
+    private static Function<SpreadsheetId, SpreadsheetFormatterProvider> spreadsheetIdToSpreadsheetFormatterProvider() {
+        return (id) -> SpreadsheetFormatterProviders.spreadsheetFormatPattern();
     }
 
     private static Function<SpreadsheetId, ExpressionFunctionProvider> spreadsheetIdToExpressionFunctionProvider() {
