@@ -21,6 +21,7 @@ import org.junit.jupiter.api.Test;
 import walkingkooka.net.email.EmailAddress;
 import walkingkooka.reflect.JavaVisibility;
 import walkingkooka.reflect.PublicStaticHelperTesting;
+import walkingkooka.spreadsheet.format.SpreadsheetFormatterProviders;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
 
 import java.lang.reflect.Method;
@@ -47,7 +48,9 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements PublicSta
                 Optional.ofNullable(userLocale),
                 Locale.ENGLISH
         );
-        metadata.converter();
+        metadata.converter(
+                SpreadsheetFormatterProviders.spreadsheetFormatPattern()
+        );
     }
 
     // Class............................................................................................................
