@@ -83,7 +83,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SpreadsheetMetadataList"
+                  "$ref": "#/components/schemas/SpreadsheetMetadataSet"
                 }
               }
             }
@@ -1620,7 +1620,7 @@
       "SpreadsheetMetadata": {
         "type": "object"
       },
-      "SpreadsheetMetadataList": {
+      "SpreadsheetMetadataSet": {
         "type": "object"
       }
     }
