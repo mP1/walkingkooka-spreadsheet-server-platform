@@ -1138,7 +1138,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/ExpressionFunctionInfoList"
+                  "$ref": "#/components/schemas/ExpressionFunctionInfoSet"
                 }
               }
             }
@@ -1605,7 +1605,7 @@
   },
   "components": {
     "schemas": {
-      "ExpressionFunctionInfoList": {
+      "ExpressionFunctionInfoSet": {
         "type": "object"
       },
       "SpreadsheetComparatorInfoList": {
