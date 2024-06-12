@@ -1646,13 +1646,40 @@
   "components": {
     "schemas": {
       "ExpressionFunctionInfoSet": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
       },
       "SpreadsheetComparatorInfoSet": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
       },
       "SpreadsheetFormatterInfoSet": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
       },
       "SpreadsheetDelta": {
         "type": "object"
