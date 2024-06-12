@@ -1112,6 +1112,46 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/formatter": {
+      "get": {
+        "tags": [
+          "formatters"
+        ],
+        "operationId": "formatter",
+        "summary": "Returns ALL SpreadsheetFormatter available to the enclosing Spreadsheet",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetFormatterInfoSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/expression-function": {
       "get": {
         "tags": [
@@ -1609,6 +1649,9 @@
         "type": "object"
       },
       "SpreadsheetComparatorInfoSet": {
+        "type": "object"
+      },
+      "SpreadsheetFormatterInfoSet": {
         "type": "object"
       },
       "SpreadsheetDelta": {
