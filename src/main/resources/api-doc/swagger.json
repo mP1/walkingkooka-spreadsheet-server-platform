@@ -1098,7 +1098,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SpreadsheetComparatorInfoList"
+                  "$ref": "#/components/schemas/SpreadsheetComparatorInfoSet"
                 }
               }
             }
@@ -1608,7 +1608,7 @@
       "ExpressionFunctionInfoSet": {
         "type": "object"
       },
-      "SpreadsheetComparatorInfoList": {
+      "SpreadsheetComparatorInfoSet": {
         "type": "object"
       },
       "SpreadsheetDelta": {
