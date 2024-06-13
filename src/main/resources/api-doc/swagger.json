@@ -1709,7 +1709,10 @@
         "type": "object"
       },
       "SpreadsheetMetadataSet": {
-        "type": "object"
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/SpreadsheetMetadata"
+        }
       }
     }
   }
