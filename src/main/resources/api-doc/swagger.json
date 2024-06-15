@@ -1385,6 +1385,46 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/parser": {
+      "get": {
+        "tags": [
+          "parsers"
+        ],
+        "operationId": "parser",
+        "summary": "Returns ALL Parser available to the enclosing Spreadsheet",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetParserInfoSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/row/{row-OR-row-range}": {
       "delete": {
         "tags": [
@@ -1712,6 +1752,24 @@
         "type": "array",
         "items": {
           "$ref" : "#/components/schemas/SpreadsheetMetadata"
+        }
+      },
+      "SpreadsheetParserInfoSet": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/SpreadsheetParserInfo"
+        }
+      },
+      "SpreadsheetParserInfo": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "name": {
+            "type": "string"
+          }
         }
       }
     }
