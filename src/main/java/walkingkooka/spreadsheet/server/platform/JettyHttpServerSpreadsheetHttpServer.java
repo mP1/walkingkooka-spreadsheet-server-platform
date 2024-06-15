@@ -43,6 +43,8 @@ import walkingkooka.spreadsheet.compare.SpreadsheetComparatorProvider;
 import walkingkooka.spreadsheet.compare.SpreadsheetComparatorProviders;
 import walkingkooka.spreadsheet.format.SpreadsheetFormatterProvider;
 import walkingkooka.spreadsheet.format.SpreadsheetFormatterProviders;
+import walkingkooka.spreadsheet.format.SpreadsheetParserProvider;
+import walkingkooka.spreadsheet.format.SpreadsheetParserProviders;
 import walkingkooka.spreadsheet.format.pattern.SpreadsheetPattern;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataPropertyName;
@@ -312,6 +314,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 spreadsheetIdToSpreadsheetComparatorProvider(),
                 spreadsheetIdToSpreadsheetFormatterProvider(),
                 spreadsheetIdToExpressionFunctionProvider(),
+                spreadsheetIdToSpreadsheetParserProvider(),
                 spreadsheetIdToStoreRepository,
                 SpreadsheetContexts::jsonHateosContentType,
                 fileServer,
@@ -417,6 +420,10 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         return (id) -> SpreadsheetServerExpressionFunctions.expressionFunctionProvider(CaseSensitivity.INSENSITIVE);
     }
 
+    private static Function<SpreadsheetId, SpreadsheetParserProvider> spreadsheetIdToSpreadsheetParserProvider() {
+        return (id) -> SpreadsheetParserProviders.spreadsheetParsePattern();
+    }
+    
     /**
      * Retrieves from the cache or lazily creates a {@link SpreadsheetStoreRepository} for the given {@link SpreadsheetId}.
      */
