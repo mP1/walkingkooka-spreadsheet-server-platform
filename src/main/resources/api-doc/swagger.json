@@ -10,7 +10,6 @@
         "tags": [
           "spreadsheet"
         ],
-        "operationId": "spreadsheet",
         "summary": "Creates a new empty spreadsheet",
         "description": "Note the request BODY must be empty",
         "requestBody": {
@@ -50,7 +49,6 @@
         "tags": [
           "spreadsheet"
         ],
-        "operationId": "spreadsheet",
         "summary": "Gets all the metadata entries for the given range",
         "parameters": [
           {
@@ -99,7 +97,6 @@
         "tags": [
           "spreadsheet"
         ],
-        "operationId": "spreadsheet",
         "summary": "Deletes an existing spreadsheet using its ID",
         "parameters": [
           {
@@ -130,7 +127,6 @@
         "tags": [
           "spreadsheet"
         ],
-        "operationId": "spreadsheet",
         "summary": "Retrieves metadata about a spreadsheet given its id",
         "parameters": [
           {
@@ -168,7 +164,6 @@
         "tags": [
           "spreadsheet"
         ],
-        "operationId": "spreadsheet",
         "summary": "Updates the metadata of the given spreadsheet.",
         "parameters": [
           {
@@ -216,7 +211,6 @@
         "tags": [
           "spreadsheet"
         ],
-        "operationId": "spreadsheet",
         "summary": "Updates the metadata of the given spreadsheet.",
         "parameters": [
           {
@@ -266,7 +260,6 @@
         "tags": [
           "cell"
         ],
-        "operationId": "cell",
         "summary": "Gets all the cells that would fit the given viewport",
         "parameters": [
           {
@@ -384,7 +377,6 @@
         "tags": [
           "cell"
         ],
-        "operationId": "cell",
         "summary": "Gets the cells",
         "parameters": [
           {
@@ -446,7 +438,6 @@
         "tags": [
           "cell"
         ],
-        "operationId": "cell",
         "summary": "Saves or replaces a cell",
         "parameters": [
           {
@@ -502,7 +493,6 @@
         "tags": [
           "cell"
         ],
-        "operationId": "cell",
         "summary": "Patches a cell using the provided delta",
         "parameters": [
           {
@@ -558,7 +548,6 @@
         "tags": [
           "cell"
         ],
-        "operationId": "cell",
         "summary": "Deletes a cell or range of cells",
         "parameters": [
           {
@@ -606,7 +595,6 @@
         "tags": [
           "cell"
         ],
-        "operationId": "cell",
         "summary": "Fills a cell or range of cells with the contents",
         "parameters": [
           {
@@ -664,7 +652,6 @@
         "tags": [
           "cell"
         ],
-        "operationId": "cell",
         "summary": "Finds all cells within the selection that match the value type and query expression",
         "parameters": [
           {
@@ -764,7 +751,6 @@
         "tags": [
           "cell"
         ],
-        "operationId": "cell",
         "summary": "Sorts the selected cells using the provided comparators",
         "parameters": [
           {
@@ -821,7 +807,6 @@
         "tags": [
           "columns"
         ],
-        "operationId": "column",
         "summary": "deletes the column or column-range",
         "parameters": [
           {
@@ -867,7 +852,6 @@
         "tags": [
           "columns"
         ],
-        "operationId": "spreadsheet",
         "summary": "Updates the column of the given spreadsheet.",
         "parameters": [
           {
@@ -917,7 +901,6 @@
         "tags": [
           "columns"
         ],
-        "operationId": "column",
         "summary": "clears the column or column-range, which includes deleting any cells",
         "parameters": [
           {
@@ -965,7 +948,6 @@
         "tags": [
           "columns"
         ],
-        "operationId": "column",
         "summary": "Inserts a given number of columns *after* the given column or column-range",
         "parameters": [
           {
@@ -1021,7 +1003,6 @@
         "tags": [
           "columns"
         ],
-        "operationId": "column",
         "summary": "Inserts a given number of columns *before* the given column or column-range",
         "parameters": [
           {
@@ -1077,7 +1058,6 @@
         "tags": [
           "comparators"
         ],
-        "operationId": "comparator",
         "summary": "Returns ALL SpreadsheetComparator available to the enclosing Spreadsheet",
         "parameters": [
           {
@@ -1117,7 +1097,6 @@
         "tags": [
           "comparators"
         ],
-        "operationId": "comparator",
         "summary": "Returns the named SpreadsheetComparatorInfo if available to the enclosing Spreadsheet",
         "parameters": [
           {
@@ -1165,7 +1144,6 @@
         "tags": [
           "formatters"
         ],
-        "operationId": "formatter",
         "summary": "Returns ALL SpreadsheetFormatter available to the enclosing Spreadsheet",
         "parameters": [
           {
@@ -1205,7 +1183,6 @@
         "tags": [
           "expression functions"
         ],
-        "operationId": "expression-functions",
         "summary": "Returns ALL ExpressionFunction(s) available to the enclosing Spreadsheet",
         "parameters": [
           {
@@ -1245,7 +1222,6 @@
         "tags": [
           "label"
         ],
-        "operationId": "label",
         "summary": "Creates a new label.",
         "parameters": [
           {
@@ -1282,7 +1258,6 @@
         "tags": [
           "label"
         ],
-        "operationId": "label",
         "summary": "Deletes an existing label using its name",
         "parameters": [
           {
@@ -1328,7 +1303,6 @@
         "tags": [
           "label"
         ],
-        "operationId": "label",
         "summary": "Loads the given label",
         "parameters": [
           {
@@ -1374,7 +1348,6 @@
         "tags": [
           "label"
         ],
-        "operationId": "label",
         "summary": "Saves or updates the given label and its mapping target",
         "requestBody": {
           "required": true,
@@ -1407,7 +1380,6 @@
           "tags": [
             "label"
           ],
-          "operationId": "label",
           "summary": "Deletes the given label and its mapping target",
           "produces": [
             "application/json"
@@ -1438,7 +1410,6 @@
         "tags": [
           "parsers"
         ],
-        "operationId": "parser",
         "summary": "Returns ALL Parser available to the enclosing Spreadsheet",
         "parameters": [
           {
@@ -1478,7 +1449,6 @@
         "tags": [
           "rows"
         ],
-        "operationId": "row",
         "summary": "deletes the row or row-range",
         "parameters": [
           {
@@ -1524,7 +1494,6 @@
         "tags": [
           "rows"
         ],
-        "operationId": "spreadsheet",
         "summary": "Updates a rows within the given spreadsheet.",
         "parameters": [
           {
@@ -1574,7 +1543,6 @@
         "tags": [
           "rows"
         ],
-        "operationId": "row",
         "summary": "clears the row or row-range, which includes deleting any cells",
         "parameters": [
           {
@@ -1622,7 +1590,6 @@
         "tags": [
           "rows"
         ],
-        "operationId": "row",
         "summary": "Inserts a given number of rows *after* the given row or row-range",
         "parameters": [
           {
@@ -1679,7 +1646,6 @@
         "tags": [
           "rows"
         ],
-        "operationId": "row",
         "summary": "Inserts a given number of rows *before* the given row or row-range",
         "parameters": [
           {
