@@ -1178,6 +1178,53 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/formatter/{spreadsheet-formatter-name}": {
+      "get": {
+        "tags": [
+          "formatters"
+        ],
+        "summary": "Returns the named SpreadsheetFormatterInfo if available to the enclosing Spreadsheet",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "spreadsheet-formatter-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetFormatterInfo"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/expression-function": {
       "get": {
         "tags": [
