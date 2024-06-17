@@ -1538,6 +1538,53 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/parser/{spreadsheet-parser-name}": {
+      "get": {
+        "tags": [
+          "parsers"
+        ],
+        "summary": "Returns the named SpreadsheetParserInfo if available to the enclosing Spreadsheet",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "spreadsheet-parser-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetParserInfo"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/row/{row-OR-row-range}": {
       "delete": {
         "tags": [
