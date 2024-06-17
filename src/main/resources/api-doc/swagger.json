@@ -1112,6 +1112,54 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/comparator/{spreadsheet-comparator-name}": {
+      "get": {
+        "tags": [
+          "comparators"
+        ],
+        "operationId": "comparator",
+        "summary": "Returns the named SpreadsheetComparatorInfo if available to the enclosing Spreadsheet",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "spreadsheet-comparator-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetComparatorInfo"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/formatter": {
       "get": {
         "tags": [
