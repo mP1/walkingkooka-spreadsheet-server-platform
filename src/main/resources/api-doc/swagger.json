@@ -1217,6 +1217,53 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/expression-function/{function-expression-name}": {
+      "get": {
+        "tags": [
+          "expression functions"
+        ],
+        "summary": "Returns the named ExpressionFunctionInfo if available to the enclosing Spreadsheet",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "function-expression-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpressionFunctionInfo"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/label/": {
       "post": {
         "tags": [
