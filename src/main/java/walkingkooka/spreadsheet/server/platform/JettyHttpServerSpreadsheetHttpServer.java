@@ -290,9 +290,12 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                              final Locale defaultLocale,
                                              final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer) {
 
+        final Function<SpreadsheetId, SpreadsheetParserProvider> spreadsheetIdToSpreadsheetParserProvider = spreadsheetIdToSpreadsheetParserProvider();
+
         final Function<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository = spreadsheetIdToStoreRepository(
                 Maps.concurrent(),
-                storeRepositorySupplier()
+                storeRepositorySupplier(),
+                spreadsheetIdToSpreadsheetParserProvider
         );
 
         metadataStore = SpreadsheetMetadataStores.spreadsheetCellStoreAction(
@@ -314,7 +317,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 spreadsheetIdToSpreadsheetComparatorProvider(),
                 spreadsheetIdToSpreadsheetFormatterProvider(),
                 spreadsheetIdToExpressionFunctionProvider(),
-                spreadsheetIdToSpreadsheetParserProvider(),
+                spreadsheetIdToSpreadsheetParserProvider,
                 spreadsheetIdToStoreRepository,
                 SpreadsheetContexts::jsonHateosContentType,
                 fileServer,
@@ -428,13 +431,15 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
      * Retrieves from the cache or lazily creates a {@link SpreadsheetStoreRepository} for the given {@link SpreadsheetId}.
      */
     private static Function<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository(final Map<SpreadsheetId, SpreadsheetStoreRepository> idToRepository,
-                                                                                                      final Supplier<SpreadsheetStoreRepository> repositoryFactory) {
+                                                                                                      final Supplier<SpreadsheetStoreRepository> repositoryFactory,
+                                                                                                      final Function<SpreadsheetId, SpreadsheetParserProvider> spreadsheetIdToSpreadsheetParserProvider) {
         return (id) -> {
             SpreadsheetStoreRepository repository = idToRepository.get(id);
             if (null == repository) {
                 repository = SpreadsheetStoreRepositories.spreadsheetMetadataAwareSpreadsheetCellStore(
                         id,
                         repositoryFactory.get(),
+                        spreadsheetIdToSpreadsheetParserProvider.apply(id),
                         LocalDateTime::now
                 );
                 idToRepository.put(id, repository); // TODO add locks etc.
