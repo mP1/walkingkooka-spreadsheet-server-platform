@@ -55,7 +55,6 @@ import walkingkooka.spreadsheet.reference.SpreadsheetViewport;
 import walkingkooka.spreadsheet.security.store.SpreadsheetGroupStores;
 import walkingkooka.spreadsheet.security.store.SpreadsheetUserStores;
 import walkingkooka.spreadsheet.server.SpreadsheetHttpServer;
-import walkingkooka.spreadsheet.server.context.SpreadsheetContexts;
 import walkingkooka.spreadsheet.server.expression.function.SpreadsheetServerExpressionFunctions;
 import walkingkooka.spreadsheet.store.SpreadsheetCellRangeStores;
 import walkingkooka.spreadsheet.store.SpreadsheetCellStores;
@@ -71,6 +70,8 @@ import walkingkooka.text.Indentation;
 import walkingkooka.text.LineEnding;
 import walkingkooka.tree.expression.ExpressionNumberKind;
 import walkingkooka.tree.expression.function.provider.ExpressionFunctionProvider;
+import walkingkooka.tree.json.marshall.JsonNodeMarshallContexts;
+import walkingkooka.tree.json.marshall.JsonNodeUnmarshallContexts;
 import walkingkooka.util.SystemProperty;
 
 import java.io.IOException;
@@ -314,12 +315,16 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 metadataStore,
                 JettyHttpServerSpreadsheetHttpServer::spreadsheetMetadataStamper,
                 fractioner(),
+                JsonNodeMarshallContexts.basic(),
+                JsonNodeUnmarshallContexts.basic(
+                        ExpressionNumberKind.DEFAULT,
+                        MathContext.DECIMAL32
+                ),
                 spreadsheetIdToSpreadsheetComparatorProvider(),
                 spreadsheetIdToSpreadsheetFormatterProvider(),
                 spreadsheetIdToExpressionFunctionProvider(),
                 spreadsheetIdToSpreadsheetParserProvider,
                 spreadsheetIdToStoreRepository,
-                SpreadsheetContexts::jsonHateosContentType,
                 fileServer,
                 jettyHttpServer(host, port)
         );
@@ -412,7 +417,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     }
 
     private static Function<SpreadsheetId, SpreadsheetComparatorProvider> spreadsheetIdToSpreadsheetComparatorProvider() {
-        return (id) -> SpreadsheetComparatorProviders.builtIn();
+        return (id) -> SpreadsheetComparatorProviders.spreadsheetComparators();
     }
 
     private static Function<SpreadsheetId, SpreadsheetFormatterProvider> spreadsheetIdToSpreadsheetFormatterProvider() {
