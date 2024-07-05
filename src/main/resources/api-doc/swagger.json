@@ -1225,6 +1225,52 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/formatter/*/format": {
+      "post": {
+        "tags": [
+          "formatters"
+        ],
+        "summary": "Accepts a request containing SpreadsheetFormatterSelector",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpreadsheetFormatterFormatRequestList"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TextNodeList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/expression-function": {
       "get": {
         "tags": [
@@ -1925,6 +1971,29 @@
           "name": {
             "type": "string"
           }
+        }
+      },
+      "SpreadsheetFormatterFormatRequestList": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/SpreadsheetFormatterFormatRequest"
+        }
+      },
+      "SpreadsheetFormatterFormatRequest": {
+        "type": "object",
+        "properties": {
+          "selector": {
+            "$ref" : "#/components/schemas/SpreadsheetFormatterSelector"
+          },
+          "value": {
+            "type": "object"
+          }
+        }
+      },
+      "TextNodeList": {
+        "type": "array",
+        "items": {
+          "$ref" : "object"
         }
       }
     }
