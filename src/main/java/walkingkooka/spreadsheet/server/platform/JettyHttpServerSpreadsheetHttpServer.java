@@ -41,6 +41,7 @@ import walkingkooka.spreadsheet.SpreadsheetId;
 import walkingkooka.spreadsheet.SpreadsheetName;
 import walkingkooka.spreadsheet.compare.SpreadsheetComparatorProvider;
 import walkingkooka.spreadsheet.compare.SpreadsheetComparatorProviders;
+import walkingkooka.spreadsheet.convert.SpreadsheetConvertersConverterProviders;
 import walkingkooka.spreadsheet.format.SpreadsheetFormatterProvider;
 import walkingkooka.spreadsheet.format.SpreadsheetFormatterProviders;
 import walkingkooka.spreadsheet.format.SpreadsheetParserProvider;
@@ -290,7 +291,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                              final IpPort port,
                                              final Locale defaultLocale,
                                              final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer) {
-
+        final Function<SpreadsheetId, SpreadsheetFormatterProvider> spreadsheetIdToSpreadsheetFormatterProvider = spreadsheetIdToSpreadsheetFormatterProvider();
         final Function<SpreadsheetId, SpreadsheetParserProvider> spreadsheetIdToSpreadsheetParserProvider = spreadsheetIdToSpreadsheetParserProvider();
 
         final Function<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository = spreadsheetIdToStoreRepository(
@@ -320,8 +321,14 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                         ExpressionNumberKind.DEFAULT,
                         MathContext.DECIMAL32
                 ),
+                (id) -> SpreadsheetConvertersConverterProviders.spreadsheetConverters(
+                    metadataStore.loadOrFail(id),
+                        spreadsheetIdToSpreadsheetFormatterProvider.apply(id),
+                        spreadsheetIdToSpreadsheetParserProvider.apply(id)
+
+                ),
                 spreadsheetIdToSpreadsheetComparatorProvider(),
-                spreadsheetIdToSpreadsheetFormatterProvider(),
+                spreadsheetIdToSpreadsheetFormatterProvider,
                 spreadsheetIdToExpressionFunctionProvider(),
                 spreadsheetIdToSpreadsheetParserProvider,
                 spreadsheetIdToStoreRepository,
