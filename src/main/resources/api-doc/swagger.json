@@ -1139,6 +1139,92 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/converter": {
+      "get": {
+        "tags": [
+          "converters"
+        ],
+        "summary": "Returns ALL Converter available to the enclosing Spreadsheet",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConverterInfoSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/spreadsheet/{spreadsheet-id}/converter/{converter-name}": {
+      "get": {
+        "tags": [
+          "converters"
+        ],
+        "summary": "Returns the named ConverterInfo if available to the enclosing Spreadsheet",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "converter-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConverterInfo"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/formatter": {
       "get": {
         "tags": [
@@ -1886,6 +1972,24 @@
   },
   "components": {
     "schemas": {
+      "ConverterInfoSet": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/ConverterInfo"
+        }
+      },
+      "ConverterInfo": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "name": {
+            "type": "string"
+          }
+        }
+      },
       "ExpressionFunctionInfoSet": {
         "type": "array",
         "items": {
