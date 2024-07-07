@@ -21,9 +21,10 @@ import org.junit.jupiter.api.Test;
 import walkingkooka.net.email.EmailAddress;
 import walkingkooka.reflect.JavaVisibility;
 import walkingkooka.reflect.PublicStaticHelperTesting;
+import walkingkooka.spreadsheet.convert.SpreadsheetConvertersConverterProviders;
 import walkingkooka.spreadsheet.format.SpreadsheetFormatterProviders;
-import walkingkooka.spreadsheet.format.SpreadsheetParserProviders;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
+import walkingkooka.spreadsheet.parser.SpreadsheetParserProviders;
 
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
@@ -49,9 +50,12 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements PublicSta
                 Optional.ofNullable(userLocale),
                 Locale.ENGLISH
         );
-        metadata.converter(
-                SpreadsheetFormatterProviders.spreadsheetFormatPattern(),
-                SpreadsheetParserProviders.spreadsheetParsePattern()
+        metadata.expressionConverter(
+                SpreadsheetConvertersConverterProviders.spreadsheetConverters(
+                        metadata,
+                        SpreadsheetFormatterProviders.spreadsheetFormatPattern(),
+                        SpreadsheetParserProviders.spreadsheetParsePattern()
+                )
         );
     }
 
