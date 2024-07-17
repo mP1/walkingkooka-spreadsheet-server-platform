@@ -1112,7 +1112,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetComparatorName"
             }
           }
         ],
@@ -2070,6 +2070,12 @@
       },
       "JsonString": {
         "type": "string"
+      },
+      "SpreadsheetComparatorName": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255,
+        "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$"
       },
       "SpreadsheetComparatorInfoSet": {
         "type": "array",
