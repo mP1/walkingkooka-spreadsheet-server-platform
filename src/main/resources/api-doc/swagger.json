@@ -1198,7 +1198,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/ConverterName"
             }
           }
         ],
@@ -2026,6 +2026,12 @@
   },
   "components": {
     "schemas": {
+      "ConverterName": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255,
+        "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$"
+      },
       "ConverterInfoSet": {
         "type": "array",
         "items": {
@@ -2040,7 +2046,7 @@
             "format": "uri"
           },
           "name": {
-            "type": "string"
+            "$ref": "#/components/schemas/ConverterName"
           }
         }
       },
