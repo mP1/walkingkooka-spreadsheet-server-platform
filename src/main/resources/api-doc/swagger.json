@@ -1744,7 +1744,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetParserName"
             }
           }
         ],
@@ -2184,6 +2184,12 @@
         "items": {
           "$ref" : "#/components/schemas/SpreadsheetMetadata"
         }
+      },
+      "SpreadsheetParserName": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255,
+        "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$"
       },
       "SpreadsheetParserInfoSet": {
         "type": "array",
