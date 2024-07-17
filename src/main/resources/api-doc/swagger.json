@@ -1284,7 +1284,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetFormatterName"
             }
           }
         ],
@@ -1331,7 +1331,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetFormatterName"
             }
           }
         ],
