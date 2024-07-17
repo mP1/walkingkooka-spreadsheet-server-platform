@@ -1553,7 +1553,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetLabelName"
             }
           }
         ],
@@ -2247,6 +2247,12 @@
       },
       "SpreadsheetLabelMapping": {
         "type": "object"
+      },
+      "SpreadsheetLabelName": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255,
+        "pattern": "^[A-Z,a-z,_][A-Z,a-z,0-9,-,_,.]*$"
       },
       "SpreadsheetMetadata": {
         "type": "object"
