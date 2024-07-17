@@ -1771,6 +1771,60 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/parser/{spreadsheet-parser-name}/text-components": {
+      "post": {
+        "tags": [
+          "parsers"
+        ],
+        "summary": "Accepts a request containing SpreadsheetParserSelector returning the SpreadsheetParserSelectorTextComponent(s)",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          },
+          {
+            "name": "spreadsheet-parser-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetParserName"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JsonString"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetParserSelectorTextComponentList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/row/{row-OR-row-range}": {
       "delete": {
         "tags": [
@@ -2224,6 +2278,37 @@
           },
           "name": {
             "$ref" : "#/components/schemas/SpreadsheetParserName"
+          }
+        }
+      },
+      "SpreadsheetParserSelectorTextComponentList": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/SpreadsheetParserSelectorTextComponent"
+        }
+      },
+      "SpreadsheetParserSelectorTextComponent": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "selector": {
+            "$ref" : "#/components/schemas/SpreadsheetParserSelectorTextComponentAlternative"
+          }
+        }
+      },
+      "SpreadsheetParserSelectorTextComponentAlternative": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
           }
         }
       },
