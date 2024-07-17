@@ -2083,6 +2083,9 @@
           }
         }
       },
+      "SpreadsheetDelta": {
+        "type": "object"
+      },
       "SpreadsheetFormatterInfoSet": {
         "type": "array",
         "items": {
@@ -2098,6 +2101,23 @@
           },
           "name": {
             "type": "string"
+          }
+        }
+      },
+      "SpreadsheetFormatterFormatRequestList": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/SpreadsheetFormatterFormatRequest"
+        }
+      },
+      "SpreadsheetFormatterFormatRequest": {
+        "type": "object",
+        "properties": {
+          "selector": {
+            "$ref" : "#/components/schemas/SpreadsheetFormatterSelector"
+          },
+          "value": {
+            "type": "object"
           }
         }
       },
@@ -2132,9 +2152,6 @@
           }
         }
       },
-      "SpreadsheetDelta": {
-        "type": "object"
-      },
       "SpreadsheetLabelMapping": {
         "type": "object"
       },
@@ -2162,23 +2179,6 @@
           },
           "name": {
             "type": "string"
-          }
-        }
-      },
-      "SpreadsheetFormatterFormatRequestList": {
-        "type": "array",
-        "items": {
-          "$ref" : "#/components/schemas/SpreadsheetFormatterFormatRequest"
-        }
-      },
-      "SpreadsheetFormatterFormatRequest": {
-        "type": "object",
-        "properties": {
-          "selector": {
-            "$ref" : "#/components/schemas/SpreadsheetFormatterSelector"
-          },
-          "value": {
-            "type": "object"
           }
         }
       },
