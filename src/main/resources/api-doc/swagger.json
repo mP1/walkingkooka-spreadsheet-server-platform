@@ -104,7 +104,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           }
         ],
@@ -134,7 +134,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           }
         ],
@@ -171,7 +171,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           }
         ],
@@ -218,7 +218,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           }
         ],
@@ -267,7 +267,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           },
           {
@@ -384,7 +384,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           },
           {
@@ -445,7 +445,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           },
           {
@@ -500,7 +500,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           },
           {
@@ -555,7 +555,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           },
           {
@@ -602,7 +602,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           },
           {
@@ -659,7 +659,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           },
           {
@@ -758,7 +758,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           },
           {
@@ -814,7 +814,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           },
           {
@@ -859,7 +859,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           }
         ],
@@ -908,7 +908,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           },
           {
@@ -955,7 +955,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           },
           {
@@ -1010,7 +1010,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           },
           {
@@ -1065,7 +1065,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           }
         ],
@@ -1104,7 +1104,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           },
           {
@@ -1151,7 +1151,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           }
         ],
@@ -1190,7 +1190,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           },
           {
@@ -1237,7 +1237,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           }
         ],
@@ -1276,7 +1276,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           },
           {
@@ -1323,7 +1323,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           },
           {
@@ -1377,7 +1377,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           }
         ],
@@ -1423,7 +1423,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           }
         ],
@@ -1462,7 +1462,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           },
           {
@@ -1509,7 +1509,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           }
         ],
@@ -1545,7 +1545,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           },
           {
@@ -1590,7 +1590,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           },
           {
@@ -1697,7 +1697,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           }
         ],
@@ -1736,7 +1736,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           },
           {
@@ -1783,7 +1783,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           },
           {
@@ -1828,7 +1828,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           }
         ],
@@ -1877,7 +1877,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           },
           {
@@ -1924,7 +1924,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           },
           {
@@ -1980,7 +1980,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetId"
             }
           },
           {
@@ -2164,6 +2164,11 @@
             "type": "string"
           }
         }
+      },
+      "SpreadsheetId": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": "^[0123456789ABCDEFabcdef]*$"
       },
       "SpreadsheetLabelMapping": {
         "type": "object"
