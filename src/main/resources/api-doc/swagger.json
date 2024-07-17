@@ -1311,6 +1311,60 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/formatter/{spreadsheet-formatter-name}/text-components": {
+      "post": {
+        "tags": [
+          "formatters"
+        ],
+        "summary": "Accepts a request containing SpreadsheetFormatterSelector returning the SpreadsheetFormatterSelectorTextComponent(s)",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "spreadsheet-formatter-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JsonString"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetFormatterSelectorTextComponentList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/formatter/*/format": {
       "post": {
         "tags": [
@@ -2008,6 +2062,9 @@
           }
         }
       },
+      "JsonString": {
+        "type": "string"
+      },
       "SpreadsheetComparatorInfoSet": {
         "type": "array",
         "items": {
@@ -2040,6 +2097,37 @@
             "format": "uri"
           },
           "name": {
+            "type": "string"
+          }
+        }
+      },
+      "SpreadsheetFormatterSelectorTextComponentList": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/SpreadsheetFormatterSelectorTextComponent"
+        }
+      },
+      "SpreadsheetFormatterSelectorTextComponent": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "selector": {
+            "$ref" : "#/components/schemas/SpreadsheetFormatterSelectorTextComponentAlternative"
+          }
+        }
+      },
+      "SpreadsheetFormatterSelectorTextComponentAlternative": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "text": {
             "type": "string"
           }
         }
