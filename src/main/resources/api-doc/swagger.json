@@ -2121,6 +2121,19 @@
           }
         }
       },
+      "SpreadsheetFormatterName": {
+        "type": "string"
+      },
+      "SpreadsheetFormatterSelector": {
+        "properties": {
+          "name": {
+            "$ref" : "#/components/schemas/SpreadsheetFormatterName"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
       "SpreadsheetFormatterSelectorTextComponentList": {
         "type": "array",
         "items": {
