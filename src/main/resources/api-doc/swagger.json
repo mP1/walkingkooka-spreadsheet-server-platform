@@ -2211,7 +2211,7 @@
             "format": "uri"
           },
           "name": {
-            "type": "string"
+            "$ref" : "#/components/schemas/SpreadsheetParserName"
           }
         }
       },
