@@ -436,7 +436,10 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     }
 
     private static Function<SpreadsheetId, SpreadsheetParserProvider> spreadsheetIdToSpreadsheetParserProvider() {
-        return (id) -> SpreadsheetParserProviders.spreadsheetParsePattern();
+        return (id) -> SpreadsheetParserProviders.spreadsheetParsePattern(
+                spreadsheetIdToSpreadsheetFormatterProvider()
+                        .apply(id)
+        );
     }
     
     /**

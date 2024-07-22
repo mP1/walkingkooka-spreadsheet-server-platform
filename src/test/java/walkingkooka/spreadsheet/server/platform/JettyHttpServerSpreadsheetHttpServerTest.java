@@ -22,6 +22,7 @@ import walkingkooka.net.email.EmailAddress;
 import walkingkooka.reflect.JavaVisibility;
 import walkingkooka.reflect.PublicStaticHelperTesting;
 import walkingkooka.spreadsheet.convert.SpreadsheetConvertersConverterProviders;
+import walkingkooka.spreadsheet.format.SpreadsheetFormatterProvider;
 import walkingkooka.spreadsheet.format.SpreadsheetFormatterProviders;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
 import walkingkooka.spreadsheet.parser.SpreadsheetParserProviders;
@@ -50,11 +51,14 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements PublicSta
                 Optional.ofNullable(userLocale),
                 Locale.ENGLISH
         );
+
+        final SpreadsheetFormatterProvider spreadsheetFormatterProvider = SpreadsheetFormatterProviders.spreadsheetFormatPattern();
+
         metadata.expressionConverter(
                 SpreadsheetConvertersConverterProviders.spreadsheetConverters(
                         metadata,
-                        SpreadsheetFormatterProviders.spreadsheetFormatPattern(),
-                        SpreadsheetParserProviders.spreadsheetParsePattern()
+                        spreadsheetFormatterProvider,
+                        SpreadsheetParserProviders.spreadsheetParsePattern(spreadsheetFormatterProvider)
                 )
         );
     }
