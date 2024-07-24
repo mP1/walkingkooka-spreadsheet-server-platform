@@ -1365,6 +1365,50 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/formatter/{spreadsheet-formatter-name}/samples": {
+      "get": {
+        "tags": [
+          "formatters"
+        ],
+        "summary": "Formats the sample values for the given SpreadsheetFormatter",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          },
+          {
+            "name": "spreadsheet-formatter-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetFormatterName"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetFormatterSampleList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/formatter/{spreadsheet-formatter-name}/text-components": {
       "post": {
         "tags": [
@@ -2306,6 +2350,26 @@
         "minLength": 1,
         "maxLength": 255,
         "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$"
+      },
+      "SpreadsheetFormatterSampleList": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/SpreadsheetFormatterSample"
+        }
+      },
+      "SpreadsheetFormatterSample": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "selector": {
+            "$ref" : "#/components/schemas/SpreadsheetFormatterSelector"
+          },
+          "value": {
+            "type": "object"
+          }
+        }
       },
       "SpreadsheetFormatterSelector": {
         "properties": {
