@@ -2474,7 +2474,7 @@
           "text": {
             "type": "string"
           },
-          "selector": {
+          "alternatives": {
             "$ref" : "#/components/schemas/SpreadsheetParserSelectorTextComponentAlternative"
           }
         }
