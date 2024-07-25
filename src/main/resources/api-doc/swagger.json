@@ -1311,7 +1311,7 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/formatter/{spreadsheet-formatter-name}/next-next-component": {
+    "/api/spreadsheet/{spreadsheet-id}/formatter/{spreadsheet-formatter-name}/next-text-component": {
       "post": {
         "tags": [
           "formatters"
