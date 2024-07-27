@@ -1463,6 +1463,52 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/formatter/*/edit": {
+      "post": {
+        "tags": [
+          "formatters"
+        ],
+        "summary": "Parses the request body holding a SpreadsheetFormatterSelector and gives an error message, text-components, next and samples",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JsonString"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetFormatterSelectorEdit"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/formatter/*/format": {
       "post": {
         "tags": [
@@ -2378,6 +2424,25 @@
           },
           "text": {
             "type": "string"
+          }
+        }
+      },
+      "SpreadsheetFormatterSelectorEdit": {
+        "properties": {
+          "selector": {
+            "$ref" : "#/components/schemas/SpreadsheetFormatterSelector"
+          },
+          "message": {
+            "type": "string"
+          },
+          "textComponents": {
+            "$ref" : "#/components/schemas/SpreadsheetFormatterSelectorTextComponentList"
+          },
+          "next": {
+            "$ref" : "#/components/schemas/SpreadsheetFormatterSelectorTextComponentAlternative"
+          },
+          "samples": {
+            "$ref" : "#/components/schemas/SpreadsheetFormatterSampleList"
           }
         }
       },
