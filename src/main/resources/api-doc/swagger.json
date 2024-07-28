@@ -2564,14 +2564,7 @@
         }
       },
       "SpreadsheetParserSelector": {
-        "properties": {
-          "name": {
-            "$ref" : "#/components/schemas/SpreadsheetParserName"
-          },
-          "text": {
-            "type": "string"
-          }
-        }
+        "type": "string"
       },
       "SpreadsheetParserSelectorEdit": {
         "properties": {
