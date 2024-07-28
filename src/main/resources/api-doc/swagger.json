@@ -2464,14 +2464,7 @@
         }
       },
       "SpreadsheetFormatterSelector": {
-        "properties": {
-          "name": {
-            "$ref" : "#/components/schemas/SpreadsheetFormatterName"
-          },
-          "text": {
-            "type": "string"
-          }
-        }
+        "type": "string"
       },
       "SpreadsheetFormatterSelectorEdit": {
         "properties": {
