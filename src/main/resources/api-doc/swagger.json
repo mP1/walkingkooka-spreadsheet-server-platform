@@ -2023,6 +2023,52 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/parser/*/edit": {
+      "post": {
+        "tags": [
+          "parsers"
+        ],
+        "summary": "Parses the request body holding a SpreadsheetParserSelector and gives an error message, text-components, next and samples",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/JsonString"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetParserSelectorEdit"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/row/{row-OR-row-range}": {
       "delete": {
         "tags": [
@@ -2521,6 +2567,35 @@
           },
           "name": {
             "$ref" : "#/components/schemas/SpreadsheetParserName"
+          }
+        }
+      },
+      "SpreadsheetParserSelector": {
+        "properties": {
+          "name": {
+            "$ref" : "#/components/schemas/SpreadsheetParserName"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "SpreadsheetParserSelectorEdit": {
+        "properties": {
+          "selector": {
+            "$ref" : "#/components/schemas/SpreadsheetParserSelector"
+          },
+          "message": {
+            "type": "string"
+          },
+          "textComponents": {
+            "$ref" : "#/components/schemas/SpreadsheetParserSelectorTextComponentList"
+          },
+          "next": {
+            "$ref" : "#/components/schemas/SpreadsheetParserSelectorTextComponentAlternative"
+          },
+          "samples": {
+            "$ref" : "#/components/schemas/SpreadsheetFormatterSampleList"
           }
         }
       },
