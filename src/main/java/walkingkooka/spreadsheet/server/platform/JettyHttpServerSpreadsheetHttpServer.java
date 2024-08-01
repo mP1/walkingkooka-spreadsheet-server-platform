@@ -291,14 +291,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                              final IpPort port,
                                              final Locale defaultLocale,
                                              final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer) {
-        final Function<SpreadsheetId, Locale> spreadsheetIdLocale = (id) -> metadataStore.loadOrFail(id).locale();
-
-        final Function<SpreadsheetId, SpreadsheetFormatterProvider> spreadsheetIdToSpreadsheetFormatterProvider = spreadsheetIdToSpreadsheetFormatterProvider(
-                spreadsheetIdLocale
-        );
-        final Function<SpreadsheetId, SpreadsheetParserProvider> spreadsheetIdToSpreadsheetParserProvider = spreadsheetIdToSpreadsheetParserProvider(
-                spreadsheetIdLocale
-        );
+        final Function<SpreadsheetId, SpreadsheetFormatterProvider> spreadsheetIdToSpreadsheetFormatterProvider = spreadsheetIdToSpreadsheetFormatterProvider();
+        final Function<SpreadsheetId, SpreadsheetParserProvider> spreadsheetIdToSpreadsheetParserProvider = spreadsheetIdToSpreadsheetParserProvider();
 
         final Function<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository = spreadsheetIdToStoreRepository(
                 Maps.concurrent(),
@@ -433,20 +427,17 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         return (id) -> SpreadsheetComparatorProviders.spreadsheetComparators();
     }
 
-    private static Function<SpreadsheetId, SpreadsheetFormatterProvider> spreadsheetIdToSpreadsheetFormatterProvider(final Function<SpreadsheetId, Locale> spreadsheetIdLocale) {
-        return (id) -> SpreadsheetFormatterProviders.spreadsheetFormatPattern(
-                spreadsheetIdLocale.apply(id),
-                LocalDateTime::now
-        );
+    private static Function<SpreadsheetId, SpreadsheetFormatterProvider> spreadsheetIdToSpreadsheetFormatterProvider() {
+        return (id) -> SpreadsheetFormatterProviders.spreadsheetFormatPattern();
     }
 
     private static Function<SpreadsheetId, ExpressionFunctionProvider> spreadsheetIdToExpressionFunctionProvider() {
         return (id) -> SpreadsheetServerExpressionFunctions.expressionFunctionProvider(CaseSensitivity.INSENSITIVE);
     }
 
-    private static Function<SpreadsheetId, SpreadsheetParserProvider> spreadsheetIdToSpreadsheetParserProvider(final Function<SpreadsheetId, Locale> spreadsheetIdLocale) {
+    private static Function<SpreadsheetId, SpreadsheetParserProvider> spreadsheetIdToSpreadsheetParserProvider() {
         return (id) -> SpreadsheetParserProviders.spreadsheetParsePattern(
-                spreadsheetIdToSpreadsheetFormatterProvider(spreadsheetIdLocale)
+                spreadsheetIdToSpreadsheetFormatterProvider()
                         .apply(id)
         );
     }

@@ -52,12 +52,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements PublicSta
                 Locale.ENGLISH
         );
 
-        final SpreadsheetFormatterProvider spreadsheetFormatterProvider = SpreadsheetFormatterProviders.spreadsheetFormatPattern(
-                Locale.forLanguageTag("EN-AU"),
-                () -> {
-                    throw new UnsupportedOperationException();
-                }
-        );
+        final SpreadsheetFormatterProvider spreadsheetFormatterProvider = SpreadsheetFormatterProviders.spreadsheetFormatPattern();
 
         metadata.expressionConverter(
                 SpreadsheetConvertersConverterProviders.spreadsheetConverters(
