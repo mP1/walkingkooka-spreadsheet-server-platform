@@ -2619,7 +2619,7 @@
       "TextNodeList": {
         "type": "array",
         "items": {
-          "$ref" : "object"
+          "type" : "object"
         }
       }
     }
