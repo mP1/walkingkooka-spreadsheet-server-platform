@@ -22,6 +22,8 @@ import walkingkooka.Either;
 import walkingkooka.collect.list.Lists;
 import walkingkooka.collect.map.Maps;
 import walkingkooka.convert.Converters;
+import walkingkooka.environment.EnvironmentContext;
+import walkingkooka.environment.EnvironmentValueName;
 import walkingkooka.math.Fraction;
 import walkingkooka.net.HostAddress;
 import walkingkooka.net.IpPort;
@@ -36,6 +38,7 @@ import walkingkooka.net.http.server.HttpServer;
 import walkingkooka.net.http.server.WebFile;
 import walkingkooka.net.http.server.WebFiles;
 import walkingkooka.net.http.server.jetty.JettyHttpServer;
+import walkingkooka.plugin.ProviderContext;
 import walkingkooka.reflect.PublicStaticHelper;
 import walkingkooka.spreadsheet.SpreadsheetId;
 import walkingkooka.spreadsheet.SpreadsheetName;
@@ -297,7 +300,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         final Function<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository = spreadsheetIdToStoreRepository(
                 Maps.concurrent(),
                 storeRepositorySupplier(),
-                spreadsheetIdToSpreadsheetParserProvider
+                spreadsheetIdToSpreadsheetParserProvider,
+                spreadsheetIdToSpreadsheetMetadata()
         );
 
         metadataStore = SpreadsheetMetadataStores.spreadsheetCellStoreAction(
@@ -441,21 +445,34 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                         .apply(id)
         );
     }
+
+    private static Function<SpreadsheetId, SpreadsheetMetadata> spreadsheetIdToSpreadsheetMetadata() {
+        return (id) -> metadataStore.loadOrFail(id);
+    }
     
     /**
      * Retrieves from the cache or lazily creates a {@link SpreadsheetStoreRepository} for the given {@link SpreadsheetId}.
      */
     private static Function<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository(final Map<SpreadsheetId, SpreadsheetStoreRepository> idToRepository,
                                                                                                       final Supplier<SpreadsheetStoreRepository> repositoryFactory,
-                                                                                                      final Function<SpreadsheetId, SpreadsheetParserProvider> spreadsheetIdToSpreadsheetParserProvider) {
+                                                                                                      final Function<SpreadsheetId, SpreadsheetParserProvider> spreadsheetIdToSpreadsheetParserProvider,
+                                                                                                      final Function<SpreadsheetId, SpreadsheetMetadata> spreadsheetIdToSpreadsheetMetadata) {
         return (id) -> {
             SpreadsheetStoreRepository repository = idToRepository.get(id);
             if (null == repository) {
+                final EnvironmentContext environmentContext = spreadsheetIdToSpreadsheetMetadata.apply(id)
+                        .environmentContext();
                 repository = SpreadsheetStoreRepositories.spreadsheetMetadataAwareSpreadsheetCellStore(
                         id,
                         repositoryFactory.get(),
                         spreadsheetIdToSpreadsheetParserProvider.apply(id),
-                        LocalDateTime::now
+                        LocalDateTime::now,
+                        new ProviderContext() {
+                            @Override
+                            public <T> Optional<T> environmentValue(final EnvironmentValueName<T> name) {
+                                return environmentContext.environmentValue(name);
+                            }
+                        }
                 );
                 idToRepository.put(id, repository); // TODO add locks etc.
             }
