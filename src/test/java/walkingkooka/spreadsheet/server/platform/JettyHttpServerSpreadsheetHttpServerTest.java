@@ -19,6 +19,7 @@ package walkingkooka.spreadsheet.server.platform;
 
 import org.junit.jupiter.api.Test;
 import walkingkooka.net.email.EmailAddress;
+import walkingkooka.plugin.ProviderContexts;
 import walkingkooka.reflect.JavaVisibility;
 import walkingkooka.reflect.PublicStaticHelperTesting;
 import walkingkooka.spreadsheet.convert.SpreadsheetConvertersConverterProviders;
@@ -59,7 +60,8 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements PublicSta
                         metadata,
                         spreadsheetFormatterProvider,
                         SpreadsheetParserProviders.spreadsheetParsePattern(spreadsheetFormatterProvider)
-                )
+                ),
+                ProviderContexts.fake()
         );
     }
 
