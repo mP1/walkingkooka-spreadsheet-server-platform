@@ -42,7 +42,6 @@ import walkingkooka.plugin.ProviderContext;
 import walkingkooka.reflect.PublicStaticHelper;
 import walkingkooka.spreadsheet.SpreadsheetId;
 import walkingkooka.spreadsheet.SpreadsheetName;
-import walkingkooka.spreadsheet.compare.SpreadsheetComparatorProvider;
 import walkingkooka.spreadsheet.compare.SpreadsheetComparatorProviders;
 import walkingkooka.spreadsheet.convert.SpreadsheetConvertersConverterProviders;
 import walkingkooka.spreadsheet.format.SpreadsheetFormatterProvider;
@@ -54,6 +53,8 @@ import walkingkooka.spreadsheet.meta.store.SpreadsheetMetadataStore;
 import walkingkooka.spreadsheet.meta.store.SpreadsheetMetadataStores;
 import walkingkooka.spreadsheet.parser.SpreadsheetParserProvider;
 import walkingkooka.spreadsheet.parser.SpreadsheetParserProviders;
+import walkingkooka.spreadsheet.provider.SpreadsheetProvider;
+import walkingkooka.spreadsheet.provider.SpreadsheetProviders;
 import walkingkooka.spreadsheet.reference.SpreadsheetSelection;
 import walkingkooka.spreadsheet.reference.SpreadsheetViewport;
 import walkingkooka.spreadsheet.security.store.SpreadsheetGroupStores;
@@ -73,7 +74,6 @@ import walkingkooka.text.CharSequences;
 import walkingkooka.text.Indentation;
 import walkingkooka.text.LineEnding;
 import walkingkooka.tree.expression.ExpressionNumberKind;
-import walkingkooka.tree.expression.function.provider.ExpressionFunctionProvider;
 import walkingkooka.tree.json.marshall.JsonNodeMarshallContexts;
 import walkingkooka.tree.json.marshall.JsonNodeUnmarshallContexts;
 import walkingkooka.util.SystemProperty;
@@ -325,16 +325,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                         ExpressionNumberKind.DEFAULT,
                         MathContext.DECIMAL32
                 ),
-                (id) -> SpreadsheetConvertersConverterProviders.spreadsheetConverters(
-                    metadataStore.loadOrFail(id),
-                        spreadsheetIdToSpreadsheetFormatterProvider.apply(id),
-                        spreadsheetIdToSpreadsheetParserProvider.apply(id)
-
-                ),
-                spreadsheetIdToSpreadsheetComparatorProvider(),
-                spreadsheetIdToSpreadsheetFormatterProvider,
-                spreadsheetIdToExpressionFunctionProvider(),
-                spreadsheetIdToSpreadsheetParserProvider,
+                spreadsheetIdToSpreadsheetProvider(),
                 spreadsheetIdToStoreRepository,
                 fileServer,
                 jettyHttpServer(host, port)
@@ -427,16 +418,33 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         };
     }
 
-    private static Function<SpreadsheetId, SpreadsheetComparatorProvider> spreadsheetIdToSpreadsheetComparatorProvider() {
-        return (id) -> SpreadsheetComparatorProviders.spreadsheetComparators();
+    private static Function<SpreadsheetId, SpreadsheetProvider> spreadsheetIdToSpreadsheetProvider() {
+        return (id) -> {
+            final SpreadsheetMetadata metadata = metadataStore.loadOrFail(id);
+
+            final SpreadsheetFormatterProvider spreadsheetFormatterProvider = spreadsheetIdToSpreadsheetFormatterProvider()
+                    .apply(id);
+            final SpreadsheetParserProvider spreadsheetParserProvider = spreadsheetIdToSpreadsheetParserProvider()
+                    .apply(id);
+
+            return metadata.spreadsheetProvider(
+                    SpreadsheetProviders.basic(
+                            SpreadsheetConvertersConverterProviders.spreadsheetConverters(
+                                    metadata,
+                                    spreadsheetFormatterProvider,
+                                    spreadsheetParserProvider
+                            ),
+                            SpreadsheetServerExpressionFunctions.expressionFunctionProvider(CaseSensitivity.INSENSITIVE),
+                            SpreadsheetComparatorProviders.spreadsheetComparators(),
+                            spreadsheetFormatterProvider,
+                            spreadsheetParserProvider
+                    )
+            );
+        };
     }
 
     private static Function<SpreadsheetId, SpreadsheetFormatterProvider> spreadsheetIdToSpreadsheetFormatterProvider() {
         return (id) -> SpreadsheetFormatterProviders.spreadsheetFormatPattern();
-    }
-
-    private static Function<SpreadsheetId, ExpressionFunctionProvider> spreadsheetIdToExpressionFunctionProvider() {
-        return (id) -> SpreadsheetServerExpressionFunctions.expressionFunctionProvider(CaseSensitivity.INSENSITIVE);
     }
 
     private static Function<SpreadsheetId, SpreadsheetParserProvider> spreadsheetIdToSpreadsheetParserProvider() {
