@@ -26,6 +26,7 @@ import walkingkooka.spreadsheet.convert.SpreadsheetConvertersConverterProviders;
 import walkingkooka.spreadsheet.format.SpreadsheetFormatterProvider;
 import walkingkooka.spreadsheet.format.SpreadsheetFormatterProviders;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
+import walkingkooka.spreadsheet.meta.SpreadsheetMetadataPropertyName;
 import walkingkooka.spreadsheet.parser.SpreadsheetParserProviders;
 
 import java.lang.reflect.Method;
@@ -55,7 +56,8 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements PublicSta
 
         final SpreadsheetFormatterProvider spreadsheetFormatterProvider = SpreadsheetFormatterProviders.spreadsheetFormatPattern();
 
-        metadata.expressionConverter(
+        metadata.converter(
+                SpreadsheetMetadataPropertyName.EXPRESSION_CONVERTER,
                 SpreadsheetConvertersConverterProviders.spreadsheetConverters(
                         metadata,
                         spreadsheetFormatterProvider,
