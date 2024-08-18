@@ -23,7 +23,6 @@ import walkingkooka.collect.list.Lists;
 import walkingkooka.collect.map.Maps;
 import walkingkooka.convert.Converters;
 import walkingkooka.environment.EnvironmentContext;
-import walkingkooka.environment.EnvironmentValueName;
 import walkingkooka.math.Fraction;
 import walkingkooka.net.HostAddress;
 import walkingkooka.net.IpPort;
@@ -38,7 +37,7 @@ import walkingkooka.net.http.server.HttpServer;
 import walkingkooka.net.http.server.WebFile;
 import walkingkooka.net.http.server.WebFiles;
 import walkingkooka.net.http.server.jetty.JettyHttpServer;
-import walkingkooka.plugin.ProviderContext;
+import walkingkooka.plugin.ProviderContexts;
 import walkingkooka.reflect.PublicStaticHelper;
 import walkingkooka.spreadsheet.SpreadsheetId;
 import walkingkooka.spreadsheet.SpreadsheetName;
@@ -475,12 +474,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                         repositoryFactory.get(),
                         spreadsheetIdToSpreadsheetParserProvider.apply(id),
                         LocalDateTime::now,
-                        new ProviderContext() {
-                            @Override
-                            public <T> Optional<T> environmentValue(final EnvironmentValueName<T> name) {
-                                return environmentContext.environmentValue(name);
-                            }
-                        }
+                        ProviderContexts.basic(environmentContext)
                 );
                 idToRepository.put(id, repository); // TODO add locks etc.
             }
