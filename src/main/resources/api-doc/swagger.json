@@ -1555,6 +1555,42 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/formatter/*/menu": {
+      "get": {
+        "tags": [
+          "formatters"
+        ],
+        "summary": "Gives all the menus for all SpreadsheetFormatters",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetFormatterSelectorMenuList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/expression-function": {
       "get": {
         "tags": [
@@ -2482,6 +2518,26 @@
           },
           "samples": {
             "$ref" : "#/components/schemas/SpreadsheetFormatterSampleList"
+          }
+        }
+      },
+      "SpreadsheetFormatterSelectorMenuList": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/SpreadsheetFormatterSelectorMenuList"
+        }
+      },
+      "SpreadsheetFormatterSelectorMenu": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "selector": {
+            "$ref" : "#/components/schemas/SpreadsheetFormatterSelector"
+          },
+          "value": {
+            "type": "object"
           }
         }
       },
