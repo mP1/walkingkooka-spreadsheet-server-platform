@@ -1311,7 +1311,7 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/formatter/{spreadsheet-formatter-name}/next-text-component": {
+    "/api/spreadsheet/{spreadsheet-id}/formatter/{spreadsheet-formatter-name}/next-token": {
       "post": {
         "tags": [
           "formatters"
@@ -1409,7 +1409,7 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/formatter/{spreadsheet-formatter-name}/text-components": {
+    "/api/spreadsheet/{spreadsheet-id}/formatter/{spreadsheet-formatter-name}/tokens": {
       "post": {
         "tags": [
           "formatters"
@@ -1468,7 +1468,7 @@
         "tags": [
           "formatters"
         ],
-        "summary": "Parses the request body holding a SpreadsheetFormatterSelector and gives an error message, text-components, next and samples",
+        "summary": "Parses the request body holding a SpreadsheetFormatterSelector and gives an error message, tokens, next and samples",
         "parameters": [
           {
             "name": "spreadsheet-id",
@@ -1951,7 +1951,7 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/parser/{spreadsheet-parser-name}/next-text-component": {
+    "/api/spreadsheet/{spreadsheet-id}/parser/{spreadsheet-parser-name}/next-token": {
       "post": {
         "tags": [
           "parsers"
@@ -2005,7 +2005,7 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/parser/{spreadsheet-parser-name}/text-components": {
+    "/api/spreadsheet/{spreadsheet-id}/parser/{spreadsheet-parser-name}/tokens": {
       "post": {
         "tags": [
           "parsers"
@@ -2064,7 +2064,7 @@
         "tags": [
           "parsers"
         ],
-        "summary": "Parses the request body holding a SpreadsheetParserSelector and gives an error message, text-components, next and samples",
+        "summary": "Parses the request body holding a SpreadsheetParserSelector and gives an error message, tokens, next and samples",
         "parameters": [
           {
             "name": "spreadsheet-id",
