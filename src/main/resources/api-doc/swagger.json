@@ -1956,7 +1956,7 @@
         "tags": [
           "parsers"
         ],
-        "summary": "Accepts a request containing SpreadsheetParserSelector returning the next SpreadsheetParserSelectorTextComponent",
+        "summary": "Accepts a request containing SpreadsheetParserSelector returning the next SpreadsheetParserSelectorToken",
         "parameters": [
           {
             "name": "spreadsheet-id",
@@ -1994,7 +1994,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SpreadsheetParserSelectorTextComponent"
+                  "$ref": "#/components/schemas/SpreadsheetParserSelectorToken"
                 }
               }
             }
@@ -2010,7 +2010,7 @@
         "tags": [
           "parsers"
         ],
-        "summary": "Accepts a request containing SpreadsheetParserSelector returning the SpreadsheetParserSelectorTextComponent(s)",
+        "summary": "Accepts a request containing SpreadsheetParserSelector returning the SpreadsheetParserSelectorToken(s)",
         "parameters": [
           {
             "name": "spreadsheet-id",
@@ -2048,7 +2048,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SpreadsheetParserSelectorTextComponentList"
+                  "$ref": "#/components/schemas/SpreadsheetParserSelectorTokenList"
                 }
               }
             }
@@ -2631,23 +2631,23 @@
             "type": "string"
           },
           "textComponents": {
-            "$ref" : "#/components/schemas/SpreadsheetParserSelectorTextComponentList"
+            "$ref" : "#/components/schemas/SpreadsheetParserSelectorTokenList"
           },
           "next": {
-            "$ref" : "#/components/schemas/SpreadsheetParserSelectorTextComponentAlternative"
+            "$ref" : "#/components/schemas/SpreadsheetParserSelectorTokenAlternative"
           },
           "samples": {
             "$ref" : "#/components/schemas/SpreadsheetFormatterSampleList"
           }
         }
       },
-      "SpreadsheetParserSelectorTextComponentList": {
+      "SpreadsheetParserSelectorTokenList": {
         "type": "array",
         "items": {
-          "$ref" : "#/components/schemas/SpreadsheetParserSelectorTextComponent"
+          "$ref" : "#/components/schemas/SpreadsheetParserSelectorToken"
         }
       },
-      "SpreadsheetParserSelectorTextComponent": {
+      "SpreadsheetParserSelectorToken": {
         "type": "object",
         "properties": {
           "label": {
@@ -2657,11 +2657,11 @@
             "type": "string"
           },
           "alternatives": {
-            "$ref" : "#/components/schemas/SpreadsheetParserSelectorTextComponentAlternative"
+            "$ref" : "#/components/schemas/SpreadsheetParserSelectorTokenAlternative"
           }
         }
       },
-      "SpreadsheetParserSelectorTextComponentAlternative": {
+      "SpreadsheetParserSelectorTokenAlternative": {
         "type": "object",
         "properties": {
           "label": {
