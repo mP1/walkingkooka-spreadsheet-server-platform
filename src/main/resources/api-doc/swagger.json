@@ -2510,7 +2510,7 @@
           "message": {
             "type": "string"
           },
-          "textComponents": {
+          "tokens": {
             "$ref" : "#/components/schemas/SpreadsheetFormatterSelectorTokenList"
           },
           "next": {
@@ -2630,7 +2630,7 @@
           "message": {
             "type": "string"
           },
-          "textComponents": {
+          "tokens": {
             "$ref" : "#/components/schemas/SpreadsheetParserSelectorTokenList"
           },
           "next": {
