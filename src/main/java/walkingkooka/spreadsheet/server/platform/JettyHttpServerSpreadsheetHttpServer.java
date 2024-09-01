@@ -46,6 +46,7 @@ import walkingkooka.spreadsheet.convert.SpreadsheetConvertersConverterProviders;
 import walkingkooka.spreadsheet.format.SpreadsheetFormatterProvider;
 import walkingkooka.spreadsheet.format.SpreadsheetFormatterProviders;
 import walkingkooka.spreadsheet.format.pattern.SpreadsheetPattern;
+import walkingkooka.spreadsheet.importer.SpreadsheetImporterProviders;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataPropertyName;
 import walkingkooka.spreadsheet.meta.store.SpreadsheetMetadataStore;
@@ -436,6 +437,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                             SpreadsheetServerExpressionFunctions.expressionFunctionProvider(CaseSensitivity.INSENSITIVE),
                             SpreadsheetComparatorProviders.spreadsheetComparators(),
                             spreadsheetFormatterProvider,
+                            SpreadsheetImporterProviders.spreadsheetImport(),
                             spreadsheetParserProvider
                     )
             );
