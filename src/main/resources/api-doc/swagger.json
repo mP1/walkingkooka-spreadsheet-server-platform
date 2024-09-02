@@ -1225,6 +1225,92 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/exporter": {
+      "get": {
+        "tags": [
+          "exporters"
+        ],
+        "summary": "Returns ALL SpreadsheetExporter available to the enclosing Spreadsheet",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetExporterInfoSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/spreadsheet/{spreadsheet-id}/exporter/{spreadsheet-exporter-name}": {
+      "get": {
+        "tags": [
+          "exporters"
+        ],
+        "summary": "Returns the named SpreadsheetExporterInfo if available to the enclosing Spreadsheet",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          },
+          {
+            "name": "spreadsheet-exporter-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetExporterName"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetExporterInfo"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/formatter": {
       "get": {
         "tags": [
@@ -2437,6 +2523,30 @@
       },
       "SpreadsheetDelta": {
         "type": "object"
+      },
+      "SpreadsheetExporterName": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255,
+        "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$"
+      },
+      "SpreadsheetExporterInfoSet": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/SpreadsheetExporterInfo"
+        }
+      },
+      "SpreadsheetExporterInfo": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "name": {
+            "$ref" : "#/components/schemas/SpreadsheetExporterName"
+          }
+        }
       },
       "SpreadsheetFormatterInfoSet": {
         "type": "array",
