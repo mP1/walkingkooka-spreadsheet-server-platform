@@ -1763,6 +1763,92 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/importer": {
+      "get": {
+        "tags": [
+          "importers"
+        ],
+        "summary": "Returns ALL SpreadsheetImporter available to the enclosing Spreadsheet",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetImporterInfoSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
+    "/api/spreadsheet/{spreadsheet-id}/importer/{spreadsheet-importer-name}": {
+      "get": {
+        "tags": [
+          "importers"
+        ],
+        "summary": "Returns the named SpreadsheetImporterInfo if available to the enclosing Spreadsheet",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          },
+          {
+            "name": "spreadsheet-importer-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetImporterName"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetImporterInfo"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/label/": {
       "post": {
         "tags": [
@@ -2686,6 +2772,30 @@
         "type": "string",
         "minLength": 1,
         "pattern": "^[0123456789ABCDEFabcdef]*$"
+      },
+      "SpreadsheetImporterName": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255,
+        "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$"
+      },
+      "SpreadsheetImporterInfoSet": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/SpreadsheetImporterInfo"
+        }
+      },
+      "SpreadsheetImporterInfo": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "format": "uri"
+          },
+          "name": {
+            "$ref" : "#/components/schemas/SpreadsheetImporterName"
+          }
+        }
       },
       "SpreadsheetLabelMapping": {
         "type": "object"
