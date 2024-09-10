@@ -2545,16 +2545,8 @@
         }
       },
       "ConverterInfo": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string",
-            "format": "uri"
-          },
-          "name": {
-            "$ref": "#/components/schemas/ConverterName"
-          }
-        }
+        "type": "string",
+        "example": "ttps://github.com/mP1/walkingkooka-spreadsheet/Converter/general general"
       },
       "ExpressionFunctionInfoSet": {
         "type": "array",
@@ -2563,16 +2555,8 @@
         }
       },
       "ExpressionFunctionInfo": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string",
-            "format": "uri"
-          },
-          "name": {
-            "$ref" : "#/components/schemas/FunctionExpressionName"
-          }
-        }
+        "type": "string",
+        "example": "https://github.com/mP1/walkingkooka-spreadsheet-server-expression-function/abs abs"
       },
       "FunctionExpressionName": {
         "type": "string",
@@ -2596,16 +2580,8 @@
         }
       },
       "SpreadsheetComparatorInfo": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string",
-            "format": "uri"
-          },
-          "name": {
-            "$ref" : "#/components/schemas/SpreadsheetComparatorName"
-          }
-        }
+        "type": "string",
+        "example": "https://github.com/mP1/walkingkooka-spreadsheet/SpreadsheetComparator/date date"
       },
       "SpreadsheetDelta": {
         "type": "object"
@@ -2623,16 +2599,8 @@
         }
       },
       "SpreadsheetExporterInfo": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string",
-            "format": "uri"
-          },
-          "name": {
-            "$ref" : "#/components/schemas/SpreadsheetExporterName"
-          }
-        }
+        "type": "string",
+        "example": "https://github.com/mP1/walkingkooka-spreadsheet/SpreadsheetExporter/json json"
       },
       "SpreadsheetFormatterInfoSet": {
         "type": "array",
@@ -2642,15 +2610,7 @@
       },
       "SpreadsheetFormatterInfo": {
         "type": "object",
-        "properties": {
-          "url": {
-            "type": "string",
-            "format": "uri"
-          },
-          "name": {
-            "$ref" : "#/components/schemas/SpreadsheetFormatterName"
-          }
-        }
+        "example": "https://github.com/mP1/walkingkooka-spreadsheet/SpreadsheetFormatter/general general"
       },
       "SpreadsheetFormatterFormatRequestList": {
         "type": "array",
@@ -2786,16 +2746,8 @@
         }
       },
       "SpreadsheetImporterInfo": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string",
-            "format": "uri"
-          },
-          "name": {
-            "$ref" : "#/components/schemas/SpreadsheetImporterName"
-          }
-        }
+        "type": "string",
+        "example": "https://github.com/mP1/walkingkooka-spreadsheet/SpreadsheetImporter/json json"
       },
       "SpreadsheetLabelMapping": {
         "type": "object"
@@ -2828,16 +2780,8 @@
         }
       },
       "SpreadsheetParserInfo": {
-        "type": "object",
-        "properties": {
-          "url": {
-            "type": "string",
-            "format": "uri"
-          },
-          "name": {
-            "$ref" : "#/components/schemas/SpreadsheetParserName"
-          }
-        }
+        "type": "string",
+        "example": "https://github.com/mP1/walkingkooka-spreadsheet/Parser/date-parse-pattern date-parse-pattern"
       },
       "SpreadsheetParserSelector": {
         "type": "string"
