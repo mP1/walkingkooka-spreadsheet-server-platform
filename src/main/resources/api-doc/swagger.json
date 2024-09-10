@@ -2546,7 +2546,7 @@
       },
       "ConverterInfo": {
         "type": "string",
-        "example": "ttps://github.com/mP1/walkingkooka-spreadsheet/Converter/general general"
+        "example": "https://github.com/mP1/walkingkooka-spreadsheet/Converter/general general"
       },
       "ExpressionFunctionInfoSet": {
         "type": "array",
