@@ -61,7 +61,7 @@ import walkingkooka.spreadsheet.reference.SpreadsheetViewport;
 import walkingkooka.spreadsheet.security.store.SpreadsheetGroupStores;
 import walkingkooka.spreadsheet.security.store.SpreadsheetUserStores;
 import walkingkooka.spreadsheet.server.SpreadsheetHttpServer;
-import walkingkooka.spreadsheet.server.expression.function.SpreadsheetServerExpressionFunctions;
+import walkingkooka.spreadsheet.server.expression.function.SpreadsheetServerExpressionFunctionProviders;
 import walkingkooka.spreadsheet.store.SpreadsheetCellRangeStores;
 import walkingkooka.spreadsheet.store.SpreadsheetCellStores;
 import walkingkooka.spreadsheet.store.SpreadsheetColumnStores;
@@ -435,7 +435,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                     spreadsheetFormatterProvider,
                                     spreadsheetParserProvider
                             ),
-                            SpreadsheetServerExpressionFunctions.expressionFunctionProvider(CaseSensitivity.INSENSITIVE),
+                            SpreadsheetServerExpressionFunctionProviders.expressionFunctionProvider(CaseSensitivity.INSENSITIVE),
                             SpreadsheetComparatorProviders.spreadsheetComparators(),
                             SpreadsheetExporterProviders.spreadsheetExport(),
                             spreadsheetFormatterProvider,
