@@ -1874,7 +1874,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SpreadsheetLabelMapping"
+                  "$ref": "#/components/schemas/SpreadsheetDelta"
                 }
               }
             }
@@ -1905,7 +1905,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/SpreadsheetLabelName"
+              "$ref": "#/components/schemas/SpreadsheetDelta"
             }
           }
         ],
@@ -1918,7 +1918,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SpreadsheetLabelMapping"
+                  "$ref": "#/components/schemas/SpreadsheetDelta"
                 }
               }
             }
@@ -1963,7 +1963,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SpreadsheetLabelMapping"
+                  "$ref": "#/components/schemas/SpreadsheetDelta"
                 }
               }
             }
@@ -1986,7 +1986,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/SpreadsheetLabelMapping"
+                "$ref": "#/components/schemas/SpreadsheetDelta"
               }
             }
           },
@@ -1997,7 +1997,7 @@
             "200": {
               "description": "200 OK",
               "schema": {
-                "$ref": "#/components/schemas/SpreadsheetLabelMapping"
+                "$ref": "#/components/schemas/SpreadsheetDelta"
               }
             },
             "400": {
@@ -2022,7 +2022,7 @@
               "content": {
                 "application/json": {
                   "schema": {
-                    "$ref": "#/components/schemas/SpreadsheetLabelMapping"
+                    "$ref": "#/components/schemas/SpreadsheetDelta"
                   }
                 }
               }
@@ -2748,9 +2748,6 @@
       "SpreadsheetImporterInfo": {
         "type": "string",
         "example": "https://github.com/mP1/walkingkooka-spreadsheet/SpreadsheetImporter/json json"
-      },
-      "SpreadsheetLabelMapping": {
-        "type": "object"
       },
       "SpreadsheetLabelName": {
         "type": "string",
