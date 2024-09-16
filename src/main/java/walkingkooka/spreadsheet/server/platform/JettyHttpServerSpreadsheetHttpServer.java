@@ -317,6 +317,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 Indentation.with("  "),
                 LineEnding.SYSTEM,
                 LocalDateTime::now,
+                systemSpreadsheetProvider(),
                 createMetadata(defaultLocale, metadataStore),
                 metadataStore,
                 JettyHttpServerSpreadsheetHttpServer::spreadsheetMetadataStamper,
@@ -332,6 +333,30 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 jettyHttpServer(host, port)
         );
         server.start();
+    }
+
+    private static SpreadsheetProvider systemSpreadsheetProvider() {
+        final SpreadsheetFormatterProvider spreadsheetFormatterProvider = SpreadsheetFormatterProviders.spreadsheetFormatPattern();
+        final SpreadsheetParserProvider spreadsheetParserProvider = SpreadsheetParserProviders.spreadsheetParsePattern(
+                spreadsheetFormatterProvider
+        );
+
+        return SpreadsheetProviders.basic(
+                SpreadsheetConvertersConverterProviders.spreadsheetConverters(
+                        SpreadsheetMetadata.EMPTY.set(
+                                SpreadsheetMetadataPropertyName.LOCALE,
+                                Locale.forLanguageTag("EN-AU")
+                        ),
+                        spreadsheetFormatterProvider,
+                        spreadsheetParserProvider
+                ), // converterProvider
+                SpreadsheetServerExpressionFunctionProviders.expressionFunctionProvider(CaseSensitivity.INSENSITIVE),
+                SpreadsheetComparatorProviders.spreadsheetComparators(),
+                SpreadsheetExporterProviders.spreadsheetExport(),
+                spreadsheetFormatterProvider,
+                SpreadsheetImporterProviders.spreadsheetImport(),
+                spreadsheetParserProvider
+        );
     }
 
     /**
