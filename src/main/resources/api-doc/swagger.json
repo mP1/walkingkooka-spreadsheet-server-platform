@@ -2778,7 +2778,7 @@
       },
       "SpreadsheetParserInfo": {
         "type": "string",
-        "example": "https://github.com/mP1/walkingkooka-spreadsheet/Parser/date-parse-pattern date-parse-pattern"
+        "example": "https://github.com/mP1/walkingkooka-spreadsheet/SpreadsheetParser/date-parse-pattern date-parse-pattern"
       },
       "SpreadsheetParserSelector": {
         "type": "string"
