@@ -19,22 +19,18 @@ package walkingkooka.spreadsheet.server.platform;
 
 import org.junit.jupiter.api.Test;
 import walkingkooka.net.email.EmailAddress;
-import walkingkooka.plugin.ProviderContexts;
 import walkingkooka.reflect.JavaVisibility;
 import walkingkooka.reflect.PublicStaticHelperTesting;
-import walkingkooka.spreadsheet.convert.SpreadsheetConvertersConverterProviders;
-import walkingkooka.spreadsheet.format.SpreadsheetFormatterProvider;
-import walkingkooka.spreadsheet.format.SpreadsheetFormatterProviders;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
-import walkingkooka.spreadsheet.meta.SpreadsheetMetadataPropertyName;
-import walkingkooka.spreadsheet.parser.SpreadsheetParserProviders;
+import walkingkooka.spreadsheet.meta.SpreadsheetMetadataTesting;
 
 import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Optional;
 
-public final class JettyHttpServerSpreadsheetHttpServerTest implements PublicStaticHelperTesting<JettyHttpServerSpreadsheetHttpServer> {
+public final class JettyHttpServerSpreadsheetHttpServerTest implements PublicStaticHelperTesting<JettyHttpServerSpreadsheetHttpServer>,
+        SpreadsheetMetadataTesting {
 
     @Test
     public void testPrepareInitialMetadataWithoutUserLocale() {
@@ -54,16 +50,11 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements PublicSta
                 Locale.ENGLISH
         );
 
-        final SpreadsheetFormatterProvider spreadsheetFormatterProvider = SpreadsheetFormatterProviders.spreadsheetFormatPattern();
-
-        metadata.converter(
-                SpreadsheetMetadataPropertyName.EXPRESSION_CONVERTER,
-                SpreadsheetConvertersConverterProviders.spreadsheetConverters(
-                        metadata,
-                        spreadsheetFormatterProvider,
-                        SpreadsheetParserProviders.spreadsheetParsePattern(spreadsheetFormatterProvider)
-                ),
-                ProviderContexts.fake()
+        metadata.expressionSpreadsheetConverterContext(
+                NOW,
+                SPREADSHEET_LABEL_NAME_RESOLVER,
+                CONVERTER_PROVIDER,
+                PROVIDER_CONTEXT
         );
     }
 
