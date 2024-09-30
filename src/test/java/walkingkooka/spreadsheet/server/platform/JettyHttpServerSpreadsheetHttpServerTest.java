@@ -50,7 +50,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements PublicSta
                 Locale.ENGLISH
         );
 
-        metadata.expressionSpreadsheetConverterContext(
+        metadata.formulaSpreadsheetConverterContext(
                 NOW,
                 SPREADSHEET_LABEL_NAME_RESOLVER,
                 CONVERTER_PROVIDER,
