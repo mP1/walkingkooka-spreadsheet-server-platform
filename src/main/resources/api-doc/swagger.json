@@ -1680,7 +1680,7 @@
     "/api/spreadsheet/{spreadsheet-id}/function": {
       "get": {
         "tags": [
-          "expression functions"
+          "functions"
         ],
         "summary": "Returns ALL ExpressionFunction(s) available to the enclosing Spreadsheet",
         "parameters": [
@@ -1719,7 +1719,7 @@
     "/api/spreadsheet/{spreadsheet-id}/function/{function-name}": {
       "get": {
         "tags": [
-          "expression functions"
+          "functions"
         ],
         "summary": "Returns the named ExpressionFunctionInfo if available to the enclosing Spreadsheet",
         "parameters": [
