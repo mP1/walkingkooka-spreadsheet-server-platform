@@ -418,7 +418,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                 .set(SpreadsheetMetadataPropertyName.DEFAULT_YEAR, 1900)
                                 .set(SpreadsheetMetadataPropertyName.EXPRESSION_NUMBER_KIND, ExpressionNumberKind.DOUBLE)
                                 .set(
-                                        SpreadsheetMetadataPropertyName.EXPRESSION_FUNCTIONS,
+                                        SpreadsheetMetadataPropertyName.FUNCTIONS,
                                         SpreadsheetServerExpressionFunctionProviders.expressionFunctionProvider(CaseSensitivity.INSENSITIVE)
                                                 .expressionFunctionInfos()
                                 ).set(SpreadsheetMetadataPropertyName.PRECISION, MathContext.DECIMAL32.getPrecision())
