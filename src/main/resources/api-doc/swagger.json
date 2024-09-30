@@ -1716,7 +1716,7 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/function/{function-expression-name}": {
+    "/api/spreadsheet/{spreadsheet-id}/function/{function-name}": {
       "get": {
         "tags": [
           "expression functions"
@@ -1732,7 +1732,7 @@
             }
           },
           {
-            "name": "function-expression-name",
+            "name": "function-name",
             "in": "path",
             "required": true,
             "schema": {
