@@ -75,6 +75,8 @@ import walkingkooka.text.CharSequences;
 import walkingkooka.text.Indentation;
 import walkingkooka.text.LineEnding;
 import walkingkooka.tree.expression.ExpressionNumberKind;
+import walkingkooka.tree.expression.function.provider.ExpressionFunctionAliases;
+import walkingkooka.tree.expression.function.provider.ExpressionFunctionInfoSet;
 import walkingkooka.tree.json.marshall.JsonNodeMarshallContexts;
 import walkingkooka.tree.json.marshall.JsonNodeUnmarshallContexts;
 import walkingkooka.util.SystemProperty;
@@ -95,6 +97,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 /**
  * Creates a {@link SpreadsheetHttpServer} with memory stores using a Jetty server using the scheme/host/port from cmd line arguments.
@@ -401,6 +404,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                                       final Optional<Locale> userLocale,
                                                       final Locale defaultLocale) {
         final Locale localeOrDefault = userLocale.orElse(defaultLocale);
+        final ExpressionFunctionInfoSet functionInfos = SpreadsheetServerExpressionFunctionProviders.expressionFunctionProvider(CaseSensitivity.INSENSITIVE)
+                .expressionFunctionInfos();
+
         return SpreadsheetMetadata.EMPTY
                 .set(SpreadsheetMetadataPropertyName.CREATOR, user)
                 .set(SpreadsheetMetadataPropertyName.CREATE_DATE_TIME, now)
@@ -418,9 +424,13 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                 .set(SpreadsheetMetadataPropertyName.DEFAULT_YEAR, 1900)
                                 .set(SpreadsheetMetadataPropertyName.EXPRESSION_NUMBER_KIND, ExpressionNumberKind.DOUBLE)
                                 .set(
-                                        SpreadsheetMetadataPropertyName.FUNCTIONS,
-                                        SpreadsheetServerExpressionFunctionProviders.expressionFunctionProvider(CaseSensitivity.INSENSITIVE)
-                                                .expressionFunctionInfos()
+                                        SpreadsheetMetadataPropertyName.FORMULA_FUNCTIONS,
+                                        ExpressionFunctionAliases.parse(
+                                                functionInfos.stream()
+                                                        .map(i -> i.name().value())
+                                                        .collect(Collectors.joining(ExpressionFunctionAliases.SEPARATOR.string()))
+                                        )
+                                ).set(SpreadsheetMetadataPropertyName.FUNCTIONS, functionInfos
                                 ).set(SpreadsheetMetadataPropertyName.PRECISION, MathContext.DECIMAL32.getPrecision())
                                 .set(SpreadsheetMetadataPropertyName.ROUNDING_MODE, RoundingMode.HALF_UP)
                                 .set(SpreadsheetMetadataPropertyName.TEXT_FORMATTER, SpreadsheetPattern.DEFAULT_TEXT_FORMAT_PATTERN.spreadsheetFormatterSelector())
