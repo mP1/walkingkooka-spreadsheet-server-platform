@@ -75,7 +75,7 @@ import walkingkooka.text.CharSequences;
 import walkingkooka.text.Indentation;
 import walkingkooka.text.LineEnding;
 import walkingkooka.tree.expression.ExpressionNumberKind;
-import walkingkooka.tree.expression.function.provider.ExpressionFunctionAliases;
+import walkingkooka.tree.expression.function.provider.ExpressionFunctionAliasSet;
 import walkingkooka.tree.expression.function.provider.ExpressionFunctionInfoSet;
 import walkingkooka.tree.json.marshall.JsonNodeMarshallContexts;
 import walkingkooka.tree.json.marshall.JsonNodeUnmarshallContexts;
@@ -425,10 +425,10 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                 .set(SpreadsheetMetadataPropertyName.EXPRESSION_NUMBER_KIND, ExpressionNumberKind.DOUBLE)
                                 .set(
                                         SpreadsheetMetadataPropertyName.FORMULA_FUNCTIONS,
-                                        ExpressionFunctionAliases.parse(
+                                        ExpressionFunctionAliasSet.parse(
                                                 functionInfos.stream()
                                                         .map(i -> i.name().value())
-                                                        .collect(Collectors.joining(ExpressionFunctionAliases.SEPARATOR.string()))
+                                                        .collect(Collectors.joining(ExpressionFunctionAliasSet.SEPARATOR.string()))
                                         )
                                 ).set(SpreadsheetMetadataPropertyName.FUNCTIONS, functionInfos
                                 ).set(SpreadsheetMetadataPropertyName.PRECISION, MathContext.DECIMAL32.getPrecision())
