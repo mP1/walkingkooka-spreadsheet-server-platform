@@ -22,6 +22,7 @@ import walkingkooka.net.email.EmailAddress;
 import walkingkooka.reflect.JavaVisibility;
 import walkingkooka.reflect.PublicStaticHelperTesting;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
+import walkingkooka.spreadsheet.meta.SpreadsheetMetadataPropertyName;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataTesting;
 
 import java.lang.reflect.Method;
@@ -50,7 +51,8 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements PublicSta
                 Locale.ENGLISH
         );
 
-        metadata.formulaSpreadsheetConverterContext(
+        metadata.spreadsheetConverterContext(
+                SpreadsheetMetadataPropertyName.FORMULA_CONVERTER,
                 NOW,
                 SPREADSHEET_LABEL_NAME_RESOLVER,
                 CONVERTER_PROVIDER,
