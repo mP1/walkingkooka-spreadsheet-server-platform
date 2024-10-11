@@ -404,9 +404,14 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                                       final Optional<Locale> userLocale,
                                                       final Locale defaultLocale) {
         final Locale localeOrDefault = userLocale.orElse(defaultLocale);
+
         final ExpressionFunctionInfoSet functionInfos = SpreadsheetServerExpressionFunctionProviders.expressionFunctionProvider(CaseSensitivity.INSENSITIVE)
                 .expressionFunctionInfos();
-
+        final ExpressionFunctionAliasSet functionAliases = ExpressionFunctionAliasSet.parse(
+                functionInfos.stream()
+                        .map(i -> i.name().value())
+                        .collect(Collectors.joining(ExpressionFunctionAliasSet.SEPARATOR.string()))
+        );
         return SpreadsheetMetadata.EMPTY
                 .set(SpreadsheetMetadataPropertyName.CREATOR, user)
                 .set(SpreadsheetMetadataPropertyName.CREATE_DATE_TIME, now)
@@ -424,12 +429,11 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                 .set(SpreadsheetMetadataPropertyName.DEFAULT_YEAR, 1900)
                                 .set(SpreadsheetMetadataPropertyName.EXPRESSION_NUMBER_KIND, ExpressionNumberKind.DOUBLE)
                                 .set(
+                                        SpreadsheetMetadataPropertyName.FIND_FUNCTIONS,
+                                        functionAliases
+                                ).set(
                                         SpreadsheetMetadataPropertyName.FORMULA_FUNCTIONS,
-                                        ExpressionFunctionAliasSet.parse(
-                                                functionInfos.stream()
-                                                        .map(i -> i.name().value())
-                                                        .collect(Collectors.joining(ExpressionFunctionAliasSet.SEPARATOR.string()))
-                                        )
+                                        functionAliases
                                 ).set(SpreadsheetMetadataPropertyName.FUNCTIONS, functionInfos
                                 ).set(SpreadsheetMetadataPropertyName.PRECISION, MathContext.DECIMAL32.getPrecision())
                                 .set(SpreadsheetMetadataPropertyName.ROUNDING_MODE, RoundingMode.HALF_UP)
