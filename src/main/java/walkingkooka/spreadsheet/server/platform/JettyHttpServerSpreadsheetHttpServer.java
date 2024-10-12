@@ -44,6 +44,7 @@ import walkingkooka.spreadsheet.SpreadsheetName;
 import walkingkooka.spreadsheet.compare.SpreadsheetComparatorProviders;
 import walkingkooka.spreadsheet.convert.SpreadsheetConvertersConverterProviders;
 import walkingkooka.spreadsheet.export.SpreadsheetExporterProviders;
+import walkingkooka.spreadsheet.expression.function.SpreadsheetExpressionFunctionProviders;
 import walkingkooka.spreadsheet.format.SpreadsheetFormatterProvider;
 import walkingkooka.spreadsheet.format.SpreadsheetFormatterProviders;
 import walkingkooka.spreadsheet.format.pattern.SpreadsheetPattern;
@@ -61,7 +62,6 @@ import walkingkooka.spreadsheet.reference.SpreadsheetViewport;
 import walkingkooka.spreadsheet.security.store.SpreadsheetGroupStores;
 import walkingkooka.spreadsheet.security.store.SpreadsheetUserStores;
 import walkingkooka.spreadsheet.server.SpreadsheetHttpServer;
-import walkingkooka.spreadsheet.server.expression.function.SpreadsheetServerExpressionFunctionProviders;
 import walkingkooka.spreadsheet.store.SpreadsheetCellRangeStores;
 import walkingkooka.spreadsheet.store.SpreadsheetCellStores;
 import walkingkooka.spreadsheet.store.SpreadsheetColumnStores;
@@ -353,7 +353,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                         spreadsheetFormatterProvider,
                         spreadsheetParserProvider
                 ), // converterProvider
-                SpreadsheetServerExpressionFunctionProviders.expressionFunctionProvider(CaseSensitivity.INSENSITIVE),
+                SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(CaseSensitivity.INSENSITIVE),
                 SpreadsheetComparatorProviders.spreadsheetComparators(),
                 SpreadsheetExporterProviders.spreadsheetExport(),
                 spreadsheetFormatterProvider,
@@ -405,7 +405,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                                       final Locale defaultLocale) {
         final Locale localeOrDefault = userLocale.orElse(defaultLocale);
 
-        final ExpressionFunctionInfoSet functionInfos = SpreadsheetServerExpressionFunctionProviders.expressionFunctionProvider(CaseSensitivity.INSENSITIVE)
+        final ExpressionFunctionInfoSet functionInfos = SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(CaseSensitivity.INSENSITIVE)
                 .expressionFunctionInfos();
         final ExpressionFunctionAliasSet functionAliases = ExpressionFunctionAliasSet.parse(
                 functionInfos.stream()
@@ -478,7 +478,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                     spreadsheetFormatterProvider,
                                     spreadsheetParserProvider
                             ),
-                            SpreadsheetServerExpressionFunctionProviders.expressionFunctionProvider(CaseSensitivity.INSENSITIVE),
+                            SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(CaseSensitivity.INSENSITIVE),
                             SpreadsheetComparatorProviders.spreadsheetComparators(),
                             SpreadsheetExporterProviders.spreadsheetExport(),
                             spreadsheetFormatterProvider,
