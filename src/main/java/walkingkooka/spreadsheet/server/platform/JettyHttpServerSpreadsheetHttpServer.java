@@ -23,7 +23,6 @@ import walkingkooka.collect.list.Lists;
 import walkingkooka.collect.map.Maps;
 import walkingkooka.convert.Converters;
 import walkingkooka.environment.EnvironmentContext;
-import walkingkooka.math.Fraction;
 import walkingkooka.net.HostAddress;
 import walkingkooka.net.IpPort;
 import walkingkooka.net.UrlPath;
@@ -82,7 +81,6 @@ import walkingkooka.tree.json.marshall.JsonNodeUnmarshallContexts;
 import walkingkooka.util.SystemProperty;
 
 import java.io.IOException;
-import java.math.BigDecimal;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.nio.file.FileSystem;
@@ -324,7 +322,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 createMetadata(defaultLocale, metadataStore),
                 metadataStore,
                 JettyHttpServerSpreadsheetHttpServer::spreadsheetMetadataStamper,
-                fractioner(),
                 JsonNodeMarshallContexts.basic(),
                 JsonNodeUnmarshallContexts.basic(
                         ExpressionNumberKind.DEFAULT,
@@ -454,12 +451,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 SpreadsheetMetadataPropertyName.MODIFIED_DATE_TIME,
                 LocalDateTime.now()
         );
-    }
-
-    private static Function<BigDecimal, Fraction> fractioner() {
-        return (n) -> {
-            throw new UnsupportedOperationException();
-        };
     }
 
     private static Function<SpreadsheetId, SpreadsheetProvider> spreadsheetIdToSpreadsheetProvider() {
