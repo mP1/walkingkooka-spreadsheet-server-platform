@@ -75,7 +75,6 @@ import walkingkooka.text.Indentation;
 import walkingkooka.text.LineEnding;
 import walkingkooka.tree.expression.ExpressionNumberKind;
 import walkingkooka.tree.expression.function.provider.ExpressionFunctionAliasSet;
-import walkingkooka.tree.expression.function.provider.ExpressionFunctionInfoSet;
 import walkingkooka.tree.json.marshall.JsonNodeMarshallContexts;
 import walkingkooka.tree.json.marshall.JsonNodeUnmarshallContexts;
 import walkingkooka.util.SystemProperty;
@@ -95,7 +94,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 /**
  * Creates a {@link SpreadsheetHttpServer} with memory stores using a Jetty server using the scheme/host/port from cmd line arguments.
@@ -402,13 +400,10 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                                       final Locale defaultLocale) {
         final Locale localeOrDefault = userLocale.orElse(defaultLocale);
 
-        final ExpressionFunctionInfoSet functionInfos = SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(CaseSensitivity.INSENSITIVE)
-                .expressionFunctionInfos();
-        final ExpressionFunctionAliasSet functionAliases = ExpressionFunctionAliasSet.parse(
-                functionInfos.stream()
-                        .map(i -> i.name().value())
-                        .collect(Collectors.joining(ExpressionFunctionAliasSet.SEPARATOR.string()))
-        );
+        final ExpressionFunctionAliasSet functionAliases = SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(CaseSensitivity.INSENSITIVE)
+                        .expressionFunctionInfos()
+                        .aliasSet();
+
         return SpreadsheetMetadata.EMPTY
                 .set(SpreadsheetMetadataPropertyName.CREATOR, user)
                 .set(SpreadsheetMetadataPropertyName.CREATE_DATE_TIME, now)
@@ -431,7 +426,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                 ).set(
                                         SpreadsheetMetadataPropertyName.FORMULA_FUNCTIONS,
                                         functionAliases
-                                ).set(SpreadsheetMetadataPropertyName.FUNCTIONS, functionInfos
+                                ).set(SpreadsheetMetadataPropertyName.FUNCTIONS, functionAliases
                                 ).set(SpreadsheetMetadataPropertyName.PRECISION, MathContext.DECIMAL32.getPrecision())
                                 .set(SpreadsheetMetadataPropertyName.ROUNDING_MODE, RoundingMode.HALF_UP)
                                 .set(SpreadsheetMetadataPropertyName.TEXT_FORMATTER, SpreadsheetPattern.DEFAULT_TEXT_FORMAT_PATTERN.spreadsheetFormatterSelector())
