@@ -76,6 +76,7 @@ import walkingkooka.text.LineEnding;
 import walkingkooka.tree.expression.ExpressionNumberKind;
 import walkingkooka.tree.expression.function.provider.ExpressionFunctionAliasSet;
 import walkingkooka.tree.json.marshall.JsonNodeMarshallContexts;
+import walkingkooka.tree.json.marshall.JsonNodeMarshallUnmarshallContexts;
 import walkingkooka.tree.json.marshall.JsonNodeUnmarshallContexts;
 import walkingkooka.util.SystemProperty;
 
@@ -320,10 +321,12 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 createMetadata(defaultLocale, metadataStore),
                 metadataStore,
                 JettyHttpServerSpreadsheetHttpServer::spreadsheetMetadataStamper,
-                JsonNodeMarshallContexts.basic(),
-                JsonNodeUnmarshallContexts.basic(
-                        ExpressionNumberKind.DEFAULT,
-                        MathContext.DECIMAL32
+                JsonNodeMarshallUnmarshallContexts.basic(
+                        JsonNodeMarshallContexts.basic(),
+                        JsonNodeUnmarshallContexts.basic(
+                                ExpressionNumberKind.DEFAULT,
+                                MathContext.DECIMAL32
+                        )
                 ),
                 spreadsheetIdToSpreadsheetProvider(),
                 spreadsheetIdToStoreRepository,
