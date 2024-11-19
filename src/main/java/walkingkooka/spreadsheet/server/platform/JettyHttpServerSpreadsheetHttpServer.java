@@ -320,7 +320,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 systemSpreadsheetProvider(),
                 createMetadata(defaultLocale, metadataStore),
                 metadataStore,
-                JettyHttpServerSpreadsheetHttpServer::spreadsheetMetadataStamper,
                 JsonNodeMarshallUnmarshallContexts.basic(
                         JsonNodeMarshallContexts.basic(),
                         JsonNodeUnmarshallContexts.basic(
@@ -443,13 +442,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                     1
             )
     );
-
-    private static SpreadsheetMetadata spreadsheetMetadataStamper(final SpreadsheetMetadata metadata) {
-        return metadata.set(
-                SpreadsheetMetadataPropertyName.MODIFIED_DATE_TIME,
-                LocalDateTime.now()
-        );
-    }
 
     private static Function<SpreadsheetId, SpreadsheetProvider> spreadsheetIdToSpreadsheetProvider() {
         return (id) -> {
