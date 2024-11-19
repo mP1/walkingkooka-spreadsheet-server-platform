@@ -23,8 +23,10 @@ import walkingkooka.collect.list.Lists;
 import walkingkooka.collect.map.Maps;
 import walkingkooka.convert.Converters;
 import walkingkooka.environment.EnvironmentContext;
+import walkingkooka.net.AbsoluteUrl;
 import walkingkooka.net.HostAddress;
 import walkingkooka.net.IpPort;
+import walkingkooka.net.Url;
 import walkingkooka.net.UrlPath;
 import walkingkooka.net.UrlScheme;
 import walkingkooka.net.email.EmailAddress;
@@ -107,22 +109,16 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     public static void main(final String[] args) throws Exception {
         switch (args.length) {
             case 0:
-                throw new IllegalArgumentException("Missing scheme, host, port, defaultLocale, file server root for jetty HttpServer");
+                throw new IllegalArgumentException("Missing serverUrl, defaultLocale, file server root for jetty HttpServer");
             case 1:
-                throw new IllegalArgumentException("Missing host, port, defaultLocale, file server root for jetty HttpServer");
-            case 2:
-                throw new IllegalArgumentException("Missing port, defaultLocale, file server root for jetty HttpServer");
-            case 3:
                 throw new IllegalArgumentException("Missing default Locale, file server root for jetty HttpServer");
-            case 4:
+            case 2:
                 throw new IllegalArgumentException("Missing file server root for jetty HttpServer");
             default:
                 startJettyHttpServer(
-                        urlScheme(args[0]),
-                        hostAddress(args[1]),
-                        port(args[2]),
-                        locale(args[3]),
-                        fileServer(args[4])
+                        Url.parseAbsolute(args[0]),
+                        locale(args[1]),
+                        fileServer(args[2])
                 );
                 break;
         }
@@ -290,9 +286,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         );
     }
 
-    private static void startJettyHttpServer(final UrlScheme scheme,
-                                             final HostAddress host,
-                                             final IpPort port,
+    private static void startJettyHttpServer(final AbsoluteUrl serverUrl,
                                              final Locale defaultLocale,
                                              final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer) {
         final Function<SpreadsheetId, SpreadsheetFormatterProvider> spreadsheetIdToSpreadsheetFormatterProvider = spreadsheetIdToSpreadsheetFormatterProvider();
@@ -311,9 +305,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         );
 
         final SpreadsheetHttpServer server = SpreadsheetHttpServer.with(
-                scheme,
-                host,
-                port,
+                serverUrl,
                 Indentation.with("  "),
                 LineEnding.SYSTEM,
                 LocalDateTime::now,
@@ -330,7 +322,15 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 spreadsheetIdToSpreadsheetProvider(),
                 spreadsheetIdToStoreRepository,
                 fileServer,
-                jettyHttpServer(host, port)
+                jettyHttpServer(
+                        serverUrl.host(),
+                        serverUrl.port()
+                                .orElse(
+                                        serverUrl.scheme().equals(UrlScheme.HTTP) ?
+                                                IpPort.HTTP :
+                                                IpPort.HTTPS
+                                )
+                )
         );
         server.start();
     }
