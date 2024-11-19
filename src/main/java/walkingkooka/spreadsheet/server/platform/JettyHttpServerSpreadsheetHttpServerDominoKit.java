@@ -24,9 +24,7 @@ public final class JettyHttpServerSpreadsheetHttpServerDominoKit {
     public static void main(final String[] args) throws Exception {
         JettyHttpServerSpreadsheetHttpServer.main(
                 new String[]{
-                        "http",
-                        "localhost",
-                        "12345",
+                        "http://localhost:12345",
                         "EN-GB",
                         fileSystemUris(
                                 "file:///Users/miroslav/repos-github/walkingkooka-spreadsheet-server-platform/src/main/resources/", // api-doc etc
