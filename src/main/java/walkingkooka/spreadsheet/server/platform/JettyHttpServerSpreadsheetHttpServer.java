@@ -117,7 +117,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 throw new IllegalArgumentException("Missing file server root for jetty HttpServer");
             default:
                 startJettyHttpServer(
-                        Url.parseAbsolute(args[0]),
+                        serverUrl(args[0]),
                         locale(args[1]),
                         fileServer(args[2])
                 );
@@ -125,37 +125,13 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         }
     }
 
-    private static UrlScheme urlScheme(final String string) {
-        final UrlScheme scheme;
+    private static AbsoluteUrl serverUrl(final String string) {
         try {
-            scheme = UrlScheme.with(string);
+            return Url.parseAbsolute(string);
         } catch (final IllegalArgumentException cause) {
-            System.err.println("Invalid scheme: " + cause.getMessage());
+            System.err.println("Invalid serverUrl: " + cause.getMessage());
             throw cause;
         }
-        return scheme;
-    }
-
-    private static HostAddress hostAddress(final String string) {
-        final HostAddress host;
-        try {
-            host = HostAddress.with(string);
-        } catch (final IllegalArgumentException cause) {
-            System.err.println("Invalid hostname: " + cause.getMessage());
-            throw cause;
-        }
-        return host;
-    }
-
-    private static IpPort port(final String string) {
-        final IpPort port;
-        try {
-            port = IpPort.with(Integer.parseInt(string));
-        } catch (final RuntimeException cause) {
-            System.err.println("Invalid port: " + cause.getMessage());
-            throw cause;
-        }
-        return port;
     }
 
     private static Locale locale(final String string) {
