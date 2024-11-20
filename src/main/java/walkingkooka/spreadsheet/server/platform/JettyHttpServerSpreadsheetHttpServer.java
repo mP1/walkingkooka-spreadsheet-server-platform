@@ -290,7 +290,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     private static void startJettyHttpServer(final AbsoluteUrl serverUrl,
                                              final Locale defaultLocale,
                                              final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer) {
-        final Function<SpreadsheetId, SpreadsheetFormatterProvider> spreadsheetIdToSpreadsheetFormatterProvider = spreadsheetIdToSpreadsheetFormatterProvider();
         final Function<SpreadsheetId, SpreadsheetParserProvider> spreadsheetIdToSpreadsheetParserProvider = spreadsheetIdToSpreadsheetParserProvider();
 
         final Function<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository = spreadsheetIdToStoreRepository(
