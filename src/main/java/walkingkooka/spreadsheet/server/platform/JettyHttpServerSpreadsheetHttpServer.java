@@ -40,6 +40,7 @@ import walkingkooka.net.http.server.WebFiles;
 import walkingkooka.net.http.server.jetty.JettyHttpServer;
 import walkingkooka.plugin.ProviderContexts;
 import walkingkooka.reflect.PublicStaticHelper;
+import walkingkooka.spreadsheet.SpreadsheetExpressionFunctionNames;
 import walkingkooka.spreadsheet.SpreadsheetId;
 import walkingkooka.spreadsheet.SpreadsheetName;
 import walkingkooka.spreadsheet.compare.SpreadsheetComparatorProviders;
@@ -402,8 +403,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                                       final Locale defaultLocale) {
         final Locale localeOrDefault = userLocale.orElse(defaultLocale);
 
-        final ExpressionFunctionAliasSet functionAliases = SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(CaseSensitivity.INSENSITIVE)
-                        .expressionFunctionInfos()
+        final ExpressionFunctionAliasSet functionAliases = SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(
+                        SpreadsheetExpressionFunctionNames.CASE_SENSITIVITY
+                ).expressionFunctionInfos()
                         .aliasSet();
 
         return SpreadsheetMetadata.EMPTY
