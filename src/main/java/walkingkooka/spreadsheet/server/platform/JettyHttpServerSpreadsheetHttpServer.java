@@ -275,8 +275,16 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 spreadsheetIdToSpreadsheetMetadata()
         );
 
+        final Supplier<LocalDateTime> now = LocalDateTime::now;
+
         metadataStore = SpreadsheetMetadataStores.spreadsheetCellStoreAction(
-                SpreadsheetMetadataStores.treeMap(),
+                SpreadsheetMetadataStores.treeMap(
+                        SpreadsheetMetadata.EMPTY.set(
+                                SpreadsheetMetadataPropertyName.LOCALE,
+                                Locale.forLanguageTag("EN-AU")
+                        ),
+                        now
+                ),
                 (id) -> spreadsheetIdToStoreRepository.apply(id).cells()
         );
 
@@ -284,7 +292,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 serverUrl,
                 Indentation.with("  "),
                 LineEnding.SYSTEM,
-                LocalDateTime::now,
+                now,
                 systemSpreadsheetProvider(),
                 createMetadata(defaultLocale, metadataStore),
                 metadataStore,
