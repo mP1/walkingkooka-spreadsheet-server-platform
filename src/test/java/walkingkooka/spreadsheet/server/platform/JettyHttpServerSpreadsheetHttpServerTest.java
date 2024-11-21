@@ -18,7 +18,6 @@
 package walkingkooka.spreadsheet.server.platform;
 
 import org.junit.jupiter.api.Test;
-import walkingkooka.net.email.EmailAddress;
 import walkingkooka.reflect.JavaVisibility;
 import walkingkooka.reflect.PublicStaticHelperTesting;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
@@ -26,29 +25,15 @@ import walkingkooka.spreadsheet.meta.SpreadsheetMetadataPropertyName;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataTesting;
 
 import java.lang.reflect.Method;
-import java.time.LocalDateTime;
 import java.util.Locale;
-import java.util.Optional;
 
 public final class JettyHttpServerSpreadsheetHttpServerTest implements PublicStaticHelperTesting<JettyHttpServerSpreadsheetHttpServer>,
         SpreadsheetMetadataTesting {
 
     @Test
-    public void testPrepareInitialMetadataWithoutUserLocale() {
-        this.prepareInitialMetadataAndConverter(null);
-    }
-
-    @Test
-    public void testPrepareInitialMetadataWithUserLocale() {
-        this.prepareInitialMetadataAndConverter(Locale.FRENCH);
-    }
-
-    private void prepareInitialMetadataAndConverter(final Locale userLocale) {
-        final SpreadsheetMetadata metadata = JettyHttpServerSpreadsheetHttpServer.prepareInitialMetadata(
-                EmailAddress.parse("user@example.com"),
-                LocalDateTime.now(),
-                Optional.ofNullable(userLocale),
-                Locale.ENGLISH
+    public void testPrepareMetadataCreateTemplate() {
+        final SpreadsheetMetadata metadata = JettyHttpServerSpreadsheetHttpServer.prepareMetadataCreateTemplate(
+                Locale.FRENCH
         );
 
         metadata.spreadsheetConverterContext(
