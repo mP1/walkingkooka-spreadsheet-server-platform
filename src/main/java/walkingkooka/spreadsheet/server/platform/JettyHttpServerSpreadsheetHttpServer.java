@@ -29,7 +29,6 @@ import walkingkooka.net.IpPort;
 import walkingkooka.net.Url;
 import walkingkooka.net.UrlPath;
 import walkingkooka.net.UrlScheme;
-import walkingkooka.net.email.EmailAddress;
 import walkingkooka.net.header.apache.tika.ApacheTikas;
 import walkingkooka.net.http.HttpStatus;
 import walkingkooka.net.http.HttpStatusCode;
@@ -279,9 +278,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
 
         metadataStore = SpreadsheetMetadataStores.spreadsheetCellStoreAction(
                 SpreadsheetMetadataStores.treeMap(
-                        SpreadsheetMetadata.EMPTY.set(
-                                SpreadsheetMetadataPropertyName.LOCALE,
-                                Locale.forLanguageTag("EN-AU")
+                        prepareMetadataCreateTemplate(
+                                defaultLocale
                         ),
                         now
                 ),
@@ -294,7 +292,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 LineEnding.SYSTEM,
                 now,
                 systemSpreadsheetProvider(),
-                createMetadata(defaultLocale, metadataStore),
                 metadataStore,
                 JsonNodeMarshallUnmarshallContexts.basic(
                         JsonNodeMarshallContexts.basic(),
@@ -349,30 +346,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     private static SpreadsheetMetadataStore metadataStore;
 
     /**
-     * Creates a function which merges the given {@link Locale} and then saves it to the {@link SpreadsheetMetadataStore}.
-     */
-    private static Function<Optional<Locale>, SpreadsheetMetadata> createMetadata(final Locale defaultLocale,
-                                                                                  final SpreadsheetMetadataStore store) {
-        // TODO https://github.com/mP1/walkingkooka-spreadsheet-server/issues/134
-        // JettyHttpServerSpreadsheetHttpServer: retrieve user from context when creating initial SpreadsheetMetadata
-        final EmailAddress user = EmailAddress.parse("user123@example.com");
-
-        // if a Locale is given load a Metadata with those defaults.
-        return (userLocale) -> {
-            final LocalDateTime now = LocalDateTime.now();
-
-            return store.save(
-                    prepareInitialMetadata(
-                            user,
-                            now,
-                            userLocale,
-                            defaultLocale
-                    )
-            );
-        };
-    }
-
-    /**
      * The default name given to all empty spreadsheets
      */
     private final static SpreadsheetName DEFAULT_NAME = SpreadsheetName.with("Untitled");
@@ -380,28 +353,19 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     /**
      * Prepares and merges the default and user locale, loading defaults and more.
      */
-    static SpreadsheetMetadata prepareInitialMetadata(final EmailAddress user,
-                                                      final LocalDateTime now,
-                                                      final Optional<Locale> userLocale,
-                                                      final Locale defaultLocale) {
-        final Locale localeOrDefault = userLocale.orElse(defaultLocale);
-
+    static SpreadsheetMetadata prepareMetadataCreateTemplate(final Locale defaultLocale) {
         final ExpressionFunctionAliasSet functionAliases = SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(
                         SpreadsheetExpressionFunctionNames.CASE_SENSITIVITY
                 ).expressionFunctionInfos()
                         .aliasSet();
 
         return SpreadsheetMetadata.EMPTY
-                .set(SpreadsheetMetadataPropertyName.CREATOR, user)
-                .set(SpreadsheetMetadataPropertyName.CREATE_DATE_TIME, now)
-                .set(SpreadsheetMetadataPropertyName.MODIFIED_BY, user)
-                .set(SpreadsheetMetadataPropertyName.MODIFIED_DATE_TIME, now)
                 .set(SpreadsheetMetadataPropertyName.SPREADSHEET_NAME, DEFAULT_NAME)
-                .set(SpreadsheetMetadataPropertyName.LOCALE, localeOrDefault)
+                .set(SpreadsheetMetadataPropertyName.LOCALE, defaultLocale)
                 .set(SpreadsheetMetadataPropertyName.VIEWPORT, INITIAL_VIEWPORT)
                 .setDefaults(
                         SpreadsheetMetadata.NON_LOCALE_DEFAULTS
-                                .set(SpreadsheetMetadataPropertyName.LOCALE, localeOrDefault)
+                                .set(SpreadsheetMetadataPropertyName.LOCALE, defaultLocale)
                                 .loadFromLocale()
                                 .set(SpreadsheetMetadataPropertyName.CELL_CHARACTER_WIDTH, 1)
                                 .set(SpreadsheetMetadataPropertyName.DATETIME_OFFSET, Converters.EXCEL_1900_DATE_SYSTEM_OFFSET)
