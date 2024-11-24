@@ -38,6 +38,7 @@ import walkingkooka.net.http.server.WebFile;
 import walkingkooka.net.http.server.WebFiles;
 import walkingkooka.net.http.server.jetty.JettyHttpServer;
 import walkingkooka.plugin.ProviderContexts;
+import walkingkooka.plugin.store.PluginStores;
 import walkingkooka.reflect.PublicStaticHelper;
 import walkingkooka.spreadsheet.SpreadsheetExpressionFunctionNames;
 import walkingkooka.spreadsheet.SpreadsheetId;
@@ -451,7 +452,10 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                         repositoryFactory.get(),
                         spreadsheetIdToSpreadsheetParserProvider.apply(id),
                         LocalDateTime::now,
-                        ProviderContexts.basic(environmentContext)
+                        ProviderContexts.basic(
+                                environmentContext,
+                                PluginStores.fake()
+                        )
                 );
                 idToRepository.put(id, repository); // TODO add locks etc.
             }
