@@ -36,6 +36,7 @@ import walkingkooka.net.http.server.HttpHandler;
 import walkingkooka.net.http.server.HttpServer;
 import walkingkooka.net.http.server.WebFile;
 import walkingkooka.net.http.server.WebFiles;
+import walkingkooka.net.http.server.hateos.HateosResourceHandlerContexts;
 import walkingkooka.net.http.server.jetty.JettyHttpServer;
 import walkingkooka.plugin.ProviderContexts;
 import walkingkooka.plugin.store.PluginStores;
@@ -294,11 +295,13 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 now,
                 systemSpreadsheetProvider(),
                 metadataStore,
-                JsonNodeMarshallUnmarshallContexts.basic(
-                        JsonNodeMarshallContexts.basic(),
-                        JsonNodeUnmarshallContexts.basic(
-                                ExpressionNumberKind.DEFAULT,
-                                MathContext.DECIMAL32
+                HateosResourceHandlerContexts.basic(
+                        JsonNodeMarshallUnmarshallContexts.basic(
+                                JsonNodeMarshallContexts.basic(),
+                                JsonNodeUnmarshallContexts.basic(
+                                        ExpressionNumberKind.DEFAULT,
+                                        MathContext.DECIMAL32
+                                )
                         )
                 ),
                 spreadsheetIdToSpreadsheetProvider(),
