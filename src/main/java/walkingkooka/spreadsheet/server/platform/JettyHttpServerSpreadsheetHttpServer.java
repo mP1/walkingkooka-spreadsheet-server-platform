@@ -23,6 +23,7 @@ import walkingkooka.collect.list.Lists;
 import walkingkooka.collect.map.Maps;
 import walkingkooka.convert.Converters;
 import walkingkooka.environment.EnvironmentContext;
+import walkingkooka.environment.EnvironmentContexts;
 import walkingkooka.net.AbsoluteUrl;
 import walkingkooka.net.HostAddress;
 import walkingkooka.net.IpPort;
@@ -38,6 +39,7 @@ import walkingkooka.net.http.server.WebFile;
 import walkingkooka.net.http.server.WebFiles;
 import walkingkooka.net.http.server.hateos.HateosResourceHandlerContexts;
 import walkingkooka.net.http.server.jetty.JettyHttpServer;
+import walkingkooka.plugin.ProviderContext;
 import walkingkooka.plugin.ProviderContexts;
 import walkingkooka.plugin.store.PluginStores;
 import walkingkooka.reflect.PublicStaticHelper;
@@ -268,12 +270,14 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                              final Locale defaultLocale,
                                              final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer) {
         final Function<SpreadsheetId, SpreadsheetParserProvider> spreadsheetIdToSpreadsheetParserProvider = spreadsheetIdToSpreadsheetParserProvider();
+        final ProviderContext providerContext = providerContext();
 
         final Function<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository = spreadsheetIdToStoreRepository(
                 Maps.concurrent(),
                 storeRepositorySupplier(),
                 spreadsheetIdToSpreadsheetParserProvider,
-                spreadsheetIdToSpreadsheetMetadata()
+                spreadsheetIdToSpreadsheetMetadata(),
+                providerContext
         );
 
         final Supplier<LocalDateTime> now = LocalDateTime::now;
@@ -294,6 +298,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 LineEnding.SYSTEM,
                 now,
                 systemSpreadsheetProvider(),
+                providerContext,
                 metadataStore,
                 HateosResourceHandlerContexts.basic(
                         JsonNodeMarshallUnmarshallContexts.basic(
@@ -341,6 +346,13 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 spreadsheetFormatterProvider,
                 SpreadsheetImporterProviders.spreadsheetImport(),
                 spreadsheetParserProvider
+        );
+    }
+
+    private static ProviderContext providerContext() {
+        return ProviderContexts.basic(
+                EnvironmentContexts.empty(),
+                PluginStores.treeMap()
         );
     }
 
@@ -444,12 +456,13 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     private static Function<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository(final Map<SpreadsheetId, SpreadsheetStoreRepository> idToRepository,
                                                                                                       final Supplier<SpreadsheetStoreRepository> repositoryFactory,
                                                                                                       final Function<SpreadsheetId, SpreadsheetParserProvider> spreadsheetIdToSpreadsheetParserProvider,
-                                                                                                      final Function<SpreadsheetId, SpreadsheetMetadata> spreadsheetIdToSpreadsheetMetadata) {
+                                                                                                      final Function<SpreadsheetId, SpreadsheetMetadata> spreadsheetIdToSpreadsheetMetadata,
+                                                                                                      final ProviderContext providerContext) {
         return (id) -> {
             SpreadsheetStoreRepository repository = idToRepository.get(id);
             if (null == repository) {
                 final EnvironmentContext environmentContext = spreadsheetIdToSpreadsheetMetadata.apply(id)
-                        .environmentContext();
+                        .environmentContext(providerContext);
                 repository = SpreadsheetStoreRepositories.spreadsheetMetadataAwareSpreadsheetCellStore(
                         id,
                         repositoryFactory.get(),
@@ -457,7 +470,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                         LocalDateTime::now,
                         ProviderContexts.basic(
                                 environmentContext,
-                                PluginStores.fake()
+                                providerContext.pluginStore()
                         )
                 );
                 idToRepository.put(id, repository); // TODO add locks etc.
