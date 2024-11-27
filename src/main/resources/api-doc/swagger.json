@@ -5,6 +5,123 @@
     "version": "v1.0.0"
   },
   "paths": {
+    "/api/plugin/*?from={from}&count={count}": {
+      "get": {
+        "tags": [
+          "plugin"
+        ],
+        "summary": "Gets all the plugins for the given range",
+        "parameters": [
+          {
+            "name": "from",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 0
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PluginSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/plugin/{plugin-name}": {
+      "delete": {
+        "tags": [
+          "plugin"
+        ],
+        "summary": "Deletes an existing Plugin using its name",
+        "parameters": [
+          {
+            "name": "plugin-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PluginName"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "plugin"
+        ],
+        "summary": "Retrieves a plugin given its name",
+        "parameters": [
+          {
+            "name": "plugin-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PluginName"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Plugin"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/api/spreadsheet": {
       "post": {
         "tags": [
@@ -2532,6 +2649,16 @@
   },
   "components": {
     "schemas": {
+      "Binary": {
+        "type": "string",
+        "format": "base64"
+      },
+      "ClassName": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255,
+        "example": "example.TestClassName123"
+      },
       "ConverterName": {
         "type": "string",
         "minLength": 1,
@@ -2547,6 +2674,16 @@
       "ConverterInfo": {
         "type": "string",
         "example": "https://github.com/mP1/walkingkooka-spreadsheet/Converter/general general"
+      },
+      "DateTime": {
+        "type": "string",
+        "format": "date-time",
+        "example": "1999-12-31T12:58:59"
+      },
+      "EmailAddress": {
+        "type": "string",
+        "format": "email",
+        "example": "user@example.com"
       },
       "ExpressionFunctionInfoSet": {
         "type": "array",
@@ -2566,6 +2703,43 @@
       },
       "JsonString": {
         "type": "string"
+      },
+      "Plugin": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref" : "#/components/schemas/PluginName"
+          },
+          "filename": {
+            "type": "string",
+            "example": "archive.jar"
+          },
+          "Binary": {
+            "$ref" : "#/components/schemas/Binary"
+          },
+          "className": {
+            "$ref" : "#/components/schemas/ClassName"
+          },
+          "user": {
+            "$ref" : "#/components/schemas/EmailAddress"
+          },
+          "timestamp": {
+            "$ref" : "#/components/schemas/DateTime"
+          }
+        }
+      },
+      "PluginName": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255,
+        "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$",
+        "example": "SamplePluginName123"
+      },
+      "PluginSet": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/Plugin"
+        }
       },
       "SpreadsheetComparatorName": {
         "type": "string",
