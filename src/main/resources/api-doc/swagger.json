@@ -2663,7 +2663,8 @@
         "type": "string",
         "minLength": 1,
         "maxLength": 255,
-        "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$"
+        "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$",
+        "example": "general"
       },
       "ConverterInfoSet": {
         "type": "array",
@@ -2699,7 +2700,8 @@
         "type": "string",
         "minLength": 1,
         "maxLength": 255,
-        "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$"
+        "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$",
+        "example": "abs"
       },
       "JsonString": {
         "type": "string"
@@ -2745,7 +2747,8 @@
         "type": "string",
         "minLength": 1,
         "maxLength": 255,
-        "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$"
+        "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$",
+        "example": "day-of-month"
       },
       "SpreadsheetComparatorInfoSet": {
         "type": "array",
@@ -2764,7 +2767,8 @@
         "type": "string",
         "minLength": 1,
         "maxLength": 255,
-        "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$"
+        "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$",
+        "example": "json"
       },
       "SpreadsheetExporterInfoSet": {
         "type": "array",
@@ -2807,7 +2811,8 @@
         "type": "string",
         "minLength": 1,
         "maxLength": 255,
-        "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$"
+        "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$",
+        "example": "date-time-format-pattern"
       },
       "SpreadsheetFormatterSampleList": {
         "type": "array",
@@ -2830,7 +2835,8 @@
         }
       },
       "SpreadsheetFormatterSelector": {
-        "type": "string"
+        "type": "string",
+        "example": "date-time-format-pattern yyyy/mm/dd hh:mm:ss"
       },
       "SpreadsheetFormatterSelectorEdit": {
         "properties": {
@@ -2905,13 +2911,15 @@
       "SpreadsheetId": {
         "type": "string",
         "minLength": 1,
-        "pattern": "^[0123456789ABCDEFabcdef]*$"
+        "pattern": "^[0123456789ABCDEFabcdef]*$",
+        "example": "1"
       },
       "SpreadsheetImporterName": {
         "type": "string",
         "minLength": 1,
         "maxLength": 255,
-        "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$"
+        "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$",
+        "example": "json"
       },
       "SpreadsheetImporterInfoSet": {
         "type": "array",
@@ -2927,7 +2935,8 @@
         "type": "string",
         "minLength": 1,
         "maxLength": 255,
-        "pattern": "^[A-Z,a-z,_][A-Z,a-z,0-9,-,_,.]*$"
+        "pattern": "^[A-Z,a-z,_][A-Z,a-z,0-9,-,_,.]*$",
+        "example": "Label123"
       },
       "SpreadsheetMetadata": {
         "type": "object"
@@ -2942,7 +2951,8 @@
         "type": "string",
         "minLength": 1,
         "maxLength": 255,
-        "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$"
+        "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$",
+        "example": "date-time-parse-pattern"
       },
       "SpreadsheetParserInfoSet": {
         "type": "array",
@@ -2955,7 +2965,8 @@
         "example": "https://github.com/mP1/walkingkooka-spreadsheet/SpreadsheetParser/date-parse-pattern date-parse-pattern"
       },
       "SpreadsheetParserSelector": {
-        "type": "string"
+        "type": "string",
+        "example": "date-time-parse-pattern yyyy/mm/dd hh:mm:ss"
       },
       "SpreadsheetParserSelectorEdit": {
         "properties": {
