@@ -38,7 +38,6 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements PublicSta
 
         metadata.spreadsheetConverterContext(
                 SpreadsheetMetadataPropertyName.FORMULA_CONVERTER,
-                NOW,
                 SPREADSHEET_LABEL_NAME_RESOLVER,
                 CONVERTER_PROVIDER,
                 PROVIDER_CONTEXT

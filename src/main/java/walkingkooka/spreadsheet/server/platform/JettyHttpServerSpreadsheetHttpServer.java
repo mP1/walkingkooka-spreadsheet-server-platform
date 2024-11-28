@@ -22,6 +22,7 @@ import walkingkooka.Either;
 import walkingkooka.collect.list.Lists;
 import walkingkooka.collect.map.Maps;
 import walkingkooka.convert.Converters;
+import walkingkooka.datetime.HasNow;
 import walkingkooka.environment.EnvironmentContext;
 import walkingkooka.environment.EnvironmentContexts;
 import walkingkooka.net.AbsoluteUrl;
@@ -270,7 +271,10 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                              final Locale defaultLocale,
                                              final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer) {
         final Function<SpreadsheetId, SpreadsheetParserProvider> spreadsheetIdToSpreadsheetParserProvider = spreadsheetIdToSpreadsheetParserProvider();
-        final ProviderContext providerContext = providerContext();
+
+        final HasNow now = LocalDateTime::now;
+
+        final ProviderContext providerContext = providerContext(now);
 
         final Function<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository = spreadsheetIdToStoreRepository(
                 Maps.concurrent(),
@@ -279,8 +283,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 spreadsheetIdToSpreadsheetMetadata(),
                 providerContext
         );
-
-        final Supplier<LocalDateTime> now = LocalDateTime::now;
 
         metadataStore = SpreadsheetMetadataStores.spreadsheetCellStoreAction(
                 SpreadsheetMetadataStores.treeMap(
@@ -296,7 +298,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 serverUrl,
                 Indentation.with("  "),
                 LineEnding.SYSTEM,
-                now,
                 systemSpreadsheetProvider(),
                 providerContext,
                 metadataStore,
@@ -349,9 +350,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         );
     }
 
-    private static ProviderContext providerContext() {
+    private static ProviderContext providerContext(final HasNow hasNow) {
         return ProviderContexts.basic(
-                EnvironmentContexts.empty(),
+                EnvironmentContexts.empty(hasNow),
                 PluginStores.treeMap()
         );
     }
@@ -467,7 +468,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                         id,
                         repositoryFactory.get(),
                         spreadsheetIdToSpreadsheetParserProvider.apply(id),
-                        LocalDateTime::now,
                         ProviderContexts.basic(
                                 environmentContext,
                                 providerContext.pluginStore()
