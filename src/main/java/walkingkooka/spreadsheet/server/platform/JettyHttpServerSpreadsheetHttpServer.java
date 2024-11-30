@@ -31,6 +31,7 @@ import walkingkooka.net.IpPort;
 import walkingkooka.net.Url;
 import walkingkooka.net.UrlPath;
 import walkingkooka.net.UrlScheme;
+import walkingkooka.net.email.EmailAddress;
 import walkingkooka.net.header.apache.tika.ApacheTikas;
 import walkingkooka.net.http.HttpStatus;
 import walkingkooka.net.http.HttpStatusCode;
@@ -352,7 +353,12 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
 
     private static ProviderContext providerContext(final HasNow hasNow) {
         return ProviderContexts.basic(
-                EnvironmentContexts.empty(hasNow),
+                EnvironmentContexts.empty(
+                        hasNow,
+                        Optional.of(
+                                EmailAddress.parse("user123@example.com")
+                        )
+                ),
                 PluginStores.treeMap()
         );
     }
