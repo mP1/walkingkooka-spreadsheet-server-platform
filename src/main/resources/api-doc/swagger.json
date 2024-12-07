@@ -25,7 +25,7 @@
           {
             "name": "count",
             "in": "query",
-            "required": false,
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int32",
@@ -181,7 +181,7 @@
           {
             "name": "count",
             "in": "query",
-            "required": false,
+            "required": true,
             "schema": {
               "type": "integer",
               "format": "int32",
