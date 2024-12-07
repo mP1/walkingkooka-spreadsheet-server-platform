@@ -161,7 +161,7 @@
         }
       }
     },
-    "/api/spreadsheet/*?from={from}&count={count}": {
+    "/api/spreadsheet/*?offset={offset}&count={count}": {
       "get": {
         "tags": [
           "spreadsheet"
@@ -169,7 +169,7 @@
         "summary": "Gets all the metadata entries for the given range",
         "parameters": [
           {
-            "name": "from",
+            "name": "offset",
             "in": "query",
             "required": false,
             "schema": {
