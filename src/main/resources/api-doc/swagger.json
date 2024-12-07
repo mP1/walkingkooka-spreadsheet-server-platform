@@ -2653,12 +2653,6 @@
         "type": "string",
         "format": "base64"
       },
-      "ClassName": {
-        "type": "string",
-        "minLength": 1,
-        "maxLength": 255,
-        "example": "example.TestClassName123"
-      },
       "ConverterName": {
         "type": "string",
         "minLength": 1,
@@ -2716,11 +2710,8 @@
             "type": "string",
             "example": "archive.jar"
           },
-          "Binary": {
+          "archive": {
             "$ref" : "#/components/schemas/Binary"
-          },
-          "className": {
-            "$ref" : "#/components/schemas/ClassName"
           },
           "user": {
             "$ref" : "#/components/schemas/EmailAddress"
