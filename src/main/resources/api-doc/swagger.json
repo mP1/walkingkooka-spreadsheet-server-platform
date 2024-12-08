@@ -5,15 +5,15 @@
     "version": "v1.0.0"
   },
   "paths": {
-    "/api/plugin/*?from={from}&count={count}": {
+    "/api/plugin/*?offset={offset}&count={count}": {
       "get": {
         "tags": [
           "plugin"
         ],
-        "summary": "Gets all the plugins for the given range",
+        "summary": "Gets all the plugins for the requested range",
         "parameters": [
           {
-            "name": "from",
+            "name": "offset",
             "in": "query",
             "required": false,
             "schema": {
