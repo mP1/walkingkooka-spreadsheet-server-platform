@@ -120,6 +120,50 @@
             "description": "Not Found"
           }
         }
+      },
+      "post": {
+        "tags": [
+          "plugin"
+        ],
+        "summary": "Saves a new or updates a Plugin",
+        "parameters": [
+          {
+            "name": "plugin-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PluginName"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Plugin"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Plugin"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
       }
     },
     "/api/plugin/*/filter?query={query}&offset={offset}&count={count}": {
