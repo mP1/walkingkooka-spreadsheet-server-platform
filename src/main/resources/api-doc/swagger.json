@@ -222,6 +222,81 @@
         }
       }
     },
+    "/api/plugin/{plugin-name}/download": {
+      "get": {
+        "tags": [
+          "plugin"
+        ],
+        "summary": "Download the plugin archive",
+        "parameters": [
+          {
+            "name": "plugin-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PluginName"
+            }
+          }
+        ],
+        "produces": [
+          "application/octet-stream"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK"
+          },
+          "204": {
+            "description": "204 No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/plugin/{plugin-name}/download/{path}": {
+      "get": {
+        "tags": [
+          "plugin"
+        ],
+        "summary": "Download file within the plugin archive",
+        "parameters": [
+          {
+            "name": "plugin-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PluginName"
+            }
+          },
+          {
+            "name": "path",
+            "in": "path",
+            "required": false,
+            "default": "",
+            "minLength": 0,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "produces": [
+          "application/octet-stream",
+          "text/plain"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/spreadsheet": {
       "post": {
         "tags": [
