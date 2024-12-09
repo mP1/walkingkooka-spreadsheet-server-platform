@@ -297,6 +297,45 @@
         }
       }
     },
+    "/api/plugin/{plugin-name}/list": {
+      "get": {
+        "tags": [
+          "plugin"
+        ],
+        "summary": "Lists of all the file/directory entries in the plugin archive",
+        "parameters": [
+          {
+            "name": "plugin-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/PluginName"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JarEntryInfoList"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/spreadsheet": {
       "post": {
         "tags": [
@@ -2862,6 +2901,42 @@
         "maxLength": 255,
         "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$",
         "example": "abs"
+      },
+      "JarEntryInfo": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "required": true,
+            "example": "/META-INF/MANIFEST.MF"
+          },
+          "size": {
+            "type": "integer"
+          },
+          "compressedSize": {
+            "type": "integer"
+          },
+          "method": {
+            "type": "integer"
+          },
+          "crc": {
+            "type": "integer"
+          },
+          "create": {
+            "$ref" : "#/components/schemas/DateTime"
+          },
+          "lastModified": {
+            "$ref" : "#/components/schemas/DateTime"
+          }
+        }
+      },
+      "JarEntryInfoList": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/JarEntryInfo"
+        }
       },
       "JsonString": {
         "type": "string"
