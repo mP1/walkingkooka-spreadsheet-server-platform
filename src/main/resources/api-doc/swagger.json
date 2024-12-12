@@ -2906,11 +2906,7 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "string",
-            "minLength": 1,
-            "maxLength": 255,
-            "required": true,
-            "example": "/META-INF/MANIFEST.MF"
+            "type": "JarEntryInfoName"
           },
           "size": {
             "type": "integer"
@@ -2937,6 +2933,13 @@
         "items": {
           "$ref" : "#/components/schemas/JarEntryInfo"
         }
+      },
+      "JarEntryInfoName": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255,
+        "pattern": "^/*$",
+        "example": "/META-INF/MANIFEST.MF"
       },
       "JsonString": {
         "type": "string"
