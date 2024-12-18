@@ -18,6 +18,7 @@
 package walkingkooka.spreadsheet.server.platform;
 
 import javaemul.internal.annotations.GwtIncompatible;
+import walkingkooka.Binary;
 import walkingkooka.Either;
 import walkingkooka.collect.list.Lists;
 import walkingkooka.collect.map.Maps;
@@ -41,8 +42,12 @@ import walkingkooka.net.http.server.WebFile;
 import walkingkooka.net.http.server.WebFiles;
 import walkingkooka.net.http.server.hateos.HateosResourceHandlerContexts;
 import walkingkooka.net.http.server.jetty.JettyHttpServer;
+import walkingkooka.plugin.JarFileTesting;
+import walkingkooka.plugin.PluginName;
 import walkingkooka.plugin.ProviderContext;
 import walkingkooka.plugin.ProviderContexts;
+import walkingkooka.plugin.store.Plugin;
+import walkingkooka.plugin.store.PluginStore;
 import walkingkooka.plugin.store.PluginStores;
 import walkingkooka.reflect.PublicStaticHelper;
 import walkingkooka.spreadsheet.SpreadsheetExpressionFunctionNames;
@@ -91,6 +96,7 @@ import walkingkooka.util.SystemProperty;
 import java.io.IOException;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
 import java.nio.file.Files;
@@ -107,7 +113,8 @@ import java.util.function.Supplier;
 /**
  * Creates a {@link SpreadsheetHttpServer} with memory stores using a Jetty server using the scheme/host/port from cmd line arguments.
  */
-public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticHelper {
+public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticHelper,
+        JarFileTesting {
 
     /**
      * Starts a server on the scheme/host/port passed as arguments, serving files from the current directory.
@@ -352,6 +359,36 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     }
 
     private static ProviderContext providerContext(final HasNow hasNow) {
+        final PluginStore pluginStore = PluginStores.treeMap();
+
+        final Map<String, byte[]> fileToContent = Maps.sorted();
+        fileToContent.put(
+                "dir111/file111.txt",
+                "Hello".getBytes(StandardCharsets.UTF_8)
+        );
+        for (int i = 2; i < 100; i++) {
+            fileToContent.put(
+                    "file" + i,
+                    "Hello".getBytes(StandardCharsets.UTF_8)
+            );
+        }
+
+        final byte[] archive = JarFileTesting.jarFile(
+                "Manifest-Version: 1.0\r\n" +
+                        "\r\n",
+                fileToContent
+        );
+
+        pluginStore.save(
+                Plugin.with(
+                        PluginName.with("TestPlugin123"),
+                        "TestPlugin123-filename.jar", // filename
+                        Binary.with(archive), // archive
+                        EmailAddress.parse("plugin-author@example.com"),
+                        hasNow.now()
+                )
+        );
+
         return ProviderContexts.basic(
                 EnvironmentContexts.empty(
                         hasNow,
@@ -359,7 +396,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                 EmailAddress.parse("user123@example.com")
                         )
                 ),
-                PluginStores.treeMap()
+                pluginStore
         );
     }
 
