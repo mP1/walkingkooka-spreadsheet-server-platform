@@ -2990,7 +2990,7 @@
         "minLength": 1,
         "maxLength": 255,
         "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$",
-        "example": "SamplePluginName123"
+        "example": "TestPlugin123"
       },
       "PluginSet": {
         "type": "array",
