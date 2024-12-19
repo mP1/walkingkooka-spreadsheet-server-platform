@@ -366,9 +366,13 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 "dir111/file111.txt",
                 "Hello".getBytes(StandardCharsets.UTF_8)
         );
-        for (int i = 2; i < 100; i++) {
+        fileToContent.put(
+                "file-2.bin",
+                new byte[0]
+        );
+        for (int i = 3; i < 100; i++) {
             fileToContent.put(
-                    "file" + i,
+                    "file" + i + ".txt",
                     "Hello".getBytes(StandardCharsets.UTF_8)
             );
         }
