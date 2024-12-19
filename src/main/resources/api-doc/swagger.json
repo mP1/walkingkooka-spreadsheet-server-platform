@@ -236,6 +236,14 @@
             "schema": {
               "$ref": "#/components/schemas/PluginName"
             }
+          },
+          {
+            "name": "accept",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Accept"
+            }
           }
         ],
         "produces": [
@@ -277,6 +285,14 @@
             "minLength": 0,
             "schema": {
               "type": "string"
+            }
+          },
+          {
+            "name": "accept",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Accept"
             }
           }
         ],
@@ -2854,6 +2870,10 @@
   },
   "components": {
     "schemas": {
+      "Accept": {
+        "type": "string",
+        "example": "*/*"
+      },
       "Binary": {
         "type": "string",
         "format": "base64"
