@@ -349,7 +349,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                         spreadsheetFormatterProvider,
                         spreadsheetParserProvider
                 ), // converterProvider
-                SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(CaseSensitivity.INSENSITIVE),
+                SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(SpreadsheetExpressionFunctionNames.CASE_SENSITIVITY),
                 SpreadsheetComparatorProviders.spreadsheetComparators(),
                 SpreadsheetExporterProviders.spreadsheetExport(),
                 spreadsheetFormatterProvider,
