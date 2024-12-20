@@ -2926,7 +2926,7 @@
         "type": "object",
         "properties": {
           "name": {
-            "type": "JarEntryInfoName"
+            "$ref" : "#/components/schemas/JarEntryInfoName"
           },
           "size": {
             "type": "integer"
