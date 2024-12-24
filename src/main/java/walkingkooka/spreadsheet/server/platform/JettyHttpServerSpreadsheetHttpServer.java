@@ -33,7 +33,7 @@ import walkingkooka.net.Url;
 import walkingkooka.net.UrlPath;
 import walkingkooka.net.UrlScheme;
 import walkingkooka.net.email.EmailAddress;
-import walkingkooka.net.header.apache.tika.ApacheTikas;
+import walkingkooka.net.header.apache.tika.ApacheTikaMediaTypeDetectors;
 import walkingkooka.net.http.HttpStatus;
 import walkingkooka.net.http.HttpStatusCode;
 import walkingkooka.net.http.server.HttpHandler;
@@ -270,7 +270,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     private static WebFile webFile(final Path file) {
         return WebFiles.file(
                 file,
-                ApacheTikas.fileContentTypeDetector(),
+                ApacheTikaMediaTypeDetectors.apacheTika(),
                 (b) -> Optional.empty()
         );
     }
@@ -306,6 +306,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 serverUrl,
                 Indentation.with("  "),
                 LineEnding.SYSTEM,
+                ApacheTikaMediaTypeDetectors.apacheTika(),
                 systemSpreadsheetProvider(),
                 providerContext,
                 metadataStore,
