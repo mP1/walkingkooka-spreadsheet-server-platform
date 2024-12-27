@@ -43,6 +43,7 @@ import walkingkooka.net.http.server.WebFiles;
 import walkingkooka.net.http.server.hateos.HateosResourceHandlerContexts;
 import walkingkooka.net.http.server.jetty.JettyHttpServer;
 import walkingkooka.plugin.JarFileTesting;
+import walkingkooka.plugin.PluginArchiveManifest;
 import walkingkooka.plugin.PluginName;
 import walkingkooka.plugin.ProviderContext;
 import walkingkooka.plugin.ProviderContexts;
@@ -380,8 +381,15 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
 
         final byte[] archive = JarFileTesting.jarFile(
                 "Manifest-Version: 1.0\r\n" +
+                        "plugin-provider-factory-className: sample.TestPlugin123\r\n" +
+                        "plugin-name: TestPlugin123\r\n" +
                         "\r\n",
                 fileToContent
+        );
+
+        // will fail if the manifest is missing required entries.
+        PluginArchiveManifest.fromArchive(
+                Binary.with(archive)
         );
 
         pluginStore.save(
