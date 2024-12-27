@@ -109,6 +109,74 @@
         }
       }
     },
+    "/api/plugin/*/upload": {
+      "post": {
+        "tags": [
+          "plugin"
+        ],
+        "summary": "Upload a plugin creating a new plugin or replacing an existing",
+        "requestBody": {
+          "content": {
+            "application/octet-stream": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "type:": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "accept",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Accept"
+            }
+          },
+          {
+            "name": "content-disposition",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ContentDisposition"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Plugin"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/plugin/{plugin-name}": {
       "delete": {
         "tags": [
@@ -2877,6 +2945,10 @@
       "Binary": {
         "type": "string",
         "format": "base64"
+      },
+      "ContentDisposition": {
+        "type": "string",
+        "example": "attachment; filename=\"file.txt\""
       },
       "ConverterName": {
         "type": "string",
