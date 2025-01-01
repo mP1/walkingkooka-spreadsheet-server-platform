@@ -133,6 +133,13 @@
                   }
                 }
               }
+            },
+            "text/base64": {
+              "schema": {
+                "type": "string",
+                "format": "base64",
+                "example": ""
+              }
             }
           }
         },
