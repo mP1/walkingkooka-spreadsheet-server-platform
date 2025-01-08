@@ -28,19 +28,19 @@ import java.lang.reflect.Method;
 import java.util.Locale;
 
 public final class JettyHttpServerSpreadsheetHttpServerTest implements PublicStaticHelperTesting<JettyHttpServerSpreadsheetHttpServer>,
-        SpreadsheetMetadataTesting {
+    SpreadsheetMetadataTesting {
 
     @Test
     public void testPrepareMetadataCreateTemplate() {
         final SpreadsheetMetadata metadata = JettyHttpServerSpreadsheetHttpServer.prepareMetadataCreateTemplate(
-                Locale.FRENCH
+            Locale.FRENCH
         );
 
         metadata.spreadsheetConverterContext(
-                SpreadsheetMetadataPropertyName.FORMULA_CONVERTER,
-                SPREADSHEET_LABEL_NAME_RESOLVER,
-                CONVERTER_PROVIDER,
-                PROVIDER_CONTEXT
+            SpreadsheetMetadataPropertyName.FORMULA_CONVERTER,
+            SPREADSHEET_LABEL_NAME_RESOLVER,
+            CONVERTER_PROVIDER,
+            PROVIDER_CONTEXT
         );
     }
 
