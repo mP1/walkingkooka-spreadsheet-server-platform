@@ -1167,6 +1167,71 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/cell/{cell-OR-cell-range-OR-label}/labels": {
+      "get": {
+        "tags": [
+          "cell"
+        ],
+        "summary": "Finds all labels with the given selection",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          },
+          {
+            "name": "cell-OR-cell-range-OR-label",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "min": 0
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "min": 0
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetDelta"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/cell/{cell-OR-cell-range-OR-label}/sort?comparators={comparators}": {
       "get": {
         "tags": [
