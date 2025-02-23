@@ -2324,7 +2324,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/SpreadsheetDelta"
+              "$ref": "#/components/schemas/SpreadsheetLabelName"
             }
           }
         ],
@@ -2366,7 +2366,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "$ref": "#/components/schemas/SpreadsheetLabelName"
             }
           }
         ],
