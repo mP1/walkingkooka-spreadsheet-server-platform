@@ -5,7 +5,7 @@
     "version": "v1.0.0"
   },
   "paths": {
-    "/api/plugin/*?offset={offset}&count={count}": {
+    "/api/plugin/*": {
       "get": {
         "tags": [
           "plugin"
@@ -53,7 +53,7 @@
         }
       }
     },
-    "/api/plugin/*/filter?query={query}&offset={offset}&count={count}": {
+    "/api/plugin/*/filter": {
       "get": {
         "tags": [
           "plugin"
@@ -457,7 +457,7 @@
         }
       }
     },
-    "/api/spreadsheet/*?offset={offset}&count={count}": {
+    "/api/spreadsheet/*": {
       "get": {
         "tags": [
           "spreadsheet"
@@ -1211,7 +1211,7 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/cell/{cell-OR-cell-range-OR-label}/sort?comparators={comparators}": {
+    "/api/spreadsheet/{spreadsheet-id}/cell/{cell-OR-cell-range-OR-label}/sort": {
       "get": {
         "tags": [
           "cell"
@@ -1413,7 +1413,7 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/column/{column-OR-column-range}/after?count={count}": {
+    "/api/spreadsheet/{spreadsheet-id}/column/{column-OR-column-range}/after": {
       "post": {
         "tags": [
           "columns"
@@ -1468,7 +1468,7 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/column/{column-OR-column-range}/before?count={count}": {
+    "/api/spreadsheet/{spreadsheet-id}/column/{column-OR-column-range}/before": {
       "post": {
         "tags": [
           "columns"
@@ -2888,7 +2888,7 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/row/{row-OR-row-range}/after?count={count}": {
+    "/api/spreadsheet/{spreadsheet-id}/row/{row-OR-row-range}/after": {
       "post": {
         "tags": [
           "rows"
@@ -2944,7 +2944,7 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/row/{row-OR-row-range}/before?count={count}": {
+    "/api/spreadsheet/{spreadsheet-id}/row/{row-OR-row-range}/before": {
       "post": {
         "tags": [
           "rows"
