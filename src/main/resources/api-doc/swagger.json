@@ -1323,6 +1323,14 @@
             "schema": {
               "$ref": "#/components/schemas/SpreadsheetId"
             }
+          },
+          {
+            "name": "column-OR-column-range",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           }
         ],
         "requestBody": {
