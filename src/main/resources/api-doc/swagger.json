@@ -1090,14 +1090,14 @@
             "schema": {
               "type": "string",
               "enum": [
-                "lrtd",
-                "rltd",
-                "lrbu",
-                "rlbu",
-                "tdlr",
-                "tdrl",
-                "bulr",
-                "burl"
+                "LRTD",
+                "RLTD",
+                "LRBU",
+                "RLBU",
+                "TDLR",
+                "TDRL",
+                "BULR",
+                "BURL"
               ]
             }
           },
