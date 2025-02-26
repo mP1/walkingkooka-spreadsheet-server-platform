@@ -784,7 +784,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "#ref": "#/components/schemas/SpreadsheetExpressionReference"
             }
           },
           {
@@ -842,7 +842,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "#ref": "#/components/schemas/SpreadsheetExpressionReference"
             }
           }
         ],
@@ -894,7 +894,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "#ref": "#/components/schemas/SpreadsheetExpressionReference"
             }
           }
         ],
@@ -946,7 +946,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "#ref": "#/components/schemas/SpreadsheetExpressionReference"
             }
           }
         ],
@@ -990,7 +990,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "#ref": "#/components/schemas/SpreadsheetExpressionReference"
             }
           }
         ],
@@ -1044,7 +1044,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "#ref": "#/components/schemas/SpreadsheetExpressionReference"
             }
           },
           {
@@ -1148,7 +1148,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "#ref": "#/components/schemas/SpreadsheetExpressionReference"
             }
           },
           {
@@ -1210,7 +1210,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "#ref": "#/components/schemas/SpreadsheetExpressionReference"
             }
           },
           {
@@ -1272,7 +1272,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "#ref": "#/components/schemas/SpreadsheetExpressionReference"
             }
           },
           {
@@ -3145,6 +3145,16 @@
         "items": {
           "$ref" : "#/components/schemas/SpreadsheetExporterInfo"
         }
+      },
+      "SpreadsheetExpressionReference": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255,
+        "example": [
+          "A1",
+          "$B2",
+          "C3:D4"
+        ]
       },
       "SpreadsheetExporterInfo": {
         "type": "string",
