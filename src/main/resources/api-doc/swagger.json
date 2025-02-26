@@ -1428,7 +1428,7 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/column/{column-OR-column-range}/after": {
+    "/api/spreadsheet/{spreadsheet-id}/column/{column-OR-column-range}/insert-after": {
       "post": {
         "tags": [
           "columns"
@@ -1480,7 +1480,7 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/column/{column-OR-column-range}/before": {
+    "/api/spreadsheet/{spreadsheet-id}/column/{column-OR-column-range}/insert-before": {
       "post": {
         "tags": [
           "columns"
@@ -2846,7 +2846,7 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/row/{row-OR-row-range}/after": {
+    "/api/spreadsheet/{spreadsheet-id}/row/{row-OR-row-range}/insert-after": {
       "post": {
         "tags": [
           "rows"
@@ -2898,7 +2898,7 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/row/{row-OR-row-range}/before": {
+    "/api/spreadsheet/{spreadsheet-id}/row/{row-OR-row-range}/insert-before": {
       "post": {
         "tags": [
           "rows"
