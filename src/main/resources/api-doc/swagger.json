@@ -1325,7 +1325,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "#ref": "#/components/schemas/SpreadsheetColumnOrColumnRange"
             }
           }
         ],
@@ -1367,7 +1367,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "#ref": "#/components/schemas/SpreadsheetColumnOrColumnRange"
             }
           }
         ],
@@ -1421,7 +1421,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "#ref": "#/components/schemas/SpreadsheetColumnOrColumnRange"
             }
           }
         ],
@@ -1465,7 +1465,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "#ref": "#/components/schemas/SpreadsheetColumnOrColumnRange"
             }
           },
           {
@@ -1517,7 +1517,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "#ref": "#/components/schemas/SpreadsheetColumnOrColumnRange"
             }
           },
           {
@@ -3102,6 +3102,16 @@
         "items": {
           "$ref" : "#/components/schemas/Plugin"
         }
+      },
+      "SpreadsheetColumnOrColumnRange": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255,
+        "example": [
+          "A",
+          "$B",
+          "C:D"
+        ]
       },
       "SpreadsheetComparatorName": {
         "type": "string",
