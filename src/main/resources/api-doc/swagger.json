@@ -2751,7 +2751,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "#ref": "#/components/schemas/SpreadsheetRowOrRowRange"
             }
           }
         ],
@@ -2839,7 +2839,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "#ref": "#/components/schemas/SpreadsheetRowOrRowRange"
             }
           }
         ],
@@ -2883,7 +2883,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "#ref": "#/components/schemas/SpreadsheetRowOrRowRange"
             }
           },
           {
@@ -2936,7 +2936,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "type": "string"
+              "#ref": "#/components/schemas/SpreadsheetRowOrRowRange"
             }
           },
           {
@@ -3387,6 +3387,16 @@
             "type": "string"
           }
         }
+      },
+      "SpreadsheetRowOrRowRange": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255,
+        "example": [
+          "A",
+          "$B",
+          "C:D"
+        ]
       },
       "TextNodeList": {
         "type": "array",
