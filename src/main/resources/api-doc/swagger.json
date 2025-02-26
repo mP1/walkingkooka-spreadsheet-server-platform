@@ -27,9 +27,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "integer",
-              "format": "int32",
-              "minimum": 0
+              "#ref": "#/components/schemas/Count"
             }
           }
         ],
@@ -83,9 +81,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "integer",
-              "format": "int32",
-              "minimum": 0
+              "#ref": "#/components/schemas/Count"
             }
           }
         ],
@@ -473,9 +469,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "integer",
-              "format": "int32",
-              "minimum": 0
+              "#ref": "#/components/schemas/Count"
             }
           }
         ],
@@ -1079,8 +1073,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "integer",
-              "min": 0
+              "#ref": "#/components/schemas/Count"
             }
           },
           {
@@ -1165,8 +1158,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "integer",
-              "min": 0
+              "#ref": "#/components/schemas/Count"
             }
           }
         ],
@@ -1227,8 +1219,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "integer",
-              "min": 0
+              "#ref": "#/components/schemas/Count"
             }
           }
         ],
@@ -1473,7 +1464,7 @@
             "in": "query",
             "required": true,
             "schema": {
-              "type": "integer"
+              "#ref": "#/components/schemas/Count"
             }
           }
         ],
@@ -1525,7 +1516,7 @@
             "in": "query",
             "required": true,
             "schema": {
-              "type": "integer"
+              "#ref": "#/components/schemas/Count"
             }
           }
         ],
@@ -2891,8 +2882,7 @@
             "in": "query",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32"
+              "#ref": "#/components/schemas/Count"
             }
           }
         ],
@@ -2944,7 +2934,7 @@
             "in": "query",
             "required": true,
             "schema": {
-              "type": "integer"
+              "#ref": "#/components/schemas/Count"
             }
           }
         ],
@@ -2999,6 +2989,16 @@
       "ConverterInfo": {
         "type": "string",
         "example": "https://github.com/mP1/walkingkooka-spreadsheet/Converter/general general"
+      },
+      "Count": {
+        "type": "integer",
+        "format": "int32",
+        "minimum": 0,
+        "example": [
+          "0",
+          "1",
+          "99"
+        ]
       },
       "DateTime": {
         "type": "string",
