@@ -2734,7 +2734,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "#ref": "#/components/schemas/SpreadsheetRowOrRowRange"
+              "#ref": "#/components/schemas/SpreadsheetRowOrRowRangeReference"
             }
           }
         ],
@@ -2822,7 +2822,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "#ref": "#/components/schemas/SpreadsheetRowOrRowRange"
+              "#ref": "#/components/schemas/SpreadsheetRowOrRowRangeReference"
             }
           }
         ],
@@ -2866,7 +2866,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "#ref": "#/components/schemas/SpreadsheetRowOrRowRange"
+              "#ref": "#/components/schemas/SpreadsheetRowOrRowRangeReference"
             }
           },
           {
@@ -2918,7 +2918,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "#ref": "#/components/schemas/SpreadsheetRowOrRowRange"
+              "#ref": "#/components/schemas/SpreadsheetRowOrRowRangeReference"
             }
           },
           {
@@ -3400,7 +3400,7 @@
           }
         }
       },
-      "SpreadsheetRowOrRowRange": {
+      "SpreadsheetRowOrRowRangeReference": {
         "type": "string",
         "minLength": 1,
         "maxLength": 255,
