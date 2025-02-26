@@ -17,9 +17,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "integer",
-              "format": "int32",
-              "minimum": 0
+              "#ref": "#/components/schemas/Offset"
             }
           },
           {
@@ -71,9 +69,7 @@
             "in": "query",
             "required": true,
             "schema": {
-              "type": "integer",
-              "format": "int32",
-              "minimum": 0
+              "#ref": "#/components/schemas/Offset"
             }
           },
           {
@@ -459,9 +455,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "integer",
-              "format": "int32",
-              "minimum": 0
+              "#ref": "#/components/schemas/Offset"
             }
           },
           {
@@ -1064,8 +1058,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "integer",
-              "min": 0
+              "#ref": "#/components/schemas/Offset"
             }
           },
           {
@@ -1149,8 +1142,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "type": "integer",
-              "min": 0
+              "#ref": "#/components/schemas/Offset"
             }
           },
           {
@@ -3068,6 +3060,16 @@
       },
       "JsonString": {
         "type": "string"
+      },
+      "Offset": {
+        "type": "integer",
+        "format": "int32",
+        "minimum": 0,
+        "example": [
+          "0",
+          "1",
+          "99"
+        ]
       },
       "Plugin": {
         "type": "object",
