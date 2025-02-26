@@ -2997,10 +2997,17 @@
         "format": "date-time",
         "example": "1999-12-31T12:58:59"
       },
+      "Double": {
+        "type": "number",
+        "format": "double"
+      },
       "EmailAddress": {
         "type": "string",
         "format": "email",
         "example": "user@example.com"
+      },
+      "Expression": {
+        "type": "object"
       },
       "ExpressionFunctionInfoSet": {
         "type": "array",
@@ -3105,6 +3112,78 @@
           "$ref" : "#/components/schemas/Plugin"
         }
       },
+      "SpreadsheetCell": {
+        "type": "object",
+        "properties": {
+          "reference": {
+            "$ref" : "#/components/schemas/SpreadsheetCellReference"
+          },
+          "formula": {
+            "$ref" : "#/components/schemas/SpreadsheetFormula"
+          },
+          "formatter": {
+            "$ref" : "#/components/schemas/SpreadsheetFormatterSelector"
+          },
+          "parser": {
+            "$ref" : "#/components/schemas/SpreadsheetParserSelector"
+          },
+          "style": {
+            "$ref" : "#/components/schemas/TextStyle"
+          },
+          "formattedValue": {
+            "$ref" : "#/components/schemas/TextNode"
+          }
+        }
+      },
+      "SpreadsheetCellReference": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255,
+        "example": [
+          "A",
+          "$B",
+          "C:D"
+        ]
+      },
+      "SpreadsheetCellSet": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/SpreadsheetCell"
+        }
+      },
+      "SpreadsheetCellReferenceSet": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/SpreadsheetCellReference"
+        }
+      },
+      "SpreadsheetColumn": {
+        "type": "object",
+        "properties": {
+          "reference": {
+            "$ref" : "#/components/schemas/SpreadsheetColumnReference"
+          },
+          "hidden": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SpreadsheetColumnReference": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255,
+        "example": [
+          "A",
+          "$B",
+          "C:D"
+        ]
+      },
+      "SpreadsheetColumnReferenceSet": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/SpreadsheetColumnReference"
+        }
+      },
       "SpreadsheetColumnOrColumnRangeReference": {
         "type": "string",
         "minLength": 1,
@@ -3114,6 +3193,12 @@
           "$B",
           "C:D"
         ]
+      },
+      "SpreadsheetColumnSet": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/SpreadsheetColumn"
+        }
       },
       "SpreadsheetComparatorName": {
         "type": "string",
@@ -3133,7 +3218,62 @@
         "example": "https://github.com/mP1/walkingkooka-spreadsheet/SpreadsheetComparator/date date"
       },
       "SpreadsheetDelta": {
-        "type": "object"
+        "type": "object",
+        "properties": {
+          "cells": {
+            "$ref" : "#/components/schemas/SpreadsheetCellSet"
+          },
+          "columns": {
+            "$ref" : "#/components/schemas/SpreadsheetColumnSet"
+          },
+          "labels": {
+            "$ref" : "#/components/schemas/SpreadsheetLabelMappingSet"
+          },
+          "rows": {
+            "$ref" : "#/components/schemas/SpreadsheetRowSet"
+          },
+          "references": {
+            "$ref" : "#/components/schemas/SpreadsheetCellReference",
+            "additionalProperties": {
+              "$ref" : "#/components/schemas/SpreadsheetExpressionReferenceSet"
+            }
+          },
+          "deletedCells": {
+            "$ref" : "#/components/schemas/SpreadsheetCellReferenceSet"
+          },
+          "deletedColumns": {
+            "$ref" : "#/components/schemas/SpreadsheetColumnReferenceSet"
+          },
+          "deletedRows": {
+            "$ref" : "#/components/schemas/SpreadsheetRowReferenceSet"
+          },
+          "deletedLabels": {
+            "$ref" : "#/components/schemas/SpreadsheetLabelNameSet"
+          },
+          "matchedCells": {
+            "$ref" : "#/components/schemas/SpreadsheetCellSet"
+          },
+          "columnWidths": {
+             "$ref" : "#/components/schemas/SpreadsheetColumnReference",
+             "additionalProperties": {
+               "$ref" : "#/components/schemas/Double"
+            }
+          },
+          "rowHeights": {
+            "$ref" : "#/components/schemas/SpreadsheetRowReference",
+            "additionalProperties": {
+              "$ref" : "#/components/schemas/Double"
+            }
+          },
+          "offsetCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "rowCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
       },
       "SpreadsheetExporterName": {
         "type": "string",
@@ -3141,6 +3281,10 @@
         "maxLength": 255,
         "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$",
         "example": "json"
+      },
+      "SpreadsheetExporterInfo": {
+        "type": "string",
+        "example": "https://github.com/mP1/walkingkooka-spreadsheet/SpreadsheetExporter/json json"
       },
       "SpreadsheetExporterInfoSet": {
         "type": "array",
@@ -3158,9 +3302,11 @@
           "C3:D4"
         ]
       },
-      "SpreadsheetExporterInfo": {
-        "type": "string",
-        "example": "https://github.com/mP1/walkingkooka-spreadsheet/SpreadsheetExporter/json json"
+      "SpreadsheetExpressionReferenceSet": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/SpreadsheetExpressionReference"
+        }
       },
       "SpreadsheetFormatterInfoSet": {
         "type": "array",
@@ -3290,6 +3436,26 @@
           }
         }
       },
+      "SpreadsheetFormula": {
+        "type": "object",
+        "properties": {
+          "reference": {
+            "type" : "string"
+          },
+          "token": {
+            "$ref" : "#/components/schemas/SpreadsheetFormulaParserToken"
+          },
+          "expression": {
+            "$ref" : "#/components/schemas/Expression"
+          },
+          "value": {
+            "type" : "object"
+          }
+        }
+      },
+      "SpreadsheetFormulaParserToken": {
+        "type": "object"
+      },
       "SpreadsheetId": {
         "type": "string",
         "minLength": 1,
@@ -3313,12 +3479,35 @@
         "type": "string",
         "example": "https://github.com/mP1/walkingkooka-spreadsheet/SpreadsheetImporter/json json"
       },
+      "SpreadsheetLabelMapping": {
+        "type": "object",
+        "properties": {
+          "label": {
+            "$ref" : "#/components/schemas/SpreadsheetLabelName"
+          },
+          "reference": {
+            "$ref" : "#/components/schemas/SpreadsheetExpressionReference"
+          }
+        }
+      },
+      "SpreadsheetLabelMappingSet": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/SpreadsheetLabelMapping"
+        }
+      },
       "SpreadsheetLabelName": {
         "type": "string",
         "minLength": 1,
         "maxLength": 255,
         "pattern": "^[A-Z,a-z,_][A-Z,a-z,0-9,-,_,.]*$",
         "example": "Label123"
+      },
+      "SpreadsheetLabelNameSet": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/SpreadsheetLabelName"
+        }
       },
       "SpreadsheetMetadata": {
         "type": "object"
@@ -3400,6 +3589,39 @@
           }
         }
       },
+      "SpreadsheetRow": {
+        "type": "object",
+        "properties": {
+          "reference": {
+            "$ref" : "#/components/schemas/SpreadsheetRowReference"
+          },
+          "hidden": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SpreadsheetRowReference": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255,
+        "example": [
+          "A",
+          "$B",
+          "C:D"
+        ]
+      },
+      "SpreadsheetRowReferenceSet": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/SpreadsheetRowReference"
+        }
+      },
+      "SpreadsheetRowSet": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/SpreadsheetRow"
+        }
+      },
       "SpreadsheetRowOrRowRangeReference": {
         "type": "string",
         "minLength": 1,
@@ -3410,11 +3632,17 @@
           "3:4"
         ]
       },
+      "TextNode": {
+        "type": "object"
+      },
       "TextNodeList": {
         "type": "array",
         "items": {
-          "type" : "object"
+          "$ref" : "#/components/schemas/TextNode"
         }
+      },
+      "TextStyle": {
+        "type": "object"
       }
     }
   }
