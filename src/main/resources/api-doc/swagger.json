@@ -3403,9 +3403,9 @@
         "minLength": 1,
         "maxLength": 255,
         "example": [
-          "A",
-          "$B",
-          "C:D"
+          "1",
+          "$2",
+          "3:4"
         ]
       },
       "TextNodeList": {
