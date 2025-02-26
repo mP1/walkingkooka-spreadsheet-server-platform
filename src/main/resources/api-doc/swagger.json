@@ -1308,7 +1308,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "#ref": "#/components/schemas/SpreadsheetColumnOrColumnRange"
+              "#ref": "#/components/schemas/SpreadsheetColumnOrColumnRangeReference"
             }
           }
         ],
@@ -1350,7 +1350,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "#ref": "#/components/schemas/SpreadsheetColumnOrColumnRange"
+              "#ref": "#/components/schemas/SpreadsheetColumnOrColumnRangeReference"
             }
           }
         ],
@@ -1404,7 +1404,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "#ref": "#/components/schemas/SpreadsheetColumnOrColumnRange"
+              "#ref": "#/components/schemas/SpreadsheetColumnOrColumnRangeReference"
             }
           }
         ],
@@ -1448,7 +1448,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "#ref": "#/components/schemas/SpreadsheetColumnOrColumnRange"
+              "#ref": "#/components/schemas/SpreadsheetColumnOrColumnRangeReference"
             }
           },
           {
@@ -1500,7 +1500,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "#ref": "#/components/schemas/SpreadsheetColumnOrColumnRange"
+              "#ref": "#/components/schemas/SpreadsheetColumnOrColumnRangeReference"
             }
           },
           {
@@ -3105,7 +3105,7 @@
           "$ref" : "#/components/schemas/Plugin"
         }
       },
-      "SpreadsheetColumnOrColumnRange": {
+      "SpreadsheetColumnOrColumnRangeReference": {
         "type": "string",
         "minLength": 1,
         "maxLength": 255,
