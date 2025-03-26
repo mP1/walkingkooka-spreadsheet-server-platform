@@ -26,6 +26,7 @@ import walkingkooka.convert.Converters;
 import walkingkooka.datetime.HasNow;
 import walkingkooka.environment.EnvironmentContext;
 import walkingkooka.environment.EnvironmentContexts;
+import walkingkooka.environment.EnvironmentValueName;
 import walkingkooka.net.AbsoluteUrl;
 import walkingkooka.net.HostAddress;
 import walkingkooka.net.IpPort;
@@ -84,6 +85,8 @@ import walkingkooka.spreadsheet.store.SpreadsheetLabelStores;
 import walkingkooka.spreadsheet.store.SpreadsheetRowStores;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepositories;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepository;
+import walkingkooka.storage.StorageStoreContext;
+import walkingkooka.storage.StorageStores;
 import walkingkooka.text.CaseSensitivity;
 import walkingkooka.text.CharSequences;
 import walkingkooka.text.Indentation;
@@ -109,6 +112,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -138,6 +142,15 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 break;
         }
     }
+
+    private final static HasNow HAS_NOW = LocalDateTime::now;
+
+    private final static EnvironmentContext ENVIRONMENT_CONTEXT = EnvironmentContexts.empty(
+        HAS_NOW,
+        Optional.of(
+            EmailAddress.parse("user123@example.com")
+        )
+    );
 
     private static AbsoluteUrl serverUrl(final String string) {
         try {
@@ -282,9 +295,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                              final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer) {
         final Function<SpreadsheetId, SpreadsheetParserProvider> spreadsheetIdToSpreadsheetParserProvider = spreadsheetIdToSpreadsheetParserProvider();
 
-        final HasNow now = LocalDateTime::now;
-
-        final ProviderContext providerContext = providerContext(now);
+        final ProviderContext providerContext = providerContext(HAS_NOW);
 
         final Function<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository = spreadsheetIdToStoreRepository(
             Maps.concurrent(),
@@ -299,7 +310,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 prepareMetadataCreateTemplate(
                     defaultLocale
                 ),
-                now
+                HAS_NOW
             ),
             (id) -> spreadsheetIdToStoreRepository.apply(id).cells()
         );
@@ -551,6 +562,29 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             SpreadsheetCellRangeStores.treeMap(),
             SpreadsheetCellRangeStores.treeMap(),
             SpreadsheetRowStores.treeMap(),
+            StorageStores.tree(
+                new StorageStoreContext() {
+                    @Override
+                    public <T> Optional<T> environmentValue(EnvironmentValueName<T> environmentValueName) {
+                        return ENVIRONMENT_CONTEXT.environmentValue(environmentValueName);
+                    }
+
+                    @Override
+                    public Set<EnvironmentValueName<?>> environmentValueNames() {
+                        return ENVIRONMENT_CONTEXT.environmentValueNames();
+                    }
+
+                    @Override
+                    public Optional<EmailAddress> user() {
+                        return ENVIRONMENT_CONTEXT.user();
+                    }
+
+                    @Override
+                    public LocalDateTime now() {
+                        return ENVIRONMENT_CONTEXT.now();
+                    }
+                }
+            ),
             SpreadsheetUserStores.treeMap()
         );
     }
