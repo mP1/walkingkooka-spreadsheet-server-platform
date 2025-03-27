@@ -565,7 +565,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             StorageStores.tree(
                 new StorageStoreContext() {
                     @Override
-                    public <T> Optional<T> environmentValue(EnvironmentValueName<T> environmentValueName) {
+                    public <T> Optional<T> environmentValue(final EnvironmentValueName<T> environmentValueName) {
                         return ENVIRONMENT_CONTEXT.environmentValue(environmentValueName);
                     }
 
