@@ -3327,6 +3327,36 @@
           }
         }
       },
+      "SpreadsheetError": {
+        "type": "object",
+        "properties": {
+          "kind": {
+            "$ref" : "#/components/schemas/SpreadsheetErrorKind"
+          },
+          "message": {
+            "type" : "string"
+          },
+          "value": {
+            "type": "object"
+          }
+        }
+      },
+      "SpreadsheetErrorKind": {
+        "type": "string",
+        "enum": [
+          "CALC",
+          "DIV0",
+          "ERROR",
+          "NA",
+          "NAME",
+          "NAME_STRING",
+          "NULL",
+          "NUM",
+          "REF",
+          "SPILL",
+          "VALUE"
+        ]
+      },
       "SpreadsheetExporterName": {
         "type": "string",
         "minLength": 1,
@@ -3500,8 +3530,11 @@
           "expression": {
             "$ref" : "#/components/schemas/Expression"
           },
-          "value": {
+          "expressionValue": {
             "type" : "object"
+          },
+          "error": {
+            "$ref" : "#/components/schemas/SpreadsheetError"
           }
         }
       },
