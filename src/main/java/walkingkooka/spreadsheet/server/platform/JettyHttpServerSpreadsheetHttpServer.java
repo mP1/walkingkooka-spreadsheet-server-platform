@@ -97,6 +97,7 @@ import walkingkooka.tree.json.marshall.JsonNodeMarshallContexts;
 import walkingkooka.tree.json.marshall.JsonNodeMarshallUnmarshallContexts;
 import walkingkooka.tree.json.marshall.JsonNodeUnmarshallContexts;
 import walkingkooka.util.SystemProperty;
+import walkingkooka.validation.provider.ValidatorProviders;
 
 import java.io.IOException;
 import java.math.MathContext;
@@ -368,7 +369,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             SpreadsheetExporterProviders.spreadsheetExport(),
             spreadsheetFormatterProvider,
             SpreadsheetImporterProviders.spreadsheetImport(),
-            spreadsheetParserProvider
+            spreadsheetParserProvider,
+            ValidatorProviders.validators()
         );
     }
 
@@ -498,7 +500,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                     SpreadsheetExporterProviders.spreadsheetExport(),
                     spreadsheetFormatterProvider,
                     SpreadsheetImporterProviders.spreadsheetImport(),
-                    spreadsheetParserProvider
+                    spreadsheetParserProvider,
+                    ValidatorProviders.validators()
                 )
             );
         };
