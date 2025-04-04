@@ -3001,6 +3001,89 @@
           }
         }
       }
+    },
+    "/api/spreadsheet/{spreadsheet-id}/validator": {
+      "get": {
+        "tags": [
+          "validators"
+        ],
+        "summary": "Returns ALL Validator available to the enclosing Spreadsheet",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidatorInfoSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/spreadsheet/{spreadsheet-id}/validator/{validator-name}": {
+      "get": {
+        "tags": [
+          "validators"
+        ],
+        "summary": "Returns the named ValidatorInfo if available to the enclosing Spreadsheet",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          },
+          {
+            "name": "validator-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ValidatorName"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidatorInfo"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3728,6 +3811,23 @@
       },
       "TextStyle": {
         "type": "object"
+      },
+      "ValidatorName": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255,
+        "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$",
+        "example": "non-null"
+      },
+      "ValidatorInfoSet": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/ValidatorInfo"
+        }
+      },
+      "ValidatorInfo": {
+        "type": "string",
+        "example": "https://github.com/mP1/walkingkooka-validation/Validator/non-null non-null"
       }
     }
   }
