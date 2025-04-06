@@ -3616,6 +3616,9 @@
           "expressionValue": {
             "type" : "object"
           },
+          "inputValue": {
+            "type" : "object"
+          },
           "error": {
             "$ref" : "#/components/schemas/SpreadsheetError"
           }
