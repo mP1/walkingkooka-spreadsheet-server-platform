@@ -22,6 +22,7 @@ import walkingkooka.Binary;
 import walkingkooka.Either;
 import walkingkooka.collect.list.Lists;
 import walkingkooka.collect.map.Maps;
+import walkingkooka.convert.ConverterContexts;
 import walkingkooka.convert.Converters;
 import walkingkooka.datetime.HasNow;
 import walkingkooka.environment.EnvironmentContext;
@@ -417,6 +418,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         );
 
         return ProviderContexts.basic(
+            ConverterContexts.fake(), // https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/222
             EnvironmentContexts.empty(
                 hasNow,
                 Optional.of(
@@ -540,6 +542,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                     repositoryFactory.get(),
                     spreadsheetIdToSpreadsheetParserProvider.apply(id),
                     ProviderContexts.basic(
+                        ConverterContexts.fake(), // https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/222
                         environmentContext,
                         providerContext.pluginStore()
                     )
