@@ -3154,6 +3154,65 @@
         "type": "string",
         "example": "https://github.com/mP1/walkingkooka-spreadsheet-server-expression-function/abs abs"
       },
+      "FormSet": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/Form"
+        }
+      },
+      "Form": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/FormName"
+          },
+          "fields": {
+            "$ref": "#/components/schemas/FormFieldList"
+          },
+          "errors": {
+            "$ref": "#/components/schemas/ValidationErrorList"
+          }
+        }
+      },
+      "FormField": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "$ref": "#/components/schemas/SpreadsheetExpressionReference"
+          },
+          "label": {
+            "$ref": "#/components/schemas/FormFieldLabel"
+          },
+          "type": {
+            "$ref": "#/components/schemas/ValidationValueTypeName"
+          },
+          "value": {
+            "type": "object"
+          },
+          "validator": {
+            "$ref": "#/components/schemas/ValidatorSelector"
+          }
+        }
+      },
+      "FormFieldLabel": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255,
+        "example": "Label123"
+      },
+      "FormFieldList": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/FormField"
+        }
+      },
+      "FormName": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255,
+        "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$",
+        "example": "abs"
+      },
       "FunctionExpressionName": {
         "type": "string",
         "minLength": 1,
@@ -3360,6 +3419,9 @@
           },
           "columns": {
             "$ref" : "#/components/schemas/SpreadsheetColumnSet"
+          },
+          "forms": {
+            "$ref" : "#/components/schemas/Forms"
           },
           "labels": {
             "$ref" : "#/components/schemas/SpreadsheetLabelMappingSet"
@@ -3822,6 +3884,26 @@
         "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$",
         "example": "non-null"
       },
+      "ValidationErrorList": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/ValidationError"
+        }
+      },
+      "ValidationError": {
+        "type": "object",
+        "properties": {
+          "reference": {
+            "$ref" : "#/components/schemas/SpreadsheetExpressionReference"
+          },
+          "message": {
+            "type": "string"
+          },
+          "value": {
+            "type": "object"
+          }
+        }
+      },
       "ValidatorInfoSet": {
         "type": "array",
         "items": {
@@ -3831,6 +3913,21 @@
       "ValidatorInfo": {
         "type": "string",
         "example": "https://github.com/mP1/walkingkooka-validation/Validator/non-null non-null"
+      },
+      "ValidatorSelector": {
+        "type": "string",
+        "example": "nonNull"
+      },
+      "ValidationValueTypeName": {
+        "type": "string",
+        "enum": [
+          "boolean",
+          "date",
+          "date-time",
+          "number",
+          "text",
+          "time"
+        ]
       }
     }
   }
