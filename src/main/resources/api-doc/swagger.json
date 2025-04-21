@@ -1775,6 +1775,106 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/form/": {
+      "post": {
+        "tags": [
+          "form"
+        ],
+        "summary": "Save a new form",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpreadsheetDelta"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "201": {
+            "description": "201 CREATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetDelta"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/spreadsheet/{spreadsheet-id}/form/{form-name}": {
+      "post": {
+        "tags": [
+          "form"
+        ],
+        "summary": "Updates an existing form.",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          },
+          {
+            "name": "form-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/FormName"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SpreadsheetDelta"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 CREATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetDelta"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/formatter": {
       "get": {
         "tags": [
@@ -3421,7 +3521,7 @@
             "$ref" : "#/components/schemas/SpreadsheetColumnSet"
           },
           "forms": {
-            "$ref" : "#/components/schemas/Forms"
+            "$ref" : "#/components/schemas/FormSet"
           },
           "labels": {
             "$ref" : "#/components/schemas/SpreadsheetLabelMappingSet"
