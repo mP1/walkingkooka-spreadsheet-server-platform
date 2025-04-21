@@ -1822,6 +1822,48 @@
       }
     },
     "/api/spreadsheet/{spreadsheet-id}/form/{form-name}": {
+      "get": {
+        "tags": [
+          "form"
+        ],
+        "summary": "Loads the form with the given name",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          },
+          {
+            "name": "form-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/FormName"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetDelta"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      },
       "post": {
         "tags": [
           "form"
@@ -1861,6 +1903,58 @@
         "responses": {
           "200": {
             "description": "200 CREATED",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetDelta"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/spreadsheet/{spreadsheet-id}/form/*": {
+      "get": {
+        "tags": [
+          "form"
+        ],
+        "summary": "Gets forms between the offset and count.",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Offset"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Count"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
             "content": {
               "application/json": {
                 "schema": {
@@ -3277,8 +3371,20 @@
       "FormField": {
         "type": "object",
         "properties": {
-          "name": {
-            "$ref": "#/components/schemas/SpreadsheetExpressionReference"
+          "reference": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "value": "string",
+                "example": [
+                  "walkingkooka.spreadsheet.reference.SpreadsheetCellReference",
+                  "walkingkooka.spreadsheet.reference.SpreadsheetLabelName"
+                ]
+              },
+              "value": {
+                "$ref": "#/components/schemas/SpreadsheetExpressionReference"
+              }
+            }
           },
           "label": {
             "$ref": "#/components/schemas/FormFieldLabel"
@@ -3311,7 +3417,7 @@
         "minLength": 1,
         "maxLength": 255,
         "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$",
-        "example": "abs"
+        "example": "FormName123"
       },
       "FunctionExpressionName": {
         "type": "string",
