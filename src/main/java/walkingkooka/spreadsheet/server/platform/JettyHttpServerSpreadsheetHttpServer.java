@@ -458,7 +458,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                     .set(SpreadsheetMetadataPropertyName.LOCALE, defaultLocale)
                     .loadFromLocale()
                     .set(SpreadsheetMetadataPropertyName.CELL_CHARACTER_WIDTH, 1)
-                    .set(SpreadsheetMetadataPropertyName.DATETIME_OFFSET, Converters.EXCEL_1900_DATE_SYSTEM_OFFSET)
+                    .set(SpreadsheetMetadataPropertyName.DATE_TIME_OFFSET, Converters.EXCEL_1900_DATE_SYSTEM_OFFSET)
                     .set(SpreadsheetMetadataPropertyName.DEFAULT_YEAR, 1900)
                     .set(SpreadsheetMetadataPropertyName.EXPRESSION_NUMBER_KIND, ExpressionNumberKind.DOUBLE)
                     .set(
