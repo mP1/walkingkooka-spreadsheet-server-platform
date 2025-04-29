@@ -99,6 +99,7 @@ import walkingkooka.tree.json.marshall.JsonNodeMarshallContexts;
 import walkingkooka.tree.json.marshall.JsonNodeMarshallUnmarshallContexts;
 import walkingkooka.tree.json.marshall.JsonNodeUnmarshallContexts;
 import walkingkooka.util.SystemProperty;
+import walkingkooka.validation.form.provider.FormHandlerProviders;
 import walkingkooka.validation.provider.ValidatorProviders;
 
 import java.io.IOException;
@@ -370,6 +371,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             SpreadsheetComparatorProviders.spreadsheetComparators(),
             SpreadsheetExporterProviders.spreadsheetExport(),
             spreadsheetFormatterProvider,
+            FormHandlerProviders.validation(),
             SpreadsheetImporterProviders.spreadsheetImport(),
             spreadsheetParserProvider,
             ValidatorProviders.validators()
@@ -502,6 +504,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                     SpreadsheetComparatorProviders.spreadsheetComparators(),
                     SpreadsheetExporterProviders.spreadsheetExport(),
                     spreadsheetFormatterProvider,
+                    FormHandlerProviders.validation(),
                     SpreadsheetImporterProviders.spreadsheetImport(),
                     spreadsheetParserProvider,
                     ValidatorProviders.validators()
