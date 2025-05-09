@@ -53,12 +53,12 @@ import walkingkooka.plugin.store.Plugin;
 import walkingkooka.plugin.store.PluginStore;
 import walkingkooka.plugin.store.PluginStores;
 import walkingkooka.reflect.PublicStaticHelper;
-import walkingkooka.spreadsheet.SpreadsheetExpressionFunctionNames;
 import walkingkooka.spreadsheet.SpreadsheetId;
 import walkingkooka.spreadsheet.SpreadsheetName;
 import walkingkooka.spreadsheet.compare.SpreadsheetComparatorProviders;
 import walkingkooka.spreadsheet.convert.SpreadsheetConvertersConverterProviders;
 import walkingkooka.spreadsheet.export.SpreadsheetExporterProviders;
+import walkingkooka.spreadsheet.expression.SpreadsheetExpressionFunctions;
 import walkingkooka.spreadsheet.expression.function.provider.SpreadsheetExpressionFunctionProviders;
 import walkingkooka.spreadsheet.format.SpreadsheetFormatterProvider;
 import walkingkooka.spreadsheet.format.SpreadsheetFormatterProviders;
@@ -367,7 +367,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 spreadsheetFormatterProvider,
                 spreadsheetParserProvider
             ), // converterProvider
-            SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(SpreadsheetExpressionFunctionNames.CASE_SENSITIVITY),
+            SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(SpreadsheetExpressionFunctions.NAME_CASE_SENSITIVITY),
             SpreadsheetComparatorProviders.spreadsheetComparators(),
             SpreadsheetExporterProviders.spreadsheetExport(),
             spreadsheetFormatterProvider,
@@ -447,7 +447,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
      */
     static SpreadsheetMetadata prepareMetadataCreateTemplate(final Locale defaultLocale) {
         final ExpressionFunctionAliasSet functionAliases = SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(
-                SpreadsheetExpressionFunctionNames.CASE_SENSITIVITY
+                SpreadsheetExpressionFunctions.NAME_CASE_SENSITIVITY
             ).expressionFunctionInfos()
             .aliasSet();
 
