@@ -20,6 +20,7 @@ package walkingkooka.spreadsheet.server.platform;
 import org.junit.jupiter.api.Test;
 import walkingkooka.reflect.JavaVisibility;
 import walkingkooka.reflect.PublicStaticHelperTesting;
+import walkingkooka.spreadsheet.convert.SpreadsheetConverterContexts;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataPropertyName;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataTesting;
@@ -37,6 +38,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements PublicSta
         );
 
         metadata.spreadsheetConverterContext(
+            SpreadsheetConverterContexts.NO_VALIDATION_REFERENCE,
             SpreadsheetMetadataPropertyName.FORMULA_CONVERTER,
             SPREADSHEET_LABEL_NAME_RESOLVER,
             CONVERTER_PROVIDER,
