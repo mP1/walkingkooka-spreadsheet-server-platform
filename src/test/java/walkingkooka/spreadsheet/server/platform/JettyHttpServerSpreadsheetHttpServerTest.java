@@ -38,6 +38,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements PublicSta
         );
 
         metadata.spreadsheetConverterContext(
+            SpreadsheetMetadata.NO_CELL,
             SpreadsheetConverterContexts.NO_METADATA,
             SpreadsheetConverterContexts.NO_VALIDATION_REFERENCE,
             SpreadsheetMetadataPropertyName.FORMULA_CONVERTER,
