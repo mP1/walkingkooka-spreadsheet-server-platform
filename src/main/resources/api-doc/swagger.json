@@ -3881,9 +3881,6 @@
           "expression": {
             "$ref" : "#/components/schemas/Expression"
           },
-          "expressionValue": {
-            "type" : "object"
-          },
           "value": {
             "type" : "object"
           },
