@@ -3884,7 +3884,7 @@
           "expressionValue": {
             "type" : "object"
           },
-          "inputValue": {
+          "value": {
             "type" : "object"
           },
           "error": {
