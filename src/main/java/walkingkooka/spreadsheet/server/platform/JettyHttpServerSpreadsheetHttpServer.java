@@ -353,7 +353,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     }
 
     private static SpreadsheetProvider systemSpreadsheetProvider() {
-        final SpreadsheetFormatterProvider spreadsheetFormatterProvider = SpreadsheetFormatterProviders.spreadsheetFormatPattern();
+        final SpreadsheetFormatterProvider spreadsheetFormatterProvider = SpreadsheetFormatterProviders.spreadsheetFormatters();
         final SpreadsheetParserProvider spreadsheetParserProvider = SpreadsheetParserProviders.spreadsheetParsePattern(
             spreadsheetFormatterProvider
         );
@@ -514,7 +514,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     }
 
     private static Function<SpreadsheetId, SpreadsheetFormatterProvider> spreadsheetIdToSpreadsheetFormatterProvider() {
-        return (id) -> SpreadsheetFormatterProviders.spreadsheetFormatPattern();
+        return (id) -> SpreadsheetFormatterProviders.spreadsheetFormatters();
     }
 
     private static Function<SpreadsheetId, SpreadsheetParserProvider> spreadsheetIdToSpreadsheetParserProvider() {
