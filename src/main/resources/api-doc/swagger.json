@@ -341,7 +341,7 @@
           {
             "name": "path",
             "in": "path",
-            "required": false,
+            "required": true,
             "default": "",
             "minLength": 0,
             "schema": {
@@ -565,7 +565,7 @@
           }
         ],
         "requestBody": {
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -609,7 +609,7 @@
           }
         ],
         "requestBody": {
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -1467,7 +1467,7 @@
           }
         ],
         "requestBody": {
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
@@ -3131,7 +3131,7 @@
           }
         ],
         "requestBody": {
-          "required": false,
+          "required": true,
           "content": {
             "application/json": {
               "schema": {
