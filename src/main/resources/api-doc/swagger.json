@@ -2441,6 +2441,89 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/formHandler": {
+      "get": {
+        "tags": [
+          "formHandlers"
+        ],
+        "summary": "Returns ALL FormHandler(s) available to the enclosing Spreadsheet",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FormHandlerInfoSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/spreadsheet/{spreadsheet-id}/formHandler/{form-handler-name}": {
+      "get": {
+        "tags": [
+          "formHandlers"
+        ],
+        "summary": "Returns the named FormHandlerInfo if available to the enclosing Spreadsheet",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          },
+          {
+            "name": "form-handler-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/FormHandlerName"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FormHandlerInfo"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/function": {
       "get": {
         "tags": [
@@ -3523,6 +3606,27 @@
         "items": {
           "$ref" : "#/components/schemas/FormField"
         }
+      },
+      "FormHandlerName": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255,
+        "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$",
+        "example": "non-null"
+      },
+      "FormHandlerInfoSet": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/FormHandlerInfo"
+        }
+      },
+      "FormHandlerInfo": {
+        "type": "string",
+        "example": "https://github.com/mP1/walkingkooka-validation/FormHandler/basic basic"
+      },
+      "FormHandlerSelector": {
+        "type": "string",
+        "example": "nonNull"
       },
       "FormName": {
         "type": "string",
