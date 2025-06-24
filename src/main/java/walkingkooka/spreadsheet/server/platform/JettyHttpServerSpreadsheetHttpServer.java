@@ -325,7 +325,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             Indentation.with("  "),
             LineEnding.SYSTEM,
             ApacheTikaMediaTypeDetectors.apacheTika(),
-            LocaleContexts.jre(),
+            LocaleContexts.jre(defaultLocale),
             systemSpreadsheetProvider(),
             providerContext,
             metadataStore,
@@ -460,8 +460,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             .setDefaults(
                 SpreadsheetMetadata.NON_LOCALE_DEFAULTS
                     .set(SpreadsheetMetadataPropertyName.LOCALE, defaultLocale)
-                    .loadFromLocale()
-                    .set(SpreadsheetMetadataPropertyName.CELL_CHARACTER_WIDTH, 1)
+                    .loadFromLocale(
+                        LocaleContexts.jre(defaultLocale)
+                    ).set(SpreadsheetMetadataPropertyName.CELL_CHARACTER_WIDTH, 1)
                     .set(SpreadsheetMetadataPropertyName.DATE_TIME_OFFSET, Converters.EXCEL_1900_DATE_SYSTEM_OFFSET)
                     .set(SpreadsheetMetadataPropertyName.DEFAULT_YEAR, 1900)
                     .set(SpreadsheetMetadataPropertyName.EXPRESSION_NUMBER_KIND, ExpressionNumberKind.DOUBLE)
