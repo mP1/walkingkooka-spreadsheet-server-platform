@@ -28,6 +28,7 @@ import walkingkooka.datetime.HasNow;
 import walkingkooka.environment.EnvironmentContext;
 import walkingkooka.environment.EnvironmentContexts;
 import walkingkooka.environment.EnvironmentValueName;
+import walkingkooka.locale.LocaleContext;
 import walkingkooka.locale.LocaleContexts;
 import walkingkooka.net.AbsoluteUrl;
 import walkingkooka.net.HostAddress;
@@ -307,6 +308,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             storeRepositorySupplier(),
             spreadsheetIdToSpreadsheetParserProvider,
             spreadsheetIdToSpreadsheetMetadata(),
+            LocaleContexts.jre(defaultLocale),
             providerContext
         );
 
@@ -538,6 +540,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                                                                                       final Supplier<SpreadsheetStoreRepository> repositoryFactory,
                                                                                                       final Function<SpreadsheetId, SpreadsheetParserProvider> spreadsheetIdToSpreadsheetParserProvider,
                                                                                                       final Function<SpreadsheetId, SpreadsheetMetadata> spreadsheetIdToSpreadsheetMetadata,
+                                                                                                      final LocaleContext localeContext,
                                                                                                       final ProviderContext providerContext) {
         return (id) -> {
             SpreadsheetStoreRepository repository = idToRepository.get(id);
@@ -548,6 +551,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                     id,
                     repositoryFactory.get(),
                     spreadsheetIdToSpreadsheetParserProvider.apply(id),
+                    localeContext,
                     ProviderContexts.basic(
                         ConverterContexts.fake(), // https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/222
                         environmentContext,
