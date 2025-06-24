@@ -28,6 +28,7 @@ import walkingkooka.datetime.HasNow;
 import walkingkooka.environment.EnvironmentContext;
 import walkingkooka.environment.EnvironmentContexts;
 import walkingkooka.environment.EnvironmentValueName;
+import walkingkooka.locale.LocaleContexts;
 import walkingkooka.net.AbsoluteUrl;
 import walkingkooka.net.HostAddress;
 import walkingkooka.net.IpPort;
@@ -324,6 +325,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             Indentation.with("  "),
             LineEnding.SYSTEM,
             ApacheTikaMediaTypeDetectors.apacheTika(),
+            LocaleContexts.jre(),
             systemSpreadsheetProvider(),
             providerContext,
             metadataStore,
