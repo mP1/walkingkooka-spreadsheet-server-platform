@@ -5,6 +5,86 @@
     "version": "v1.0.0"
   },
   "paths": {
+    "/api/locale/{locale-tag}": {
+      "get": {
+        "tags": [
+          "locale"
+        ],
+        "summary": "Retrieves a Locale given a LocaleTag",
+        "parameters": [
+          {
+            "name": "locale-tag",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/LocaleTag"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocaleHateosResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/locale/*": {
+      "get": {
+        "tags": [
+          "locale"
+        ],
+        "summary": "Gets all the locales for the requested range",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Offset"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Count"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocaleHateosResourceSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/plugin/*": {
       "get": {
         "tags": [
@@ -3682,6 +3762,15 @@
         "example": "/META-INF/MANIFEST.MF"
       },
       "JsonString": {
+        "type": "string"
+      },
+      "LocaleHateosResource": {
+        "type": "string"
+      },
+      "LocaleHateosResourceSet": {
+        "type": "string"
+      },
+      "LocaleTag": {
         "type": "string"
       },
       "Offset": {
