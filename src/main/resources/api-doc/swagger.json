@@ -3922,6 +3922,9 @@
           "formula": {
             "$ref" : "#/components/schemas/SpreadsheetFormula"
           },
+          "value": {
+            "type" : "object"
+          },
           "formatter": {
             "$ref" : "#/components/schemas/SpreadsheetFormatterSelector"
           },
@@ -3933,6 +3936,9 @@
           },
           "formattedValue": {
             "$ref" : "#/components/schemas/TextNode"
+          },
+          "validator": {
+            "$ref" : "#/components/schemas/ValidatorSelector"
           }
         }
       },
