@@ -41,6 +41,42 @@
         }
       }
     },
+    "/api/decimalNumberSymbols/{locale-tag}": {
+      "get": {
+        "tags": [
+          "decimalNumberSymbols"
+        ],
+        "summary": "Retrieves the DecimalNumberSymbols given a LocaleTag",
+        "parameters": [
+          {
+            "name": "locale-tag",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/LocaleTag"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DecimalNumberSymbolsHateosResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/locale/{locale-tag}": {
       "get": {
         "tags": [
@@ -3680,6 +3716,78 @@
           },
           "dateTimeSymbols": {
             "$ref": "#/components/schemas/DateTimeSymbols"
+          }
+        }
+      },
+      "DecimalNumberSymbols": {
+        "type": "object",
+        "properties": {
+          "negativeSign": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1
+          },
+          "positiveSign": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1
+          },
+          "zeroDigit": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1
+          },
+          "currencySymbol": {
+            "type": "string",
+            "minLength": 1
+          },
+          "decimalSeparator": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1
+          },
+          "exponentSymbol": {
+            "type": "string",
+            "minLength": 1
+          },
+          "groupSeparator": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1
+          },
+          "infinitySymbol": {
+            "type": "string",
+            "minLength": 1
+          },
+          "monetaryDecimalSeparator": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1
+          },
+          "nanSymbol": {
+            "type": "string",
+            "minLength": 1
+          },
+          "percentSymbol": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1
+          },
+          "permillSymbol": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1
+          }
+        }
+      },
+      "DecimalNumberSymbolsHateosResource": {
+        "type": "object",
+        "properties": {
+          "localeTag": {
+            "$ref": "#/components/schemas/LocaleTag"
+          },
+          "dateTimeSymbols": {
+            "$ref": "#/components/schemas/DecimalNumberSymbols"
           }
         }
       },
