@@ -3916,6 +3916,9 @@
           "reference": {
             "$ref" : "#/components/schemas/SpreadsheetCellReference"
           },
+          "dateTimeSymbols": {
+            "$ref" : "#/components/schemas/DateTimeSymbols"
+          },
           "formula": {
             "$ref" : "#/components/schemas/SpreadsheetFormula"
           },
