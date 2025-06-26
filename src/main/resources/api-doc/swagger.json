@@ -3765,10 +3765,21 @@
         "type": "string"
       },
       "LocaleHateosResource": {
-        "type": "string"
+        "type": "object",
+        "properties": {
+          "localeTag": {
+            "$ref" : "#/components/schemas/LocaleTag"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
       },
       "LocaleHateosResourceSet": {
-        "type": "string"
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/LocaleHateosResource"
+        }
       },
       "LocaleTag": {
         "type": "string"
