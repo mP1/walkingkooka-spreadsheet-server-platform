@@ -4027,6 +4027,9 @@
           "dateTimeSymbols": {
             "$ref" : "#/components/schemas/DateTimeSymbols"
           },
+          "decimalNumberSymbols": {
+            "$ref" : "#/components/schemas/DecimalNumberSymbols"
+          },
           "formula": {
             "$ref" : "#/components/schemas/SpreadsheetFormula"
           },
