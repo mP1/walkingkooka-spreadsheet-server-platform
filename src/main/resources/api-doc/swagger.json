@@ -5,6 +5,42 @@
     "version": "v1.0.0"
   },
   "paths": {
+    "/api/dateTimeSymbols/{locale-tag}": {
+      "get": {
+        "tags": [
+          "dateTimeSymbols"
+        ],
+        "summary": "Retrieves the DateTimeSymbols given a LocaleTag",
+        "parameters": [
+          {
+            "name": "locale-tag",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/LocaleTag"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DateTimeSymbolsHateosResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/locale/{locale-tag}": {
       "get": {
         "tags": [
@@ -3600,6 +3636,52 @@
         "type": "string",
         "format": "date-time",
         "example": "1999-12-31T12:58:59"
+      },
+      "DateTimeSymbols": {
+        "type": "object",
+        "properties": {
+          "ampms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "monthNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "monthNameAbbreviations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "weekDayNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "weekDayNameAbbreviations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "DateTimeSymbolsHateosResource": {
+        "type": "object",
+        "properties": {
+          "localeTag": {
+            "$ref": "#/components/schemas/LocaleTag"
+          },
+          "dateTimeSymbols": {
+            "$ref": "#/components/schemas/DateTimeSymbols"
+          }
+        }
       },
       "Double": {
         "type": "number",
