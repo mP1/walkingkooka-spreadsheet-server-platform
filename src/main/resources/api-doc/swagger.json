@@ -1959,6 +1959,60 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/converter/*/verify/{spreadsheet-metadata-property-name-converter-selector}": {
+      "post": {
+        "tags": [
+          "converters"
+        ],
+        "summary": "Verifies the ConverterSelector in the BODY using the provided SpreadsheetMetadataPropertyNameConverterSelector",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          },
+          {
+            "name": "spreadsheet-metadata-property-name-converter-selector",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetMetadataPropertyNameConverterSelector"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConverterSelector"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MissingConverterSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/exporter": {
       "get": {
         "tags": [
@@ -3658,6 +3712,10 @@
         "type": "string",
         "example": "https://github.com/mP1/walkingkooka-spreadsheet/Converter/general general"
       },
+      "ConverterSelector": {
+        "type": "string",
+        "example": "simple"
+      },
       "Count": {
         "type": "integer",
         "format": "int32",
@@ -3973,6 +4031,40 @@
       },
       "LocaleTag": {
         "type": "string"
+      },
+      "MissingConverter": {
+        "type": "object",
+        "properties": {
+          "converter": {
+            "$ref": "#/components/schemas/ConverterName"
+          },
+          "values": {
+            "$ref": "#/components/schemas/MissingConverterValueSet"
+          }
+        }
+      },
+      "MissingConverterSet": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/MissingConverter"
+        }
+      },
+      "MissingConverterValue": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "object"
+          },
+          "type": {
+            "type": "string"
+          }
+        }
+      },
+      "MissingConverterValueSet": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/MissingConverterValue"
+        }
       },
       "Offset": {
         "type": "integer",
@@ -4465,6 +4557,16 @@
       },
       "SpreadsheetMetadata": {
         "type": "object"
+      },
+      "SpreadsheetMetadataPropertyNameConverterSelector": {
+        "type": "string",
+        "enum": [
+          "findConverter",
+          "formattingConverter",
+          "formulaConverter",
+          "sortConverter",
+          "validationConverter"
+        ]
       },
       "SpreadsheetMetadataSet": {
         "type": "array",
