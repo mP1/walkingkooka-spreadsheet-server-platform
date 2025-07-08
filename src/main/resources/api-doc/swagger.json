@@ -3545,22 +3545,13 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/validator": {
+    "/api/validator": {
       "get": {
         "tags": [
           "validators"
         ],
-        "summary": "Returns ALL Validator available to the enclosing Spreadsheet",
-        "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetId"
-            }
-          }
-        ],
+        "summary": "Returns ALL Validator available to the system",
+        "parameters": [],
         "produces": [
           "application/json"
         ],
@@ -3581,21 +3572,13 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/validator/{validator-name}": {
+    "/api/validator/{validator-name}": {
       "get": {
         "tags": [
           "validators"
         ],
-        "summary": "Returns the named ValidatorInfo if available to the enclosing Spreadsheet",
+        "summary": "Returns the named ValidatorInfo if available to the system",
         "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetId"
-            }
-          },
           {
             "name": "validator-name",
             "in": "path",
