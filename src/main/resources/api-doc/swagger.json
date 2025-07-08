@@ -790,6 +790,60 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/metadata/*/verify/{spreadsheet-metadata-property-name-converter-selector}": {
+      "post": {
+        "tags": [
+          "spreadsheet"
+        ],
+        "summary": "Verifies the ConverterSelector in the BODY using the provided SpreadsheetMetadataPropertyNameConverterSelector",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          },
+          {
+            "name": "spreadsheet-metadata-property-name-converter-selector",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetMetadataPropertyNameConverterSelector"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConverterSelector"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MissingConverterSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/cell/*/{cell-evaluation-mode}": {
       "get": {
         "tags": [
@@ -1935,60 +1989,6 @@
           },
           "204": {
             "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/api/spreadsheet/{spreadsheet-id}/converter/*/verify/{spreadsheet-metadata-property-name-converter-selector}": {
-      "post": {
-        "tags": [
-          "converters"
-        ],
-        "summary": "Verifies the ConverterSelector in the BODY using the provided SpreadsheetMetadataPropertyNameConverterSelector",
-        "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetId"
-            }
-          },
-          {
-            "name": "spreadsheet-metadata-property-name-converter-selector",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetMetadataPropertyNameConverterSelector"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ConverterSelector"
-              }
-            }
-          }
-        },
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/MissingConverterSet"
-                }
-              }
-            }
           },
           "400": {
             "description": "Bad Request"
