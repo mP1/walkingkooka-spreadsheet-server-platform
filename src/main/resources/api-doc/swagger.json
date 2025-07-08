@@ -2638,22 +2638,13 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/formHandler": {
+    "/api/formHandler": {
       "get": {
         "tags": [
           "formHandlers"
         ],
-        "summary": "Returns ALL FormHandler(s) available to the enclosing Spreadsheet",
-        "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetId"
-            }
-          }
-        ],
+        "summary": "Returns ALL FormHandler(s) for the system",
+        "parameters": [],
         "produces": [
           "application/json"
         ],
@@ -2674,12 +2665,12 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/formHandler/{form-handler-name}": {
+    "/api/formHandler/{form-handler-name}": {
       "get": {
         "tags": [
           "formHandlers"
         ],
-        "summary": "Returns the named FormHandlerInfo if available to the enclosing Spreadsheet",
+        "summary": "Returns the named FormHandlerInfo if available to the System",
         "parameters": [
           {
             "name": "spreadsheet-id",
