@@ -1913,22 +1913,13 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/converter": {
+    "/api/converter": {
       "get": {
         "tags": [
           "converters"
         ],
-        "summary": "Returns ALL Converter available to the enclosing Spreadsheet",
-        "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetId"
-            }
-          }
-        ],
+        "summary": "Returns ALL Converter available to the system",
+        "parameters": [],
         "produces": [
           "application/json"
         ],
@@ -1949,21 +1940,13 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/converter/{converter-name}": {
+    "/api/converter/{converter-name}": {
       "get": {
         "tags": [
           "converters"
         ],
-        "summary": "Returns the named ConverterInfo if available to the enclosing Spreadsheet",
+        "summary": "Returns the named ConverterInfo for the system",
         "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetId"
-            }
-          },
           {
             "name": "converter-name",
             "in": "path",
