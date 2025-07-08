@@ -1979,22 +1979,13 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/exporter": {
+    "/api/exporter": {
       "get": {
         "tags": [
           "exporters"
         ],
-        "summary": "Returns ALL SpreadsheetExporter available to the enclosing Spreadsheet",
-        "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetId"
-            }
-          }
-        ],
+        "summary": "Returns ALL SpreadsheetExporter available to the system",
+        "parameters": [],
         "produces": [
           "application/json"
         ],
@@ -2015,21 +2006,13 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/exporter/{spreadsheet-exporter-name}": {
+    "/api/exporter/{spreadsheet-exporter-name}": {
       "get": {
         "tags": [
           "exporters"
         ],
-        "summary": "Returns the named SpreadsheetExporterInfo if available to the enclosing Spreadsheet",
+        "summary": "Returns the named SpreadsheetExporterInfo",
         "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetId"
-            }
-          },
           {
             "name": "spreadsheet-exporter-name",
             "in": "path",
