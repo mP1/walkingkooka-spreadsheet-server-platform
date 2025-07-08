@@ -2712,22 +2712,13 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/function": {
+    "/api/function": {
       "get": {
         "tags": [
           "functions"
         ],
-        "summary": "Returns ALL ExpressionFunction(s) available to the enclosing Spreadsheet",
-        "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetId"
-            }
-          }
-        ],
+        "summary": "Returns ALL ExpressionFunction(s) available to the system",
+        "parameters": [],
         "produces": [
           "application/json"
         ],
@@ -2748,21 +2739,13 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/function/{function-name}": {
+    "/api/function/{function-name}": {
       "get": {
         "tags": [
           "functions"
         ],
-        "summary": "Returns the named ExpressionFunctionInfo if available to the enclosing Spreadsheet",
+        "summary": "Returns the named ExpressionFunctionInfo if available to the system",
         "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetId"
-            }
-          },
           {
             "name": "function-name",
             "in": "path",
