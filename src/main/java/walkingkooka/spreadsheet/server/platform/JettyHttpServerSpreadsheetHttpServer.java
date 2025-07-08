@@ -27,7 +27,6 @@ import walkingkooka.convert.Converters;
 import walkingkooka.datetime.HasNow;
 import walkingkooka.environment.EnvironmentContext;
 import walkingkooka.environment.EnvironmentContexts;
-import walkingkooka.environment.EnvironmentValueName;
 import walkingkooka.locale.LocaleContext;
 import walkingkooka.locale.LocaleContexts;
 import walkingkooka.net.AbsoluteUrl;
@@ -89,7 +88,7 @@ import walkingkooka.spreadsheet.store.SpreadsheetRowStores;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepositories;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepository;
 import walkingkooka.spreadsheet.validation.form.store.SpreadsheetFormStores;
-import walkingkooka.storage.StorageStoreContext;
+import walkingkooka.storage.StorageStoreContexts;
 import walkingkooka.storage.StorageStores;
 import walkingkooka.text.CaseSensitivity;
 import walkingkooka.text.CharSequences;
@@ -118,7 +117,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -581,27 +579,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             SpreadsheetCellRangeStores.treeMap(),
             SpreadsheetRowStores.treeMap(),
             StorageStores.tree(
-                new StorageStoreContext() {
-                    @Override
-                    public <T> Optional<T> environmentValue(final EnvironmentValueName<T> environmentValueName) {
-                        return ENVIRONMENT_CONTEXT.environmentValue(environmentValueName);
-                    }
-
-                    @Override
-                    public Set<EnvironmentValueName<?>> environmentValueNames() {
-                        return ENVIRONMENT_CONTEXT.environmentValueNames();
-                    }
-
-                    @Override
-                    public Optional<EmailAddress> user() {
-                        return ENVIRONMENT_CONTEXT.user();
-                    }
-
-                    @Override
-                    public LocalDateTime now() {
-                        return ENVIRONMENT_CONTEXT.now();
-                    }
-                }
+                StorageStoreContexts.basic(ENVIRONMENT_CONTEXT)
             ),
             SpreadsheetUserStores.treeMap()
         );
