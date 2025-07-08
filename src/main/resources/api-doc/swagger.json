@@ -1796,22 +1796,13 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/comparator": {
+    "/api/comparator": {
       "get": {
         "tags": [
           "comparators"
         ],
-        "summary": "Returns ALL SpreadsheetComparator available to the enclosing Spreadsheet",
-        "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetId"
-            }
-          }
-        ],
+        "summary": "Returns ALL SpreadsheetComparator available to the system",
+        "parameters": [],
         "produces": [
           "application/json"
         ],
@@ -1829,21 +1820,13 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/comparator/{spreadsheet-comparator-name}": {
+    "/api/comparator/{spreadsheet-comparator-name}": {
       "get": {
         "tags": [
           "comparators"
         ],
-        "summary": "Returns the named SpreadsheetComparatorInfo if available to the enclosing Spreadsheet",
+        "summary": "Returns the named SpreadsheetComparatorInfo",
         "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetId"
-            }
-          },
           {
             "name": "spreadsheet-comparator-name",
             "in": "path",
