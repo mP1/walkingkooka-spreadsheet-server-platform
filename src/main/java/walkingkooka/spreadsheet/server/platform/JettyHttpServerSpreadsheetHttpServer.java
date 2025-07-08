@@ -90,7 +90,6 @@ import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepository;
 import walkingkooka.spreadsheet.validation.form.store.SpreadsheetFormStores;
 import walkingkooka.storage.StorageStoreContexts;
 import walkingkooka.storage.StorageStores;
-import walkingkooka.text.CaseSensitivity;
 import walkingkooka.text.CharSequences;
 import walkingkooka.text.Indentation;
 import walkingkooka.text.LineEnding;
@@ -503,7 +502,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                         spreadsheetFormatterProvider,
                         spreadsheetParserProvider
                     ),
-                    SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(CaseSensitivity.INSENSITIVE),
+                    SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(SpreadsheetExpressionFunctions.NAME_CASE_SENSITIVITY),
                     SpreadsheetComparatorProviders.spreadsheetComparators(),
                     SpreadsheetExporterProviders.spreadsheetExport(),
                     spreadsheetFormatterProvider,
