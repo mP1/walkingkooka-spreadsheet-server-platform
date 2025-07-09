@@ -3055,22 +3055,13 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/parser": {
+    "/api/parser": {
       "get": {
         "tags": [
           "parsers"
         ],
-        "summary": "Returns ALL Parser available to the enclosing Spreadsheet",
-        "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetId"
-            }
-          }
-        ],
+        "summary": "Returns ALL Parser available to the system",
+        "parameters": [],
         "produces": [
           "application/json"
         ],
@@ -3091,21 +3082,13 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/parser/{spreadsheet-parser-name}": {
+    "/api/parser/{spreadsheet-parser-name}": {
       "get": {
         "tags": [
           "parsers"
         ],
-        "summary": "Returns the named SpreadsheetParserInfo if available to the enclosing Spreadsheet",
+        "summary": "Returns the named SpreadsheetParserInfo if available to system",
         "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetId"
-            }
-          },
           {
             "name": "spreadsheet-parser-name",
             "in": "path",
