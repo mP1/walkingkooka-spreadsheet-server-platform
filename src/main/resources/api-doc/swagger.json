@@ -2278,22 +2278,13 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/formatter": {
+    "/api/formatter": {
       "get": {
         "tags": [
           "formatters"
         ],
-        "summary": "Returns ALL SpreadsheetFormatter available to the enclosing Spreadsheet",
-        "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetId"
-            }
-          }
-        ],
+        "summary": "Returns ALL SpreadsheetFormatter available to the system",
+        "parameters": [],
         "produces": [
           "application/json"
         ],
@@ -2314,21 +2305,13 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/formatter/{spreadsheet-formatter-name}": {
+    "/api/formatter/{spreadsheet-formatter-name}": {
       "get": {
         "tags": [
           "formatters"
         ],
-        "summary": "Returns the named SpreadsheetFormatterInfo if available to the enclosing Spreadsheet",
+        "summary": "Returns the named SpreadsheetFormatterInfo if known to the system",
         "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetId"
-            }
-          },
           {
             "name": "spreadsheet-formatter-name",
             "in": "path",
