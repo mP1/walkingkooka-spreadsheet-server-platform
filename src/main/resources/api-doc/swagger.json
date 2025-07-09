@@ -790,7 +790,7 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/metadata/*/verify/{spreadsheet-metadata-property-name-converter-selector}": {
+    "/api/spreadsheet/{spreadsheet-id}/metadata/{spreadsheet-metadata-property-name-converter-selector}/verify": {
       "post": {
         "tags": [
           "spreadsheet"
