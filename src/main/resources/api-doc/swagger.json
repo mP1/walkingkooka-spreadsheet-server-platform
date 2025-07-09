@@ -2539,52 +2539,6 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/formatter/*/format": {
-      "post": {
-        "tags": [
-          "formatters"
-        ],
-        "summary": "Accepts a request containing SpreadsheetFormatterSelector",
-        "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetId"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/SpreadsheetFormatterFormatRequestList"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TextNodeList"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
     "/api/spreadsheet/{spreadsheet-id}/formatter/*/menu": {
       "get": {
         "tags": [
@@ -4257,23 +4211,6 @@
       "SpreadsheetFormatterInfo": {
         "type": "object",
         "example": "https://github.com/mP1/walkingkooka-spreadsheet/SpreadsheetFormatter/general general"
-      },
-      "SpreadsheetFormatterFormatRequestList": {
-        "type": "array",
-        "items": {
-          "$ref" : "#/components/schemas/SpreadsheetFormatterFormatRequest"
-        }
-      },
-      "SpreadsheetFormatterFormatRequest": {
-        "type": "object",
-        "properties": {
-          "selector": {
-            "$ref" : "#/components/schemas/SpreadsheetFormatterSelector"
-          },
-          "value": {
-            "type": "object"
-          }
-        }
       },
       "SpreadsheetFormatterName": {
         "type": "string",
