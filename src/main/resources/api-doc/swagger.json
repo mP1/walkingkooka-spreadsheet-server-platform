@@ -2341,12 +2341,12 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/formatter/{spreadsheet-formatter-name}/next-token": {
-      "post": {
+    "/api/spreadsheet/{spreadsheet-id}/formatter/*/next-token/{spreadsheet-formatter-selector}": {
+      "get": {
         "tags": [
           "formatters"
         ],
-        "summary": "Accepts a request containing SpreadsheetFormatterSelector returning the next SpreadsheetFormatterSelectorToken",
+        "summary": "Accepts a request containing a SpreadsheetFormatterSelector returning the next SpreadsheetFormatterSelectorToken",
         "parameters": [
           {
             "name": "spreadsheet-id",
@@ -2357,27 +2357,17 @@
             }
           },
           {
-            "name": "spreadsheet-formatter-name",
+            "name": "spreadsheet-formatter-selector",
             "in": "path",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/SpreadsheetFormatterName"
+              "$ref": "#/components/schemas/SpreadsheetFormatterSelector"
             }
           }
         ],
         "produces": [
           "application/json"
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/JsonString"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "200 OK",
@@ -2830,6 +2820,66 @@
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Offset"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Count"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetDelta"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/spreadsheet/{spreadsheet-id}/label/*/findByName/{spreadsheet-label-name}": {
+      "get": {
+        "tags": [
+          "label"
+        ],
+        "summary": "Finds any labels that match the query",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          },
+          {
+            "name": "spreadsheet-label-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
             }
           },
           {
