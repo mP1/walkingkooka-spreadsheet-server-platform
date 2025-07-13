@@ -2869,6 +2869,66 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/label/*/findByName/{spreadsheet-label-name}": {
+      "get": {
+        "tags": [
+          "label"
+        ],
+        "summary": "Finds any labels that match the query",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          },
+          {
+            "name": "spreadsheet-label-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Offset"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Count"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetDelta"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/label/{label-name}": {
       "delete": {
         "tags": [
