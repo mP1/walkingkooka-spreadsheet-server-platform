@@ -2981,12 +2981,12 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/parser/*/edit": {
-      "post": {
+    "/api/spreadsheet/{spreadsheet-id}/parser/*/edit/{spreadsheet-parser-selector}": {
+      "get": {
         "tags": [
           "parsers"
         ],
-        "summary": "Parses the request body holding a SpreadsheetParserSelector and gives an error message, tokens, next and samples",
+        "summary": "Accepts a SpreadsheetParserSelector and gives an error message, tokens, next and samples",
         "parameters": [
           {
             "name": "spreadsheet-id",
@@ -2995,18 +2995,16 @@
             "schema": {
               "$ref": "#/components/schemas/SpreadsheetId"
             }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/JsonString"
-              }
+          },
+          {
+            "name": "spreadsheet-parser-selector",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetParserSelector"
             }
           }
-        },
+        ],
         "produces": [
           "application/json"
         ],
