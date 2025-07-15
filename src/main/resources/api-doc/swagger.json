@@ -2341,12 +2341,12 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/formatter/{spreadsheet-formatter-name}/next-token": {
-      "post": {
+    "/api/spreadsheet/{spreadsheet-id}/formatter/*/next-token/{spreadsheet-formatter-selector}": {
+      "get": {
         "tags": [
           "formatters"
         ],
-        "summary": "Accepts a request containing SpreadsheetFormatterSelector returning the next SpreadsheetFormatterSelectorToken",
+        "summary": "Accepts a request containing a SpreadsheetFormatterSelector returning the next SpreadsheetFormatterSelectorToken",
         "parameters": [
           {
             "name": "spreadsheet-id",
@@ -2357,27 +2357,17 @@
             }
           },
           {
-            "name": "spreadsheet-formatter-name",
+            "name": "spreadsheet-formatter-selector",
             "in": "path",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/SpreadsheetFormatterName"
+              "$ref": "#/components/schemas/SpreadsheetFormatterSelector"
             }
           }
         ],
         "produces": [
           "application/json"
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/JsonString"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "200 OK",
