@@ -2341,12 +2341,12 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/formatter/*/edit": {
-      "post": {
+    "/api/spreadsheet/{spreadsheet-id}/formatter/*/edit/{spreadsheet-formatter-selector}": {
+      "get": {
         "tags": [
           "formatters"
         ],
-        "summary": "Parses the request body holding a SpreadsheetFormatterSelector and gives an error message, tokens, next and samples",
+        "summary": "Uses the given SpreadsheetFormatterSelector and gives an error message, tokens, next and samples",
         "parameters": [
           {
             "name": "spreadsheet-id",
@@ -2355,18 +2355,16 @@
             "schema": {
               "$ref": "#/components/schemas/SpreadsheetId"
             }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/JsonString"
-              }
+          },
+          {
+            "name": "spreadsheet-formatter-selector",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetFormatterSelector"
             }
           }
-        },
+        ],
         "produces": [
           "application/json"
         ],
