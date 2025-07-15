@@ -2341,50 +2341,6 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/formatter/*/next-token/{spreadsheet-formatter-selector}": {
-      "get": {
-        "tags": [
-          "formatters"
-        ],
-        "summary": "Accepts a request containing a SpreadsheetFormatterSelector returning the next SpreadsheetFormatterSelectorToken",
-        "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetId"
-            }
-          },
-          {
-            "name": "spreadsheet-formatter-selector",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetFormatterSelector"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SpreadsheetFormatterSelectorToken"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
     "/api/spreadsheet/{spreadsheet-id}/formatter/{spreadsheet-formatter-name}/samples": {
       "get": {
         "tags": [
