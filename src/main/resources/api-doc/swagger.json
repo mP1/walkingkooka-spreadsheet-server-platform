@@ -2981,60 +2981,6 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/parser/{spreadsheet-parser-name}/next-token": {
-      "post": {
-        "tags": [
-          "parsers"
-        ],
-        "summary": "Accepts a request containing SpreadsheetParserSelector returning the next SpreadsheetParserSelectorToken",
-        "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetId"
-            }
-          },
-          {
-            "name": "spreadsheet-parser-name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetParserName"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/JsonString"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SpreadsheetParserSelectorToken"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
     "/api/spreadsheet/{spreadsheet-id}/parser/{spreadsheet-parser-name}/tokens": {
       "post": {
         "tags": [
