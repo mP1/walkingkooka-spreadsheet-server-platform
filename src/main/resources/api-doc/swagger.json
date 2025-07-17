@@ -93,6 +93,58 @@
         }
       }
     },
+    "/api/decimalNumberSymbols/*/localeStartsWith/{locale-starts-with}": {
+      "get": {
+        "tags": [
+          "decimalNumberSymbols"
+        ],
+        "summary": "Retrieves all DecimalNumberSymbols that belong to the matched locales",
+        "parameters": [
+          {
+            "name": "locale-starts-with",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/LocaleTag"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Offset"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Count"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DecimalNumberSymbolsHateosResourceSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/decimalNumberSymbols/{locale-tag}": {
       "get": {
         "tags": [
@@ -3594,6 +3646,12 @@
           "errors": {
             "$ref": "#/components/schemas/ValidationErrorList"
           }
+        }
+      },
+      "DecimalNumberSymbolsHateosResourceSet": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/DecimalNumberSymbolsHateosResource"
         }
       },
       "FormField": {
