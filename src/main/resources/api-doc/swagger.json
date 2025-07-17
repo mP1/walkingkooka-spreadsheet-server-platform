@@ -181,42 +181,6 @@
         }
       }
     },
-    "/api/locale/{locale-tag}": {
-      "get": {
-        "tags": [
-          "locale"
-        ],
-        "summary": "Retrieves a Locale given a LocaleTag",
-        "parameters": [
-          {
-            "name": "locale-tag",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/LocaleTag"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LocaleHateosResource"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
     "/api/locale/*": {
       "get": {
         "tags": [
@@ -251,6 +215,42 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/LocaleHateosResourceSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/locale/{locale-tag}": {
+      "get": {
+        "tags": [
+          "locale"
+        ],
+        "summary": "Retrieves a Locale given a LocaleTag",
+        "parameters": [
+          {
+            "name": "locale-tag",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/LocaleTag"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocaleHateosResource"
                 }
               }
             }
