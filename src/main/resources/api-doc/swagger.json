@@ -5,6 +5,58 @@
     "version": "v1.0.0"
   },
   "paths": {
+    "/api/dateTimeSymbols/*/localeStartsWith/{locale-starts-with}": {
+      "get": {
+        "tags": [
+          "dateTimeSymbols"
+        ],
+        "summary": "Retrieves all DateTimeSymbols that belong to the matched locales",
+        "parameters": [
+          {
+            "name": "locale-starts-with",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/LocaleTag"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Offset"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Count"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DateTimeSymbolsHateosResourceSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/dateTimeSymbols/{locale-tag}": {
       "get": {
         "tags": [
@@ -3422,6 +3474,12 @@
           "dateTimeSymbols": {
             "$ref": "#/components/schemas/DateTimeSymbols"
           }
+        }
+      },
+      "DateTimeSymbolsHateosResourceSet": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/DateTimeSymbolsHateosResource"
         }
       },
       "DecimalNumberSymbols": {
