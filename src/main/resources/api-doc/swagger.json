@@ -948,7 +948,7 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/metadata/{spreadsheet-metadata-property-name-formatter-selector}/edit":{
+    "/api/spreadsheet/{spreadsheet-id}/metadata/{spreadsheet-metadata-property-name-formatter-selector}":{
       "get": {
         "tags": [
           "spreadsheet"
@@ -972,16 +972,6 @@
             }
           }
         ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/ConverterSelector"
-              }
-            }
-          }
-        },
         "produces": [
           "application/json"
         ],
