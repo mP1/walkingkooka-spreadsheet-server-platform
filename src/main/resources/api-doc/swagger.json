@@ -948,6 +948,60 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/metadata/{spreadsheet-metadata-property-name-formatter-selector}/edit":{
+      "get": {
+        "tags": [
+          "spreadsheet"
+        ],
+        "summary": "Used during editing of a SpreadsheetFormatterSelector to display tokens and samples",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          },
+          {
+            "name": "spreadsheet-metadata-property-name-formatter-selector",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetMetadataPropertyNameSpreadsheetFormatterSelector"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConverterSelector"
+              }
+            }
+          }
+        },
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MissingConverterSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/cell/*/{cell-evaluation-mode}": {
       "get": {
         "tags": [
@@ -4328,6 +4382,16 @@
           "formulaConverter",
           "sortConverter",
           "validationConverter"
+        ]
+      },
+      "SpreadsheetMetadataPropertyNameSpreadsheetFormatterSelector": {
+        "type": "string",
+        "enum": [
+          "dateFormatter",
+          "dateTimeFormatter",
+          "numberFormatter",
+          "textFormatter",
+          "timeFormatter"
         ]
       },
       "SpreadsheetMetadataSet": {
