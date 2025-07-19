@@ -948,7 +948,7 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/metadata/{spreadsheet-metadata-property-name-formatter-selector}":{
+    "/api/spreadsheet/{spreadsheet-id}/metadata/{spreadsheet-metadata-property-name-formatter-selector}/edit/{spreadsheet-formatter-selector}":{
       "get": {
         "tags": [
           "spreadsheet"
@@ -969,6 +969,14 @@
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/SpreadsheetMetadataPropertyNameSpreadsheetFormatterSelector"
+            }
+          },
+          {
+            "name": "spreadsheet-formatter-selector",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetFormatterSelector"
             }
           }
         ],
