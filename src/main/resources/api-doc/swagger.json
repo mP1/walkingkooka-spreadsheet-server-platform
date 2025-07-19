@@ -1588,6 +1588,50 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/cell/{cell-OR-cell-range-OR-label}/formatter-menu": {
+      "get": {
+        "tags": [
+          "cell"
+        ],
+        "summary": "Gives all the menus for all SpreadsheetFormatters",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          },
+          {
+            "name": "cell-OR-cell-range-OR-label",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "#ref": "#/components/schemas/SpreadsheetExpressionReference"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetFormatterSelectorMenuList"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/spreadsheet/{spreadsheet-id}/cell/{cell-OR-cell-range-OR-label}/labels": {
       "get": {
         "tags": [
@@ -2493,86 +2537,6 @@
           },
           "204": {
             "description": "No Content"
-          }
-        }
-      }
-    },
-    "/api/spreadsheet/{spreadsheet-id}/formatter-edit/{spreadsheet-formatter-selector}": {
-      "get": {
-        "tags": [
-          "formatters"
-        ],
-        "summary": "Uses the given SpreadsheetFormatterSelector and gives an error message, tokens, next and samples",
-        "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetId"
-            }
-          },
-          {
-            "name": "spreadsheet-formatter-selector",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetFormatterSelector"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SpreadsheetFormatterSelectorEdit"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/api/spreadsheet/{spreadsheet-id}/formatter-menu": {
-      "get": {
-        "tags": [
-          "formatters"
-        ],
-        "summary": "Gives all the menus for all SpreadsheetFormatters",
-        "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetId"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SpreadsheetFormatterSelectorMenuList"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
           }
         }
       }
