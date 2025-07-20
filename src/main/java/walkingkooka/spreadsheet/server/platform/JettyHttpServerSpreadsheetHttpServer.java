@@ -321,14 +321,14 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
 
         final SpreadsheetHttpServer server = SpreadsheetHttpServer.with(
             serverUrl,
-            Indentation.with("  "),
-            LineEnding.SYSTEM,
             ApacheTikaMediaTypeDetectors.apacheTika(),
             LocaleContexts.jre(defaultLocale),
             systemSpreadsheetProvider(),
             providerContext,
             metadataStore,
             HateosResourceHandlerContexts.basic(
+                Indentation.SPACES2,
+                LineEnding.SYSTEM,
                 JsonNodeMarshallUnmarshallContexts.basic(
                     JsonNodeMarshallContexts.basic(),
                     JsonNodeUnmarshallContexts.basic(
