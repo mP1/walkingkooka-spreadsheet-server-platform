@@ -443,15 +443,14 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
      */
     private final static SpreadsheetName DEFAULT_NAME = SpreadsheetName.with("Untitled");
 
+    private final static ExpressionFunctionAliasSet FUNCTION_ALIASES = SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(SpreadsheetExpressionFunctions.NAME_CASE_SENSITIVITY)
+        .expressionFunctionInfos()
+        .aliasSet();
+
     /**
      * Prepares and merges the default and user locale, loading defaults and more.
      */
     static SpreadsheetMetadata prepareMetadataCreateTemplate(final Locale defaultLocale) {
-        final ExpressionFunctionAliasSet functionAliases = SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(
-                SpreadsheetExpressionFunctions.NAME_CASE_SENSITIVITY
-            ).expressionFunctionInfos()
-            .aliasSet();
-
         return SpreadsheetMetadata.EMPTY
             .set(SpreadsheetMetadataPropertyName.SPREADSHEET_NAME, DEFAULT_NAME)
             .set(SpreadsheetMetadataPropertyName.LOCALE, defaultLocale)
@@ -467,15 +466,23 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                     .set(SpreadsheetMetadataPropertyName.EXPRESSION_NUMBER_KIND, ExpressionNumberKind.DOUBLE)
                     .set(
                         SpreadsheetMetadataPropertyName.FIND_FUNCTIONS,
-                        functionAliases
+                        SpreadsheetExpressionFunctionProviders.FIND
                     ).set(
                         SpreadsheetMetadataPropertyName.FORMULA_FUNCTIONS,
-                        functionAliases
-                    ).set(SpreadsheetMetadataPropertyName.FUNCTIONS, functionAliases
+                        SpreadsheetExpressionFunctionProviders.FORMULA
+                    ).set(
+                        SpreadsheetMetadataPropertyName.FORMATTING_FUNCTIONS,
+                        SpreadsheetExpressionFunctionProviders.FORMATTING
+                    ).set(SpreadsheetMetadataPropertyName.FUNCTIONS,
+                        FUNCTION_ALIASES
                     ).set(SpreadsheetMetadataPropertyName.PRECISION, MathContext.DECIMAL32.getPrecision())
                     .set(SpreadsheetMetadataPropertyName.ROUNDING_MODE, RoundingMode.HALF_UP)
                     .set(SpreadsheetMetadataPropertyName.TEXT_FORMATTER, SpreadsheetPattern.DEFAULT_TEXT_FORMAT_PATTERN.spreadsheetFormatterSelector())
                     .set(SpreadsheetMetadataPropertyName.TWO_DIGIT_YEAR, 20)
+                    .set(
+                        SpreadsheetMetadataPropertyName.VALIDATION_FUNCTIONS,
+                        SpreadsheetExpressionFunctionProviders.VALIDATION
+                    )
             );
     }
 
