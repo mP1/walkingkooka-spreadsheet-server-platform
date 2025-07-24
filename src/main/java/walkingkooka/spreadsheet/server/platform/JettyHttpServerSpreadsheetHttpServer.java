@@ -361,12 +361,14 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
 
         return SpreadsheetProviders.basic(
             SpreadsheetConvertersConverterProviders.spreadsheetConverters(
-                SpreadsheetMetadata.EMPTY.set(
+                (ProviderContext p) -> SpreadsheetMetadata.EMPTY.set(
                     SpreadsheetMetadataPropertyName.LOCALE,
                     Locale.forLanguageTag("EN-AU")
-                ),
-                spreadsheetFormatterProvider,
-                spreadsheetParserProvider
+                ).generalConverter(
+                    spreadsheetFormatterProvider,
+                    spreadsheetParserProvider,
+                    ProviderContexts.fake()
+                )
             ), // converterProvider
             SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(SpreadsheetExpressionFunctions.NAME_CASE_SENSITIVITY),
             SpreadsheetComparatorProviders.spreadsheetComparators(),
@@ -505,9 +507,11 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             return metadata.spreadsheetProvider(
                 SpreadsheetProviders.basic(
                     SpreadsheetConvertersConverterProviders.spreadsheetConverters(
-                        metadata,
-                        spreadsheetFormatterProvider,
-                        spreadsheetParserProvider
+                        (ProviderContext p) -> metadata.generalConverter(
+                            spreadsheetFormatterProvider,
+                            spreadsheetParserProvider,
+                            p
+                        )
                     ),
                     SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(SpreadsheetExpressionFunctions.NAME_CASE_SENSITIVITY),
                     SpreadsheetComparatorProviders.spreadsheetComparators(),
