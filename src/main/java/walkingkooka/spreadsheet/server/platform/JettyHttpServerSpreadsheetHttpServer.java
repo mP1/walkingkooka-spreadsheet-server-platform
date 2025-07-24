@@ -72,6 +72,7 @@ import walkingkooka.spreadsheet.meta.store.SpreadsheetMetadataStores;
 import walkingkooka.spreadsheet.parser.SpreadsheetParserProvider;
 import walkingkooka.spreadsheet.parser.SpreadsheetParserProviders;
 import walkingkooka.spreadsheet.provider.SpreadsheetProvider;
+import walkingkooka.spreadsheet.provider.SpreadsheetProviderContexts;
 import walkingkooka.spreadsheet.provider.SpreadsheetProviders;
 import walkingkooka.spreadsheet.reference.SpreadsheetSelection;
 import walkingkooka.spreadsheet.reference.SpreadsheetViewport;
@@ -96,6 +97,7 @@ import walkingkooka.text.LineEnding;
 import walkingkooka.tree.expression.ExpressionNumberKind;
 import walkingkooka.tree.expression.function.provider.ExpressionFunctionAliasSet;
 import walkingkooka.tree.json.marshall.JsonNodeMarshallContexts;
+import walkingkooka.tree.json.marshall.JsonNodeMarshallUnmarshallContext;
 import walkingkooka.tree.json.marshall.JsonNodeMarshallUnmarshallContexts;
 import walkingkooka.tree.json.marshall.JsonNodeUnmarshallContexts;
 import walkingkooka.util.SystemProperty;
@@ -298,7 +300,10 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                              final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer) {
         final Function<SpreadsheetId, SpreadsheetParserProvider> spreadsheetIdToSpreadsheetParserProvider = spreadsheetIdToSpreadsheetParserProvider();
 
-        final ProviderContext providerContext = providerContext(HAS_NOW);
+        final ProviderContext providerContext = providerContext(
+            HAS_NOW,
+            defaultLocale
+        );
 
         final Function<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository = spreadsheetIdToStoreRepository(
             Maps.concurrent(),
@@ -329,13 +334,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             HateosResourceHandlerContexts.basic(
                 Indentation.SPACES2,
                 LineEnding.SYSTEM,
-                JsonNodeMarshallUnmarshallContexts.basic(
-                    JsonNodeMarshallContexts.basic(),
-                    JsonNodeUnmarshallContexts.basic(
-                        ExpressionNumberKind.DEFAULT,
-                        MathContext.DECIMAL32
-                    )
-                )
+                JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT
             ),
             spreadsheetIdToSpreadsheetProvider(),
             spreadsheetIdToStoreRepository,
@@ -352,6 +351,14 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         );
         server.start();
     }
+
+    private static final JsonNodeMarshallUnmarshallContext JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT = JsonNodeMarshallUnmarshallContexts.basic(
+        JsonNodeMarshallContexts.basic(),
+        JsonNodeUnmarshallContexts.basic(
+            ExpressionNumberKind.DEFAULT,
+            MathContext.DECIMAL32
+        )
+    );
 
     private static SpreadsheetProvider systemSpreadsheetProvider() {
         final SpreadsheetFormatterProvider spreadsheetFormatterProvider = SpreadsheetFormatterProviders.spreadsheetFormatters();
@@ -381,7 +388,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         );
     }
 
-    private static ProviderContext providerContext(final HasNow hasNow) {
+    private static ProviderContext providerContext(final HasNow hasNow,
+                                                   final Locale locale) {
         final PluginStore pluginStore = PluginStores.treeMap();
 
         final Map<String, byte[]> fileToContent = Maps.sorted();
@@ -423,15 +431,16 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             )
         );
 
-        return ProviderContexts.basic(
-            ConverterContexts.fake(), // https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/222
+        return SpreadsheetProviderContexts.basic(
+            pluginStore,
+            locale,
+            JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT,
             EnvironmentContexts.empty(
                 hasNow,
                 Optional.of(
                     EmailAddress.parse("user123@example.com")
                 )
-            ),
-            pluginStore
+            )
         );
     }
 
