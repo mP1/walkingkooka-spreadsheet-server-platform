@@ -22,7 +22,6 @@ import walkingkooka.Binary;
 import walkingkooka.Either;
 import walkingkooka.collect.list.Lists;
 import walkingkooka.collect.map.Maps;
-import walkingkooka.convert.ConverterContexts;
 import walkingkooka.convert.Converters;
 import walkingkooka.datetime.HasNow;
 import walkingkooka.environment.EnvironmentContext;
@@ -569,10 +568,11 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                     repositoryFactory.get(),
                     spreadsheetIdToSpreadsheetParserProvider.apply(id),
                     localeContext,
-                    ProviderContexts.basic(
-                        ConverterContexts.fake(), // https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/222
-                        environmentContext,
-                        providerContext.pluginStore()
+                    SpreadsheetProviderContexts.basic(
+                        providerContext.pluginStore(),
+                        localeContext.locale(), // locale
+                        JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT,
+                        environmentContext
                     )
                 );
                 idToRepository.put(id, repository); // TODO add locks etc.
