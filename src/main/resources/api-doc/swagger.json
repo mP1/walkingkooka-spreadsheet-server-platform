@@ -4245,7 +4245,7 @@
       "SpreadsheetFormatterMenuList": {
         "type": "array",
         "items": {
-          "$ref" : "#/components/schemas/SpreadsheetFormatterMenuList"
+          "$ref" : "#/components/schemas/SpreadsheetFormatterMenu"
         }
       },
       "SpreadsheetFormatterMenu": {
