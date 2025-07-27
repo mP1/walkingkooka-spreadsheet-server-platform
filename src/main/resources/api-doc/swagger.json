@@ -1673,7 +1673,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SpreadsheetFormatterSelectorMenuList"
+                  "$ref": "#/components/schemas/SpreadsheetFormatterMenuList"
                 }
               }
             }
@@ -4242,13 +4242,13 @@
           }
         }
       },
-      "SpreadsheetFormatterSelectorMenuList": {
+      "SpreadsheetFormatterMenuList": {
         "type": "array",
         "items": {
-          "$ref" : "#/components/schemas/SpreadsheetFormatterSelectorMenuList"
+          "$ref" : "#/components/schemas/SpreadsheetFormatterMenuList"
         }
       },
-      "SpreadsheetFormatterSelectorMenu": {
+      "SpreadsheetFormatterMenu": {
         "type": "object",
         "properties": {
           "label": {
