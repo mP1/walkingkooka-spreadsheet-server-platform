@@ -48,7 +48,6 @@ import walkingkooka.plugin.JarFileTesting;
 import walkingkooka.plugin.PluginArchiveManifest;
 import walkingkooka.plugin.PluginName;
 import walkingkooka.plugin.ProviderContext;
-import walkingkooka.plugin.ProviderContexts;
 import walkingkooka.plugin.store.Plugin;
 import walkingkooka.plugin.store.PluginStore;
 import walkingkooka.plugin.store.PluginStores;
@@ -66,6 +65,7 @@ import walkingkooka.spreadsheet.format.pattern.SpreadsheetPattern;
 import walkingkooka.spreadsheet.importer.SpreadsheetImporterProviders;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataPropertyName;
+import walkingkooka.spreadsheet.meta.SpreadsheetMetadataTesting;
 import walkingkooka.spreadsheet.meta.store.SpreadsheetMetadataStore;
 import walkingkooka.spreadsheet.meta.store.SpreadsheetMetadataStores;
 import walkingkooka.spreadsheet.parser.SpreadsheetParserProvider;
@@ -373,7 +373,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 ).generalConverter(
                     spreadsheetFormatterProvider,
                     spreadsheetParserProvider,
-                    ProviderContexts.fake()
+                    SpreadsheetMetadataTesting.PROVIDER_CONTEXT
                 )
             ), // converterProvider
             SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(SpreadsheetExpressionFunctions.NAME_CASE_SENSITIVITY),
