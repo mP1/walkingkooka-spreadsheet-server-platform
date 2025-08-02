@@ -3591,6 +3591,10 @@
           "localeTag": {
             "$ref": "#/components/schemas/LocaleTag"
           },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
           "dateTimeSymbols": {
             "$ref": "#/components/schemas/DateTimeSymbols"
           }
