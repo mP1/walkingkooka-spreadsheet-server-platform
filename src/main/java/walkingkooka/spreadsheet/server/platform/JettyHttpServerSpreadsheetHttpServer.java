@@ -87,7 +87,6 @@ import walkingkooka.spreadsheet.store.SpreadsheetRowStores;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepositories;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepository;
 import walkingkooka.spreadsheet.validation.form.store.SpreadsheetFormStores;
-import walkingkooka.spreadsheet.viewport.SpreadsheetViewport;
 import walkingkooka.storage.StorageStoreContexts;
 import walkingkooka.storage.StorageStores;
 import walkingkooka.text.CharSequences;
@@ -464,7 +463,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         return SpreadsheetMetadata.EMPTY
             .set(SpreadsheetMetadataPropertyName.SPREADSHEET_NAME, DEFAULT_NAME)
             .set(SpreadsheetMetadataPropertyName.LOCALE, defaultLocale)
-            .set(SpreadsheetMetadataPropertyName.VIEWPORT, INITIAL_VIEWPORT)
+            .set(SpreadsheetMetadataPropertyName.VIEWPORT_HOME, SpreadsheetSelection.A1)
             .setDefaults(
                 SpreadsheetMetadata.NON_LOCALE_DEFAULTS
                     .set(SpreadsheetMetadataPropertyName.LOCALE, defaultLocale)
@@ -495,13 +494,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                     )
             );
     }
-
-    private final static SpreadsheetViewport INITIAL_VIEWPORT = SpreadsheetViewport.with(
-        SpreadsheetSelection.A1.viewportRectangle(
-            1,
-            1
-        )
-    );
 
     private static Function<SpreadsheetId, SpreadsheetProvider> spreadsheetIdToSpreadsheetProvider() {
         return (id) -> {
