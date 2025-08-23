@@ -431,14 +431,14 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
 
         return SpreadsheetProviderContexts.basic(
             pluginStore,
-            locale,
             JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT,
             EnvironmentContexts.empty(
                 hasNow,
                 Optional.of(
                     EmailAddress.parse("user123@example.com")
                 )
-            )
+            ),
+            LocaleContexts.jre(locale)
         );
     }
 
@@ -562,9 +562,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                     localeContext,
                     SpreadsheetProviderContexts.basic(
                         providerContext.pluginStore(),
-                        localeContext.locale(), // locale
                         JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT,
-                        environmentContext
+                        environmentContext,
+                        localeContext
                     )
                 );
                 idToRepository.put(id, repository); // TODO add locks etc.
