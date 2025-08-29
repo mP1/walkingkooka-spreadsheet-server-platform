@@ -364,12 +364,19 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             spreadsheetFormatterProvider
         );
 
+        final SpreadsheetMetadata metadata = SpreadsheetMetadata.EMPTY.set(
+            SpreadsheetMetadataPropertyName.LOCALE,
+            Locale.forLanguageTag("EN-AU")
+        );
+
         return SpreadsheetProviders.basic(
             SpreadsheetConvertersConverterProviders.spreadsheetConverters(
-                (ProviderContext p) -> SpreadsheetMetadata.EMPTY.set(
-                    SpreadsheetMetadataPropertyName.LOCALE,
-                    Locale.forLanguageTag("EN-AU")
-                ).generalConverter(
+                (ProviderContext p) -> metadata.dateTimeConverter(
+                    spreadsheetFormatterProvider,
+                    spreadsheetParserProvider,
+                    SpreadsheetMetadataTesting.PROVIDER_CONTEXT
+                ),
+                (ProviderContext p) -> metadata.generalConverter(
                     spreadsheetFormatterProvider,
                     spreadsheetParserProvider,
                     SpreadsheetMetadataTesting.PROVIDER_CONTEXT
@@ -507,6 +514,11 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             return metadata.spreadsheetProvider(
                 SpreadsheetProviders.basic(
                     SpreadsheetConvertersConverterProviders.spreadsheetConverters(
+                        (ProviderContext p) -> metadata.dateTimeConverter(
+                            spreadsheetFormatterProvider,
+                            spreadsheetParserProvider,
+                            p
+                        ),
                         (ProviderContext p) -> metadata.generalConverter(
                             spreadsheetFormatterProvider,
                             spreadsheetParserProvider,
