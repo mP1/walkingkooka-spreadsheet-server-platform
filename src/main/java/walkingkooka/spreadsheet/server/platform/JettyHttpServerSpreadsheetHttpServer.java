@@ -375,11 +375,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                     spreadsheetFormatterProvider,
                     spreadsheetParserProvider,
                     SpreadsheetMetadataTesting.PROVIDER_CONTEXT
-                ),
-                (ProviderContext p) -> metadata.generalConverter(
-                    spreadsheetFormatterProvider,
-                    spreadsheetParserProvider,
-                    SpreadsheetMetadataTesting.PROVIDER_CONTEXT
                 )
             ), // converterProvider
             SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(SpreadsheetExpressionFunctions.NAME_CASE_SENSITIVITY),
@@ -515,11 +510,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 SpreadsheetProviders.basic(
                     SpreadsheetConvertersConverterProviders.spreadsheetConverters(
                         (ProviderContext p) -> metadata.dateTimeConverter(
-                            spreadsheetFormatterProvider,
-                            spreadsheetParserProvider,
-                            p
-                        ),
-                        (ProviderContext p) -> metadata.generalConverter(
                             spreadsheetFormatterProvider,
                             spreadsheetParserProvider,
                             p
