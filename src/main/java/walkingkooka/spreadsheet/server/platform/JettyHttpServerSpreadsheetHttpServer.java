@@ -148,12 +148,15 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
 
     private final static HasNow HAS_NOW = LocalDateTime::now;
 
-    private final static EnvironmentContext ENVIRONMENT_CONTEXT = EnvironmentContexts.empty(
-        HAS_NOW,
-        Optional.of(
-            EmailAddress.parse("user123@example.com")
-        )
-    );
+    private static EnvironmentContext environmentContext(final Locale locale) {
+        return EnvironmentContexts.empty(
+            locale,
+            HAS_NOW,
+            Optional.of(
+                EmailAddress.parse("user123@example.com")
+            )
+        );
+    }
 
     private static AbsoluteUrl serverUrl(final String string) {
         try {
@@ -305,7 +308,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
 
         final Function<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository = spreadsheetIdToStoreRepository(
             Maps.concurrent(),
-            storeRepositorySupplier(),
+            storeRepositorySupplier(defaultLocale),
             spreadsheetIdToSpreadsheetParserProvider,
             spreadsheetIdToSpreadsheetMetadata(),
             LocaleContexts.jre(defaultLocale),
@@ -434,12 +437,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         return SpreadsheetProviderContexts.basic(
             pluginStore,
             JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT,
-            EnvironmentContexts.empty(
-                hasNow,
-                Optional.of(
-                    EmailAddress.parse("user123@example.com")
-                )
-            ),
+            environmentContext(locale),
             LocaleContexts.jre(locale)
         );
     }
@@ -578,7 +576,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     /**
      * Creates a new {@link SpreadsheetStoreRepository} on demand
      */
-    private static Supplier<SpreadsheetStoreRepository> storeRepositorySupplier() {
+    private static Supplier<SpreadsheetStoreRepository> storeRepositorySupplier(final Locale locale) {
         return () -> SpreadsheetStoreRepositories.basic(
             SpreadsheetCellStores.treeMap(),
             SpreadsheetCellReferencesStores.treeMap(),
@@ -592,7 +590,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             SpreadsheetCellRangeStores.treeMap(),
             SpreadsheetRowStores.treeMap(),
             StorageStores.tree(
-                StorageStoreContexts.basic(ENVIRONMENT_CONTEXT)
+                StorageStoreContexts.basic(
+                    environmentContext(locale)
+                )
             ),
             SpreadsheetUserStores.treeMap()
         );
