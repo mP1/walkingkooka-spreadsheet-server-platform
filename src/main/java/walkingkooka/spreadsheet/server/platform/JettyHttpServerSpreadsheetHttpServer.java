@@ -87,8 +87,7 @@ import walkingkooka.spreadsheet.store.SpreadsheetRowStores;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepositories;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepository;
 import walkingkooka.spreadsheet.validation.form.store.SpreadsheetFormStores;
-import walkingkooka.storage.StorageContexts;
-import walkingkooka.storage.StorageStores;
+import walkingkooka.storage.Storages;
 import walkingkooka.text.CharSequences;
 import walkingkooka.text.Indentation;
 import walkingkooka.text.LineEnding;
@@ -589,11 +588,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             SpreadsheetCellRangeStores.treeMap(),
             SpreadsheetCellRangeStores.treeMap(),
             SpreadsheetRowStores.treeMap(),
-            StorageStores.tree(
-                StorageContexts.basic(
-                    environmentContext(locale)
-                )
-            ),
+            Storages.tree(),
             SpreadsheetUserStores.treeMap()
         );
     }
