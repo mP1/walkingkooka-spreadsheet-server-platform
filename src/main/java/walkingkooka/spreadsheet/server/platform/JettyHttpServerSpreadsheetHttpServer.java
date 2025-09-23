@@ -320,10 +320,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         final SpreadsheetMetadata createMetadataTemplate = prepareMetadataCreateTemplate(defaultLocale);
 
         metadataStore = SpreadsheetMetadataStores.spreadsheetCellStoreAction(
-            SpreadsheetMetadataStores.treeMap(
-                createMetadataTemplate,
-                HAS_NOW
-            ),
+            SpreadsheetMetadataStores.treeMap(),
             (id) -> spreadsheetIdToStoreRepository.apply(id).cells()
         );
 
