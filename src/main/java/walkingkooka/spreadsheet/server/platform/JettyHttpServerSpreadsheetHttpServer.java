@@ -64,8 +64,7 @@ import walkingkooka.spreadsheet.format.provider.SpreadsheetFormatterProvider;
 import walkingkooka.spreadsheet.format.provider.SpreadsheetFormatterProviders;
 import walkingkooka.spreadsheet.format.provider.SpreadsheetFormatterSelector;
 import walkingkooka.spreadsheet.importer.provider.SpreadsheetImporterProviders;
-import walkingkooka.spreadsheet.meta.FakeSpreadsheetContext;
-import walkingkooka.spreadsheet.meta.SpreadsheetContext;
+import walkingkooka.spreadsheet.meta.SpreadsheetContexts;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataPropertyName;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataTesting;
@@ -330,7 +329,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         final SpreadsheetHttpServer server = SpreadsheetHttpServer.with(
             serverUrl,
             ApacheTikaMediaTypeDetectors.apacheTika(),
-            LocaleContexts.jre(defaultLocale),
             systemSpreadsheetProvider(),
             metadataStore,
             HateosResourceHandlerContexts.basic(
@@ -338,17 +336,14 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 LineEnding.SYSTEM,
                 JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT
             ),
-            new FakeSpreadsheetContext() {
-                @Override
-                public ProviderContext providerContext() {
-                    return providerContext;
-                }
-
-                @Override
-                public SpreadsheetContext setLocale(final Locale locale) {
-                    return this;
-                }
-            },
+            SpreadsheetContexts.basic(
+                (u, dl) -> {
+                    throw new UnsupportedOperationException();
+                },
+                metadataStore,
+                LocaleContexts.jre(defaultLocale),
+                providerContext
+            ),
             spreadsheetIdToSpreadsheetProvider(),
             spreadsheetIdToStoreRepository,
             fileServer,
