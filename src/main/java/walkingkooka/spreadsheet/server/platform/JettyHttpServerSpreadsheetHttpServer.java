@@ -65,6 +65,7 @@ import walkingkooka.spreadsheet.format.provider.SpreadsheetFormatterProviders;
 import walkingkooka.spreadsheet.format.provider.SpreadsheetFormatterSelector;
 import walkingkooka.spreadsheet.importer.provider.SpreadsheetImporterProviders;
 import walkingkooka.spreadsheet.meta.FakeSpreadsheetContext;
+import walkingkooka.spreadsheet.meta.SpreadsheetContext;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataPropertyName;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataTesting;
@@ -341,6 +342,11 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 @Override
                 public ProviderContext providerContext() {
                     return providerContext;
+                }
+
+                @Override
+                public SpreadsheetContext setLocale(final Locale locale) {
+                    return this;
                 }
             },
             spreadsheetIdToSpreadsheetProvider(),
