@@ -24,6 +24,7 @@ import walkingkooka.collect.list.Lists;
 import walkingkooka.collect.map.Maps;
 import walkingkooka.convert.Converters;
 import walkingkooka.datetime.HasNow;
+import walkingkooka.environment.AuditInfo;
 import walkingkooka.environment.EnvironmentContext;
 import walkingkooka.environment.EnvironmentContexts;
 import walkingkooka.locale.LocaleContext;
@@ -316,11 +317,11 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             providerContext
         );
 
+        final SpreadsheetMetadata createMetadataTemplate = prepareMetadataCreateTemplate(defaultLocale);
+
         metadataStore = SpreadsheetMetadataStores.spreadsheetCellStoreAction(
             SpreadsheetMetadataStores.treeMap(
-                prepareMetadataCreateTemplate(
-                    defaultLocale
-                ),
+                createMetadataTemplate,
                 HAS_NOW
             ),
             (id) -> spreadsheetIdToStoreRepository.apply(id).cells()
@@ -337,8 +338,19 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT
             ),
             SpreadsheetContexts.basic(
-                (u, dl) -> {
-                    throw new UnsupportedOperationException();
+                (final EmailAddress creator,
+                 final Optional<Locale> creatorLocale) -> {
+                    final LocalDateTime now = HAS_NOW.now();
+
+                    return createMetadataTemplate.set(
+                        SpreadsheetMetadataPropertyName.AUDIT_INFO,
+                        AuditInfo.with(
+                            creator,
+                            now,
+                            creator,
+                            now
+                        )
+                    );
                 },
                 metadataStore,
                 LocaleContexts.jre(defaultLocale),
