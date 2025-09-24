@@ -53,6 +53,7 @@ import walkingkooka.plugin.store.Plugin;
 import walkingkooka.plugin.store.PluginStore;
 import walkingkooka.plugin.store.PluginStores;
 import walkingkooka.reflect.PublicStaticHelper;
+import walkingkooka.spreadsheet.SpreadsheetGlobalContexts;
 import walkingkooka.spreadsheet.SpreadsheetId;
 import walkingkooka.spreadsheet.SpreadsheetName;
 import walkingkooka.spreadsheet.compare.provider.SpreadsheetComparatorProviders;
@@ -65,7 +66,6 @@ import walkingkooka.spreadsheet.format.provider.SpreadsheetFormatterProvider;
 import walkingkooka.spreadsheet.format.provider.SpreadsheetFormatterProviders;
 import walkingkooka.spreadsheet.format.provider.SpreadsheetFormatterSelector;
 import walkingkooka.spreadsheet.importer.provider.SpreadsheetImporterProviders;
-import walkingkooka.spreadsheet.meta.SpreadsheetContexts;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataPropertyName;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataTesting;
@@ -334,7 +334,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 LineEnding.SYSTEM,
                 JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT
             ),
-            SpreadsheetContexts.basic(
+            SpreadsheetGlobalContexts.basic(
                 (final EmailAddress creator,
                  final Optional<Locale> creatorLocale) -> {
                     final LocalDateTime now = HAS_NOW.now();
