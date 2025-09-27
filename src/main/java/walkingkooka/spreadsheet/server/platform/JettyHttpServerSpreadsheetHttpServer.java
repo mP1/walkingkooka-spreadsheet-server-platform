@@ -328,7 +328,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             serverUrl,
             ApacheTikaMediaTypeDetectors.apacheTika(),
             systemSpreadsheetProvider(),
-            metadataStore,
             HateosResourceHandlerContexts.basic(
                 Indentation.SPACES2,
                 LineEnding.SYSTEM,
