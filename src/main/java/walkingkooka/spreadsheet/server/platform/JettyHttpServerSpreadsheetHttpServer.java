@@ -55,6 +55,8 @@ import walkingkooka.reflect.PublicStaticHelper;
 import walkingkooka.spreadsheet.SpreadsheetName;
 import walkingkooka.spreadsheet.compare.provider.SpreadsheetComparatorProviders;
 import walkingkooka.spreadsheet.convert.provider.SpreadsheetConvertersConverterProviders;
+import walkingkooka.spreadsheet.engine.SpreadsheetEngineContextMode;
+import walkingkooka.spreadsheet.engine.SpreadsheetEngineContexts;
 import walkingkooka.spreadsheet.export.provider.SpreadsheetExporterProviders;
 import walkingkooka.spreadsheet.expression.SpreadsheetExpressionFunctions;
 import walkingkooka.spreadsheet.expression.function.provider.SpreadsheetExpressionFunctionProviders;
@@ -90,6 +92,7 @@ import walkingkooka.spreadsheet.store.SpreadsheetRowStores;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepositories;
 import walkingkooka.spreadsheet.validation.form.store.SpreadsheetFormStores;
 import walkingkooka.storage.Storages;
+import walkingkooka.terminal.TerminalContexts;
 import walkingkooka.text.CharSequences;
 import walkingkooka.text.Indentation;
 import walkingkooka.text.LineEnding;
@@ -337,6 +340,11 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 SpreadsheetUserStores.treeMap()
             ),
             systemSpreadsheetProvider(defaultLocale),
+            (c) -> SpreadsheetEngineContexts.basic(
+                SpreadsheetEngineContextMode.FORMULA,
+                c,
+                TerminalContexts.fake()
+            ),
             environmentContext(defaultLocale),
             LocaleContexts.jre(defaultLocale),
             SpreadsheetMetadataContexts.basic(
