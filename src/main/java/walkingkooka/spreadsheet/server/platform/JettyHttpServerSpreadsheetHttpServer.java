@@ -334,7 +334,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 SpreadsheetLabelReferencesStores.treeMap(),
                 metadataStore,
                 SpreadsheetCellRangeStores.treeMap(),
-                SpreadsheetCellRangeStores.treeMap(),
                 SpreadsheetRowStores.treeMap(),
                 Storages.tree(),
                 SpreadsheetUserStores.treeMap()
