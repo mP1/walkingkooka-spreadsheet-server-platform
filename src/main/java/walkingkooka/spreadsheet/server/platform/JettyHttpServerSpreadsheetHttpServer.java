@@ -134,16 +134,19 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     public static void main(final String[] args) throws Exception {
         switch (args.length) {
             case 0:
-                throw new IllegalArgumentException("Missing serverUrl, defaultLocale, file server root for jetty HttpServer");
+                throw new IllegalArgumentException("Missing serverUrl, defaultLocale, systemUser, file server root for jetty HttpServer");
             case 1:
-                throw new IllegalArgumentException("Missing default Locale, file server root for jetty HttpServer");
+                throw new IllegalArgumentException("Missing default Locale, systemUser, file server root for jetty HttpServer");
             case 2:
+                throw new IllegalArgumentException("Missing system systemUser, file server root for jetty HttpServer");
+            case 3:
                 throw new IllegalArgumentException("Missing file server root for jetty HttpServer");
             default:
                 startJettyHttpServer(
                     serverUrl(args[0]),
                     locale(args[1]),
-                    fileServer(args[2])
+                    user(args[2]),
+                    fileServer(args[3])
                 );
                 break;
         }
@@ -151,14 +154,13 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
 
     private final static HasNow HAS_NOW = LocalDateTime::now;
 
-    private static EnvironmentContext environmentContext(final Locale locale) {
+    private static EnvironmentContext environmentContext(final Locale locale,
+                                                         final Optional<EmailAddress> user) {
         return EnvironmentContexts.map(
             EnvironmentContexts.empty(
                 locale,
                 HAS_NOW,
-                Optional.of(
-                    EmailAddress.parse("user123@example.com")
-                )
+                user
             )
         );
     }
@@ -181,6 +183,18 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             throw cause;
         }
         return defaultLocale;
+    }
+
+    private static Optional<EmailAddress> user(final String string) {
+        final EmailAddress emailAddress;
+
+        try {
+            emailAddress = EmailAddress.parse(string);
+        } catch (final RuntimeException cause) {
+            System.err.println("Invalid user: " + cause.getMessage());
+            throw cause;
+        }
+        return Optional.ofNullable(emailAddress);
     }
 
     /**
@@ -311,6 +325,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
 
     private static void startJettyHttpServer(final AbsoluteUrl serverUrl,
                                              final Locale defaultLocale,
+                                             final Optional<EmailAddress> user,
                                              final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer) {
         final SpreadsheetMetadata createMetadataTemplate = prepareMetadataCreateTemplate(defaultLocale);
 
@@ -344,7 +359,10 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 c,
                 TerminalContexts.fake()
             ),
-            environmentContext(defaultLocale),
+            environmentContext(
+                defaultLocale,
+                user
+            ),
             LocaleContexts.jre(defaultLocale),
             SpreadsheetMetadataContexts.basic(
                 (final EmailAddress creator,
@@ -372,7 +390,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             ), // final HateosResourceHandlerContext hateosResourceHandlerContext,
             providerContext(
                 HAS_NOW,
-                defaultLocale
+                defaultLocale,
+                user
             )
         );
 
@@ -457,7 +476,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     }
 
     private static ProviderContext providerContext(final HasNow hasNow,
-                                                   final Locale locale) {
+                                                   final Locale locale,
+                                                   final Optional<EmailAddress> user) {
         final PluginStore pluginStore = PluginStores.treeMap();
 
         final Map<String, byte[]> fileToContent = Maps.sorted();
@@ -502,7 +522,10 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         return SpreadsheetProviderContexts.basic(
             pluginStore,
             JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT,
-            environmentContext(locale),
+            environmentContext(
+                locale,
+                user
+            ),
             LocaleContexts.jre(locale)
         );
     }
