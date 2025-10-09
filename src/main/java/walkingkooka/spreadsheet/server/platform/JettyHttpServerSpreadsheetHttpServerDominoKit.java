@@ -24,8 +24,9 @@ public final class JettyHttpServerSpreadsheetHttpServerDominoKit {
     public static void main(final String[] args) throws Exception {
         JettyHttpServerSpreadsheetHttpServer.main(
             new String[]{
-                "http://localhost:12345",
-                "EN-GB",
+                "http://localhost:12345", // serverUrl
+                "EN-GB", // defaultLocale
+                "systemUser@example.com", // systemUser
                 fileSystemUris(
                     "file:///Users/miroslav/repos-github/walkingkooka-spreadsheet-server-platform/src/main/resources/", // api-doc etc
                     "file:///Users/miroslav/repos-github/walkingkooka-spreadsheet-dominokit/target/gwt/out/walkingkooka.spreadsheet.dominokit.App/", // gwt output
