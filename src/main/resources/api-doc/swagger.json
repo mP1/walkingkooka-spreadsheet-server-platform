@@ -3752,7 +3752,7 @@
             "$ref": "#/components/schemas/FormFieldLabel"
           },
           "type": {
-            "$ref": "#/components/schemas/ValidationValueTypeName"
+            "$ref": "#/components/schemas/ValueTypeName"
           },
           "value": {
             "type": "object"
@@ -4573,7 +4573,7 @@
         "type": "string",
         "example": "nonNull"
       },
-      "ValidationValueTypeName": {
+      "ValueTypeName": {
         "type": "string",
         "enum": [
           "boolean",
