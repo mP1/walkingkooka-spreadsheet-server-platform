@@ -499,7 +499,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         final byte[] archive = JarFileTesting.jarFile(
             "Manifest-Version: 1.0\r\n" +
                 "plugin-provider-factory-className: sample.TestPlugin123\r\n" +
-                "plugin-name: TestPlugin123\r\n" +
+                "plugin-name: test-plugin-123\r\n" +
                 "\r\n",
             fileToContent
         );
@@ -511,7 +511,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
 
         pluginStore.save(
             Plugin.with(
-                PluginName.with("TestPlugin123"),
+                PluginName.with("test-plugin-123"),
                 "TestPlugin123-filename.jar", // filename
                 Binary.with(archive), // archive
                 EmailAddress.parse("plugin-author@example.com"),
