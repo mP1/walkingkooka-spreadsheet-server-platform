@@ -4205,7 +4205,7 @@
         "minLength": 1,
         "maxLength": 255,
         "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$",
-        "example": "date-time-format-pattern"
+        "example": "date-time"
       },
       "SpreadsheetFormatterSampleList": {
         "type": "array",
@@ -4229,7 +4229,7 @@
       },
       "SpreadsheetFormatterSelector": {
         "type": "string",
-        "example": "date-time-format-pattern yyyy/mm/dd hh:mm:ss"
+        "example": "date-time yyyy/mm/dd hh:mm:ss"
       },
       "SpreadsheetFormatterSelectorEdit": {
         "properties": {
