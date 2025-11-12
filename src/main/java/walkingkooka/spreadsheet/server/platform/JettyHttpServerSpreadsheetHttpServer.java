@@ -458,11 +458,12 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
 
         return SpreadsheetProviders.basic(
             SpreadsheetConvertersConverterProviders.spreadsheetConverters(
-                (ProviderContext p) -> metadata.dateTimeConverter(
-                    spreadsheetFormatterProvider,
-                    spreadsheetParserProvider,
-                    SpreadsheetMetadataTesting.PROVIDER_CONTEXT
-                )
+                (ProviderContext p) ->
+                    metadata.dateTimeConverter(
+                        spreadsheetFormatterProvider,
+                        spreadsheetParserProvider,
+                        SpreadsheetMetadataTesting.PROVIDER_CONTEXT
+                    )
             ), // converterProvider
             SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(SpreadsheetExpressionFunctions.NAME_CASE_SENSITIVITY),
             SpreadsheetComparatorProviders.spreadsheetComparators(),
@@ -552,14 +553,22 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                     .set(SpreadsheetMetadataPropertyName.LOCALE, defaultLocale)
                     .loadFromLocale(
                         LocaleContexts.jre(defaultLocale)
-                    ).set(SpreadsheetMetadataPropertyName.CELL_CHARACTER_WIDTH, 1)
-                    .set(SpreadsheetMetadataPropertyName.DATE_TIME_OFFSET, Converters.EXCEL_1900_DATE_SYSTEM_OFFSET)
-                    .set(SpreadsheetMetadataPropertyName.DEFAULT_YEAR, 1900)
-                    .set(
+                    ).set(
+                        SpreadsheetMetadataPropertyName.CELL_CHARACTER_WIDTH,
+                        1
+                    ).set(
+                        SpreadsheetMetadataPropertyName.DATE_TIME_OFFSET,
+                        Converters.EXCEL_1900_DATE_SYSTEM_OFFSET
+                    ).set(
+                        SpreadsheetMetadataPropertyName.DEFAULT_YEAR,
+                        1900
+                    ).set(
                         SpreadsheetMetadataPropertyName.ERROR_FORMATTER,
                         SpreadsheetFormatterSelector.parse("badge-error default-text")
-                    ).set(SpreadsheetMetadataPropertyName.EXPRESSION_NUMBER_KIND, ExpressionNumberKind.DOUBLE)
-                    .set(
+                    ).set(
+                        SpreadsheetMetadataPropertyName.EXPRESSION_NUMBER_KIND,
+                        ExpressionNumberKind.DOUBLE
+                    ).set(
                         SpreadsheetMetadataPropertyName.FIND_FUNCTIONS,
                         SpreadsheetExpressionFunctionProviders.FIND
                     ).set(
@@ -568,13 +577,22 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                     ).set(
                         SpreadsheetMetadataPropertyName.FORMATTING_FUNCTIONS,
                         SpreadsheetExpressionFunctionProviders.FORMATTING
-                    ).set(SpreadsheetMetadataPropertyName.FUNCTIONS,
+                    ).set(
+                        SpreadsheetMetadataPropertyName.FUNCTIONS,
                         FUNCTION_ALIASES
-                    ).set(SpreadsheetMetadataPropertyName.PRECISION, MathContext.DECIMAL32.getPrecision())
-                    .set(SpreadsheetMetadataPropertyName.ROUNDING_MODE, RoundingMode.HALF_UP)
-                    .set(SpreadsheetMetadataPropertyName.TEXT_FORMATTER, SpreadsheetPattern.DEFAULT_TEXT_FORMAT_PATTERN.spreadsheetFormatterSelector())
-                    .set(SpreadsheetMetadataPropertyName.TWO_DIGIT_YEAR, 20)
+                    ).set(
+                        SpreadsheetMetadataPropertyName.PRECISION,
+                        MathContext.DECIMAL32.getPrecision())
                     .set(
+                        SpreadsheetMetadataPropertyName.ROUNDING_MODE,
+                        RoundingMode.HALF_UP)
+                    .set(
+                        SpreadsheetMetadataPropertyName.TEXT_FORMATTER,
+                        SpreadsheetPattern.DEFAULT_TEXT_FORMAT_PATTERN.spreadsheetFormatterSelector())
+                    .set(
+                        SpreadsheetMetadataPropertyName.TWO_DIGIT_YEAR,
+                        20
+                    ).set(
                         SpreadsheetMetadataPropertyName.VALIDATION_FUNCTIONS,
                         SpreadsheetExpressionFunctionProviders.VALIDATION
                     )
