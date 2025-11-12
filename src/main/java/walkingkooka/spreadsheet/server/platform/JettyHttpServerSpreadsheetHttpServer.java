@@ -331,8 +331,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
 
         final SpreadsheetMetadataStore metadataStore = SpreadsheetMetadataStores.spreadsheetCellStoreAction(
             SpreadsheetMetadataStores.treeMap(),
-            (id) -> serverContext.spreadsheetContext(id)
-                .orElseThrow(() -> new IllegalStateException("Missing spreadsheet " + id))
+            (id) -> serverContext.spreadsheetContextOrFail(id)
                 .storeRepository()
                 .cells()
         );
