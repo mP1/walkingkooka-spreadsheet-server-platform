@@ -329,7 +329,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                              final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer) {
         final SpreadsheetMetadata createMetadataTemplate = prepareMetadataCreateTemplate(defaultLocale);
 
-        metadataStore = SpreadsheetMetadataStores.spreadsheetCellStoreAction(
+        final SpreadsheetMetadataStore metadataStore = SpreadsheetMetadataStores.spreadsheetCellStoreAction(
             SpreadsheetMetadataStores.treeMap(),
             (id) -> serverContext.spreadsheetContext(id)
                 .orElseThrow(() -> new IllegalStateException("Missing spreadsheet " + id))
@@ -529,11 +529,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             LocaleContexts.jre(locale)
         );
     }
-
-    /**
-     * Shared global singleton {@link SpreadsheetMetadataStore}.
-     */
-    private static SpreadsheetMetadataStore metadataStore;
 
     /**
      * The default name given to all empty spreadsheets
