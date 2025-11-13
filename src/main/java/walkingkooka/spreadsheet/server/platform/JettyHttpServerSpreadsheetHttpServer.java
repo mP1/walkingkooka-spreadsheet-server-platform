@@ -385,7 +385,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 Indentation.SPACES2,
                 LineEnding.SYSTEM,
                 JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT
-            ), // final HateosResourceHandlerContext hateosResourceHandlerContext,
+            ),
             providerContext(
                 HAS_NOW,
                 defaultLocale,
