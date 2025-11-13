@@ -52,6 +52,7 @@ import walkingkooka.plugin.store.Plugin;
 import walkingkooka.plugin.store.PluginStore;
 import walkingkooka.plugin.store.PluginStores;
 import walkingkooka.reflect.PublicStaticHelper;
+import walkingkooka.spreadsheet.SpreadsheetId;
 import walkingkooka.spreadsheet.SpreadsheetName;
 import walkingkooka.spreadsheet.compare.provider.SpreadsheetComparatorProviders;
 import walkingkooka.spreadsheet.convert.provider.SpreadsheetConvertersConverterProviders;
@@ -80,7 +81,6 @@ import walkingkooka.spreadsheet.reference.SpreadsheetSelection;
 import walkingkooka.spreadsheet.security.store.SpreadsheetGroupStores;
 import walkingkooka.spreadsheet.security.store.SpreadsheetUserStores;
 import walkingkooka.spreadsheet.server.SpreadsheetHttpServer;
-import walkingkooka.spreadsheet.server.SpreadsheetServerContext;
 import walkingkooka.spreadsheet.server.SpreadsheetServerContexts;
 import walkingkooka.spreadsheet.store.SpreadsheetCellRangeStores;
 import walkingkooka.spreadsheet.store.SpreadsheetCellReferencesStores;
@@ -90,6 +90,7 @@ import walkingkooka.spreadsheet.store.SpreadsheetLabelReferencesStores;
 import walkingkooka.spreadsheet.store.SpreadsheetLabelStores;
 import walkingkooka.spreadsheet.store.SpreadsheetRowStores;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepositories;
+import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepository;
 import walkingkooka.spreadsheet.validation.form.store.SpreadsheetFormStores;
 import walkingkooka.storage.Storages;
 import walkingkooka.terminal.TerminalContexts;
@@ -327,70 +328,13 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                              final Locale defaultLocale,
                                              final Optional<EmailAddress> user,
                                              final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer) {
+        final Map<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdSpreadsheetStoreRepositoryMap = Maps.concurrent();
         final SpreadsheetMetadata createMetadataTemplate = prepareMetadataCreateTemplate(defaultLocale);
 
         final SpreadsheetMetadataStore metadataStore = SpreadsheetMetadataStores.spreadsheetCellStoreAction(
             SpreadsheetMetadataStores.treeMap(),
-            (id) -> serverContext.storeRepositoryOrFail(id)
+            (id) -> spreadsheetIdSpreadsheetStoreRepositoryMap.get(id)
                 .cells()
-        );
-
-        serverContext = SpreadsheetServerContexts.basic(
-            serverUrl,
-            () -> SpreadsheetStoreRepositories.basic(
-                SpreadsheetCellStores.treeMap(),
-                SpreadsheetCellReferencesStores.treeMap(),
-                SpreadsheetColumnStores.treeMap(),
-                SpreadsheetFormStores.treeMap(),
-                SpreadsheetGroupStores.treeMap(),
-                SpreadsheetLabelStores.treeMap(),
-                SpreadsheetLabelReferencesStores.treeMap(),
-                metadataStore,
-                SpreadsheetCellRangeStores.treeMap(),
-                SpreadsheetRowStores.treeMap(),
-                Storages.tree(),
-                SpreadsheetUserStores.treeMap()
-            ),
-            systemSpreadsheetProvider(defaultLocale),
-            (c) -> SpreadsheetEngineContexts.basic(
-                SpreadsheetEngineContextMode.FORMULA,
-                c,
-                TerminalContexts.fake()
-            ),
-            environmentContext(
-                defaultLocale,
-                user
-            ),
-            LocaleContexts.jre(defaultLocale),
-            SpreadsheetMetadataContexts.basic(
-                (final EmailAddress creator,
-                 final Optional<Locale> creatorLocale) -> {
-                    final LocalDateTime now = HAS_NOW.now();
-
-                    return metadataStore.save(
-                        createMetadataTemplate.set(
-                            SpreadsheetMetadataPropertyName.AUDIT_INFO,
-                            AuditInfo.with(
-                                creator,
-                                now,
-                                creator,
-                                now
-                            )
-                        )
-                    );
-                },
-                metadataStore
-            ),
-            HateosResourceHandlerContexts.basic(
-                Indentation.SPACES2,
-                LineEnding.SYSTEM,
-                JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT
-            ),
-            providerContext(
-                HAS_NOW,
-                defaultLocale,
-                user
-            )
         );
 
         final SpreadsheetHttpServer server = SpreadsheetHttpServer.with(
@@ -405,13 +349,88 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                             IpPort.HTTPS
                     )
             ),
-            serverContext
+            (u) -> SpreadsheetServerContexts.basic(
+                    serverUrl,
+                    createSpreadsheetStoreRepository(
+                        spreadsheetIdSpreadsheetStoreRepositoryMap,
+                        metadataStore
+                    ),
+                    systemSpreadsheetProvider(defaultLocale),
+                    (c) -> SpreadsheetEngineContexts.basic(
+                        SpreadsheetEngineContextMode.FORMULA,
+                        c,
+                        TerminalContexts.fake()
+                    ),
+                    environmentContext(
+                        defaultLocale,
+                        u
+                    ),
+                    LocaleContexts.jre(defaultLocale),
+                    SpreadsheetMetadataContexts.basic(
+                        (final EmailAddress creator,
+                         final Optional<Locale> creatorLocale) -> {
+                            final LocalDateTime now = HAS_NOW.now();
+
+                            return metadataStore.save(
+                                createMetadataTemplate.set(
+                                    SpreadsheetMetadataPropertyName.AUDIT_INFO,
+                                    AuditInfo.with(
+                                        creator,
+                                        now,
+                                        creator,
+                                        now
+                                    )
+                                )
+                            );
+                        },
+                        metadataStore
+                    ),
+                    HateosResourceHandlerContexts.basic(
+                        Indentation.SPACES2,
+                        LineEnding.SYSTEM,
+                        JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT
+                    ),
+                    providerContext(
+                        HAS_NOW,
+                        defaultLocale,
+                        u
+                    )
+                ),
+            (r) -> user
         );
 
         server.start();
     }
 
-    private static SpreadsheetServerContext serverContext;
+    private static Function<SpreadsheetId, SpreadsheetStoreRepository> createSpreadsheetStoreRepository(final Map<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository,
+                                                                                                        final SpreadsheetMetadataStore metadataStore) {
+        return (id) -> {
+            SpreadsheetStoreRepository repo = spreadsheetIdToStoreRepository.get(id);
+            if (null == repo) {
+                repo = SpreadsheetStoreRepositories.basic(
+                    SpreadsheetCellStores.treeMap(),
+                    SpreadsheetCellReferencesStores.treeMap(),
+                    SpreadsheetColumnStores.treeMap(),
+                    SpreadsheetFormStores.treeMap(),
+                    SpreadsheetGroupStores.treeMap(),
+                    SpreadsheetLabelStores.treeMap(),
+                    SpreadsheetLabelReferencesStores.treeMap(),
+                    metadataStore,
+                    SpreadsheetCellRangeStores.treeMap(),
+                    SpreadsheetRowStores.treeMap(),
+                    Storages.tree(),
+                    SpreadsheetUserStores.treeMap()
+                );
+
+                spreadsheetIdToStoreRepository.put(
+                    id,
+                    repo
+                );
+            }
+
+            return repo;
+        };
+    }
 
     /**
      * Creates a global or system {@link SpreadsheetProvider} which maybe shared given the system {@link Locale}.
