@@ -413,6 +413,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
 
     private static SpreadsheetServerContext serverContext;
 
+    /**
+     * Creates a global or system {@link SpreadsheetProvider} which maybe shared given the system {@link Locale}.
+     */
     private static SpreadsheetProvider systemSpreadsheetProvider(final Locale locale) {
         final SpreadsheetFormatterProvider spreadsheetFormatterProvider = SpreadsheetFormatterProviders.spreadsheetFormatters();
         final SpreadsheetParserProvider spreadsheetParserProvider = SpreadsheetParserProviders.spreadsheetParsePattern(
@@ -474,6 +477,10 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         );
     }
 
+    /**
+     * Creates a {@link ProviderContext} with the given {@link EmailAddress user} and {@link Locale}, all other
+     * state is common for all users
+     */
     private static ProviderContext providerContext(final HasNow hasNow,
                                                    final Locale locale,
                                                    final Optional<EmailAddress> user) {
@@ -606,6 +613,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         return (handler) -> JettyHttpServer.with(host, port, handler);
     }
 
+    /**
+     * Stop creation
+     */
     private JettyHttpServerSpreadsheetHttpServer() {
         throw new UnsupportedOperationException();
     }
