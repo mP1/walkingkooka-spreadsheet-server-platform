@@ -544,13 +544,13 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             )
         );
 
-        return SpreadsheetProviderContexts.basic(
+        return SpreadsheetProviderContexts.spreadsheet(
             pluginStore,
-            JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT,
             environmentContext(
                 locale,
                 user
             ),
+            JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT,
             LocaleContexts.jre(locale)
         );
     }
