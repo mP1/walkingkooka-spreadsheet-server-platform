@@ -160,6 +160,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                                          final Optional<EmailAddress> user) {
         return EnvironmentContexts.map(
             EnvironmentContexts.empty(
+                LineEnding.NL,
                 locale,
                 HAS_NOW,
                 user
