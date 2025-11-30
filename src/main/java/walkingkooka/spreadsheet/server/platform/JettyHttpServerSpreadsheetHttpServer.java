@@ -136,19 +136,22 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     public static void main(final String[] args) throws Exception {
         switch (args.length) {
             case 0:
-                throw new IllegalArgumentException("Missing serverUrl, defaultLocale, systemUser, file server root for jetty HttpServer");
+                throw new IllegalArgumentException("Missing serverUrl, lineEnding, defaultLocale, systemUser, file server root for jetty HttpServer");
             case 1:
-                throw new IllegalArgumentException("Missing default Locale, systemUser, file server root for jetty HttpServer");
+                throw new IllegalArgumentException("Missing lineEnding, defaultLocale, systemUser, file server root for jetty HttpServer");
             case 2:
-                throw new IllegalArgumentException("Missing system systemUser, file server root for jetty HttpServer");
+                throw new IllegalArgumentException("Missing default Locale, systemUser, file server root for jetty HttpServer");
             case 3:
+                throw new IllegalArgumentException("Missing system systemUser, file server root for jetty HttpServer");
+            case 4:
                 throw new IllegalArgumentException("Missing file server root for jetty HttpServer");
             default:
                 startJettyHttpServer(
                     serverUrl(args[0]),
-                    locale(args[1]),
-                    user(args[2]),
-                    fileServer(args[3])
+                    lineEnding(args[1]),
+                    locale(args[2]),
+                    user(args[3]),
+                    fileServer(args[4])
                 );
                 break;
         }
@@ -156,11 +159,12 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
 
     private final static HasNow HAS_NOW = LocalDateTime::now;
 
-    private static EnvironmentContext environmentContext(final Locale locale,
+    private static EnvironmentContext environmentContext(final LineEnding lineEnding,
+                                                         final Locale locale,
                                                          final Optional<EmailAddress> user) {
         return EnvironmentContexts.map(
             EnvironmentContexts.empty(
-                LineEnding.NL,
+                lineEnding,
                 locale,
                 HAS_NOW,
                 user
@@ -177,6 +181,17 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         }
     }
 
+    private static LineEnding lineEnding(final String string) {
+        final LineEnding lineEnding;
+        try {
+            lineEnding = LineEnding.parse(string);
+        } catch (final RuntimeException cause) {
+            System.err.println("Invalid LineEnding: " + cause.getMessage());
+            throw cause;
+        }
+        return lineEnding;
+    }
+    
     private static Locale locale(final String string) {
         final Locale defaultLocale;
         try {
@@ -327,6 +342,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     }
 
     private static void startJettyHttpServer(final AbsoluteUrl serverUrl,
+                                             final LineEnding lineEnding,
                                              final Locale defaultLocale,
                                              final Optional<EmailAddress> user,
                                              final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer) {
@@ -364,6 +380,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                         TerminalContexts.fake()
                     ),
                     environmentContext(
+                        lineEnding,
                         defaultLocale,
                         u
                     ),
@@ -389,11 +406,12 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                     ),
                     HateosResourceHandlerContexts.basic(
                         Indentation.SPACES2,
-                        LineEnding.SYSTEM,
+                        lineEnding,
                         JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT
                     ),
                     providerContext(
                         HAS_NOW,
+                        lineEnding,
                         defaultLocale,
                         u
                     ),
@@ -504,6 +522,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
      * state is common for all users
      */
     private static ProviderContext providerContext(final HasNow hasNow,
+                                                   final LineEnding lineEnding,
                                                    final Locale locale,
                                                    final Optional<EmailAddress> user) {
         final PluginStore pluginStore = PluginStores.treeMap();
@@ -550,6 +569,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         return SpreadsheetProviderContexts.spreadsheet(
             pluginStore,
             environmentContext(
+                lineEnding,
                 locale,
                 user
             ),
