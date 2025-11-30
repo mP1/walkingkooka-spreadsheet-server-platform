@@ -17,6 +17,8 @@
 
 package walkingkooka.spreadsheet.server.platform;
 
+import walkingkooka.text.LineEnding;
+
 /**
  * Runs {@link JettyHttpServerSpreadsheetHttpServer#main} on port 12345 and points the file server to read various gwt assets from walkingkooka-spreadsheet-dominokit
  */
@@ -25,6 +27,7 @@ public final class JettyHttpServerSpreadsheetHttpServerDominoKit {
         JettyHttpServerSpreadsheetHttpServer.main(
             new String[]{
                 "http://localhost:12345", // serverUrl
+                LineEnding.NL.name(), // lineEnding
                 "EN-GB", // defaultLocale
                 "systemUser@example.com", // systemUser
                 fileSystemUris(
