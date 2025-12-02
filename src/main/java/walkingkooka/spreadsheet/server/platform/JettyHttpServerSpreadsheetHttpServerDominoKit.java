@@ -29,12 +29,12 @@ public final class JettyHttpServerSpreadsheetHttpServerDominoKit {
                 "http://localhost:12345", // serverUrl
                 LineEnding.NL.name(), // lineEnding
                 "EN-GB", // defaultLocale
-                "systemUser@example.com", // systemUser
                 fileSystemUris(
                     "file:///Users/miroslav/repos-github/walkingkooka-spreadsheet-server-platform/src/main/resources/", // api-doc etc
                     "file:///Users/miroslav/repos-github/walkingkooka-spreadsheet-dominokit/target/gwt/out/walkingkooka.spreadsheet.dominokit.App/", // gwt output
                     "jar:file:///Users/miroslav/.m2/repository/org/dominokit/domino-ui/2.0.5/domino-ui-2.0.5.jar!META-INF/resources/webjars/" // domino-ui *.css
-                )
+                ),
+                "systemUser@example.com" // systemUser
             }
         );
     }

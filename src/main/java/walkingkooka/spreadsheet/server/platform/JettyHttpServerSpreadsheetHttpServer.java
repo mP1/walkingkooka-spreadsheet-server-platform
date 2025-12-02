@@ -124,22 +124,22 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     public static void main(final String[] args) throws Exception {
         switch (args.length) {
             case 0:
-                throw new IllegalArgumentException("Missing httpServerUrl, lineEnding, defaultLocale, defaultUser, file server root for jetty HttpServer");
+                throw new IllegalArgumentException("Missing httpServerUrl, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
             case 1:
-                throw new IllegalArgumentException("Missing lineEnding, defaultLocale, defaultUser, file server root for jetty HttpServer");
+                throw new IllegalArgumentException("Missing lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
             case 2:
-                throw new IllegalArgumentException("Missing default Locale, defaultUser, file server root for jetty HttpServer");
+                throw new IllegalArgumentException("Missing default Locale, file server root, defaultUser for jetty HttpServer");
             case 3:
-                throw new IllegalArgumentException("Missing defaultUser, file server root for jetty HttpServer");
+                throw new IllegalArgumentException("Missing file server root, defaultUser for jetty HttpServer");
             case 4:
-                throw new IllegalArgumentException("Missing file server root for jetty HttpServer");
+                throw new IllegalArgumentException("Missing defaultUser for jetty HttpServer");
             default:
                 startJettyHttpServer(
                     httpServerUrl(args[0]),
                     lineEnding(args[1]),
                     locale(args[2]),
-                    user(args[3]),
-                    fileServer(args[4])
+                    fileServer(args[3]),
+                    user(args[4])
                 );
                 break;
         }
@@ -189,18 +189,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             throw cause;
         }
         return defaultLocale;
-    }
-
-    private static Optional<EmailAddress> user(final String string) {
-        final EmailAddress emailAddress;
-
-        try {
-            emailAddress = EmailAddress.parse(string);
-        } catch (final RuntimeException cause) {
-            System.err.println("Invalid user: " + cause.getMessage());
-            throw cause;
-        }
-        return Optional.ofNullable(emailAddress);
     }
 
     /**
@@ -329,11 +317,23 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         );
     }
 
+    private static Optional<EmailAddress> user(final String string) {
+        final EmailAddress emailAddress;
+
+        try {
+            emailAddress = EmailAddress.parse(string);
+        } catch (final RuntimeException cause) {
+            System.err.println("Invalid user: " + cause.getMessage());
+            throw cause;
+        }
+        return Optional.ofNullable(emailAddress);
+    }
+
     private static void startJettyHttpServer(final AbsoluteUrl httpServerUrl,
                                              final LineEnding lineEnding,
                                              final Locale defaultLocale,
-                                             final Optional<EmailAddress> defaultUser,
-                                             final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer) {
+                                             final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer,
+                                             final Optional<EmailAddress> defaultUser) {
         final Map<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdSpreadsheetStoreRepositoryMap = Maps.concurrent();
         final SpreadsheetMetadata createMetadataTemplate = prepareMetadataCreateTemplate(defaultLocale);
 
