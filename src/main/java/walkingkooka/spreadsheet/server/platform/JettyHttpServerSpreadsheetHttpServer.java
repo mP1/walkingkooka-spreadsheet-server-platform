@@ -130,7 +130,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             case 2:
                 throw new IllegalArgumentException("Missing default Locale, defaultUser, file server root for jetty HttpServer");
             case 3:
-                throw new IllegalArgumentException("Missing system defaultUser, file server root for jetty HttpServer");
+                throw new IllegalArgumentException("Missing defaultUser, file server root for jetty HttpServer");
             case 4:
                 throw new IllegalArgumentException("Missing file server root for jetty HttpServer");
             default:
