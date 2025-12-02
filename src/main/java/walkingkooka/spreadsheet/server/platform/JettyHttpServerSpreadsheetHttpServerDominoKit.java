@@ -26,7 +26,8 @@ public final class JettyHttpServerSpreadsheetHttpServerDominoKit {
     public static void main(final String[] args) throws Exception {
         JettyHttpServerSpreadsheetHttpServer.main(
             new String[]{
-                "http://localhost:12345", // serverUrl
+                "http://localhost:12345", // httpServerUrl
+                "2000", // apacheSshdPort
                 LineEnding.NL.name(), // lineEnding
                 "EN-GB", // defaultLocale
                 fileSystemUris(
