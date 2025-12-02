@@ -398,9 +398,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                             return metadataStore.save(
                                 createMetadataTemplate.set(
                                     SpreadsheetMetadataPropertyName.AUDIT_INFO,
-                                    AuditInfo.with(
-                                        creator,
-                                        now,
+                                    AuditInfo.create(
                                         creator,
                                         now
                                     )
