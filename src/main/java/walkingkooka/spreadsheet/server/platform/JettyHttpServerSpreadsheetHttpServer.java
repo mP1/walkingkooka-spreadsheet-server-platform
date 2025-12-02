@@ -29,7 +29,6 @@ import walkingkooka.environment.EnvironmentContext;
 import walkingkooka.environment.EnvironmentContexts;
 import walkingkooka.locale.LocaleContexts;
 import walkingkooka.net.AbsoluteUrl;
-import walkingkooka.net.HostAddress;
 import walkingkooka.net.IpPort;
 import walkingkooka.net.Url;
 import walkingkooka.net.UrlPath;
@@ -358,15 +357,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         final SpreadsheetHttpServer server = SpreadsheetHttpServer.with(
             ApacheTikaMediaTypeDetectors.apacheTika(),
             fileServer,
-            jettyHttpServer(
-                serverUrl.host(),
-                serverUrl.port()
-                    .orElse(
-                        serverUrl.scheme().equals(UrlScheme.HTTP) ?
-                            IpPort.HTTP :
-                            IpPort.HTTPS
-                    )
-            ),
+            jettyHttpServer(serverUrl),
             (u) -> SpreadsheetServerContexts.basic(
                     serverUrl,
                     createSpreadsheetStoreRepository(
@@ -650,9 +641,18 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
      * Creates a {@link JettyHttpServer} given the given host and port.
      */
     @GwtIncompatible
-    private static Function<HttpHandler, HttpServer> jettyHttpServer(final HostAddress host,
-                                                                     final IpPort port) {
-        return (handler) -> JettyHttpServer.with(host, port, handler);
+    private static Function<HttpHandler, HttpServer> jettyHttpServer(final AbsoluteUrl serverUrl) {
+        return (handler) -> JettyHttpServer.with(
+            serverUrl.host(),
+            serverUrl.port()
+                .orElse(
+                    serverUrl.scheme()
+                        .equals(UrlScheme.HTTP) ?
+                        IpPort.HTTP :
+                        IpPort.HTTPS
+                ),
+            handler
+        );
     }
 
     /**
