@@ -87,6 +87,7 @@ import walkingkooka.terminal.TerminalId;
 import walkingkooka.terminal.apachesshd.ApacheSshdServer;
 import walkingkooka.terminal.server.TerminalServerContext;
 import walkingkooka.terminal.server.TerminalServerContexts;
+import walkingkooka.terminal.shell.TerminalShells;
 import walkingkooka.text.CharSequences;
 import walkingkooka.text.Indentation;
 import walkingkooka.text.LineEnding;
@@ -430,6 +431,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             sshdPort,
             (u, p) -> p.length() > 0, // TODO password authenticator https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/355
             (u, pubKey) -> false, // TODO public key authentication not currently supported https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/356
+            TerminalShells.basic(50),
             environmentContext(
                 lineEnding,
                 defaultLocale,
