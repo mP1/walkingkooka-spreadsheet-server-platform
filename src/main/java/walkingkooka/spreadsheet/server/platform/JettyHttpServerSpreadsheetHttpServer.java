@@ -77,21 +77,10 @@ import walkingkooka.spreadsheet.provider.SpreadsheetProvider;
 import walkingkooka.spreadsheet.provider.SpreadsheetProviderContexts;
 import walkingkooka.spreadsheet.provider.SpreadsheetProviders;
 import walkingkooka.spreadsheet.reference.SpreadsheetSelection;
-import walkingkooka.spreadsheet.security.store.SpreadsheetGroupStores;
-import walkingkooka.spreadsheet.security.store.SpreadsheetUserStores;
 import walkingkooka.spreadsheet.server.SpreadsheetHttpServer;
 import walkingkooka.spreadsheet.server.SpreadsheetServerContexts;
-import walkingkooka.spreadsheet.store.SpreadsheetCellRangeStores;
-import walkingkooka.spreadsheet.store.SpreadsheetCellReferencesStores;
-import walkingkooka.spreadsheet.store.SpreadsheetCellStores;
-import walkingkooka.spreadsheet.store.SpreadsheetColumnStores;
-import walkingkooka.spreadsheet.store.SpreadsheetLabelReferencesStores;
-import walkingkooka.spreadsheet.store.SpreadsheetLabelStores;
-import walkingkooka.spreadsheet.store.SpreadsheetRowStores;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepositories;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepository;
-import walkingkooka.spreadsheet.validation.form.store.SpreadsheetFormStores;
-import walkingkooka.storage.Storages;
 import walkingkooka.terminal.TerminalContexts;
 import walkingkooka.terminal.server.TerminalServerContexts;
 import walkingkooka.text.CharSequences;
@@ -419,20 +408,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         return (id) -> {
             SpreadsheetStoreRepository repo = spreadsheetIdToStoreRepository.get(id);
             if (null == repo) {
-                repo = SpreadsheetStoreRepositories.basic(
-                    SpreadsheetCellStores.treeMap(),
-                    SpreadsheetCellReferencesStores.treeMap(),
-                    SpreadsheetColumnStores.treeMap(),
-                    SpreadsheetFormStores.treeMap(),
-                    SpreadsheetGroupStores.treeMap(),
-                    SpreadsheetLabelStores.treeMap(),
-                    SpreadsheetLabelReferencesStores.treeMap(),
-                    metadataStore,
-                    SpreadsheetCellRangeStores.treeMap(),
-                    SpreadsheetRowStores.treeMap(),
-                    Storages.tree(),
-                    SpreadsheetUserStores.treeMap()
-                );
+                repo = SpreadsheetStoreRepositories.treeMap(metadataStore);
 
                 spreadsheetIdToStoreRepository.put(
                     id,
