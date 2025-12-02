@@ -81,7 +81,11 @@ import walkingkooka.spreadsheet.server.SpreadsheetHttpServer;
 import walkingkooka.spreadsheet.server.SpreadsheetServerContexts;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepositories;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepository;
+import walkingkooka.terminal.TerminalContext;
 import walkingkooka.terminal.TerminalContexts;
+import walkingkooka.terminal.TerminalId;
+import walkingkooka.terminal.apachesshd.ApacheSshdServer;
+import walkingkooka.terminal.server.TerminalServerContext;
 import walkingkooka.terminal.server.TerminalServerContexts;
 import walkingkooka.text.CharSequences;
 import walkingkooka.text.Indentation;
@@ -110,7 +114,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Creates a {@link SpreadsheetHttpServer} with memory stores using a Jetty server using the scheme/host/port from cmd line arguments.
@@ -124,22 +130,25 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     public static void main(final String[] args) throws Exception {
         switch (args.length) {
             case 0:
-                throw new IllegalArgumentException("Missing httpServerUrl, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing httpServerUrl, sshdPort, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
             case 1:
-                throw new IllegalArgumentException("Missing lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing sshdPort, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
             case 2:
-                throw new IllegalArgumentException("Missing default Locale, file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
             case 3:
-                throw new IllegalArgumentException("Missing file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing default Locale, file server root, defaultUser for jetty HttpServer");
             case 4:
+                throw new IllegalArgumentException("Missing file server root, defaultUser for jetty HttpServer");
+            case 5:
                 throw new IllegalArgumentException("Missing defaultUser for jetty HttpServer");
             default:
                 startJettyHttpServer(
                     httpServerUrl(args[0]),
-                    lineEnding(args[1]),
-                    locale(args[2]),
-                    fileServer(args[3]),
-                    user(args[4])
+                    sshdPort(args[1]),
+                    lineEnding(args[2]),
+                    locale(args[3]),
+                    fileServer(args[4]),
+                    user(args[5])
                 );
                 break;
         }
@@ -165,6 +174,17 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             return Url.parseAbsolute(string);
         } catch (final IllegalArgumentException cause) {
             System.err.println("Invalid httpServerUrl: " + cause.getMessage());
+            throw cause;
+        }
+    }
+
+    private static IpPort sshdPort(final String string) {
+        try {
+            return IpPort.with(
+                Integer.parseInt(string)
+            );
+        } catch (final IllegalArgumentException cause) {
+            System.err.println("Invalid sshdPort: " + cause.getMessage());
             throw cause;
         }
     }
@@ -330,10 +350,11 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     }
 
     private static void startJettyHttpServer(final AbsoluteUrl httpServerUrl,
+                                             final IpPort sshdPort,
                                              final LineEnding lineEnding,
                                              final Locale defaultLocale,
                                              final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer,
-                                             final Optional<EmailAddress> defaultUser) {
+                                             final Optional<EmailAddress> defaultUser) throws IOException {
         final Map<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdSpreadsheetStoreRepositoryMap = Maps.concurrent();
         final SpreadsheetMetadata createMetadataTemplate = prepareMetadataCreateTemplate(defaultLocale);
 
@@ -342,6 +363,10 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             (id) -> spreadsheetIdSpreadsheetStoreRepositoryMap.get(id)
                 .cells()
         );
+
+        final Supplier<TerminalId> nextTerminalId = nextTerminalId();
+
+        final TerminalServerContext terminalServerContext = TerminalServerContexts.basic(nextTerminalId);
 
         final SpreadsheetHttpServer httpServer = SpreadsheetHttpServer.with(
             ApacheTikaMediaTypeDetectors.apacheTika(),
@@ -395,12 +420,28 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                         defaultLocale,
                         u
                     ),
-                    TerminalServerContexts.fake()
+                    TerminalServerContexts.userFiltered(
+                        (uu) -> uu.equals(u), // only show current user TerminalContext.
+                        terminalServerContext
+                    )
                 ),
             (r) -> defaultUser // hard-coded web user because authentication is not yet implemented
         );
 
+        final ApacheSshdServer sshdServer = ApacheSshdServer.with(
+            sshdPort,
+            (u, p) -> p.length() > 0, // TODO password authenticator https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/355
+            (u, pubKey) -> false, // TODO public key authentication not currently supported https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/356
+            environmentContext(
+                lineEnding,
+                defaultLocale,
+                EnvironmentContext.ANONYMOUS // initial context has no user, user will be set by ApacheSshdServer
+            ),
+            terminalServerContext
+        );
+
         httpServer.start();
+        sshdServer.start();
     }
 
     private static Function<SpreadsheetId, SpreadsheetStoreRepository> createSpreadsheetStoreRepository(final Map<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository,
@@ -418,6 +459,17 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
 
             return repo;
         };
+    }
+
+    /**
+     * Allocates globally unique {@link TerminalId} for any created {@link TerminalContext}.
+     */
+    private static Supplier<TerminalId> nextTerminalId() {
+        final AtomicLong nextTerminalId = new AtomicLong();
+
+        return () -> TerminalId.with(
+            nextTerminalId.incrementAndGet()
+        );
     }
 
     /**
