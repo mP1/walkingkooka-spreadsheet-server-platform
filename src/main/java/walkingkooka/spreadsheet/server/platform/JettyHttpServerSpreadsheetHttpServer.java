@@ -135,7 +135,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     public static void main(final String[] args) throws Exception {
         switch (args.length) {
             case 0:
-                throw new IllegalArgumentException("Missing serverUrl, lineEnding, defaultLocale, systemUser, file server root for jetty HttpServer");
+                throw new IllegalArgumentException("Missing httpServerUrl, lineEnding, defaultLocale, systemUser, file server root for jetty HttpServer");
             case 1:
                 throw new IllegalArgumentException("Missing lineEnding, defaultLocale, systemUser, file server root for jetty HttpServer");
             case 2:
@@ -146,7 +146,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 throw new IllegalArgumentException("Missing file server root for jetty HttpServer");
             default:
                 startJettyHttpServer(
-                    serverUrl(args[0]),
+                    httpServerUrl(args[0]),
                     lineEnding(args[1]),
                     locale(args[2]),
                     user(args[3]),
@@ -171,11 +171,11 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         );
     }
 
-    private static AbsoluteUrl serverUrl(final String string) {
+    private static AbsoluteUrl httpServerUrl(final String string) {
         try {
             return Url.parseAbsolute(string);
         } catch (final IllegalArgumentException cause) {
-            System.err.println("Invalid serverUrl: " + cause.getMessage());
+            System.err.println("Invalid httpServerUrl: " + cause.getMessage());
             throw cause;
         }
     }
@@ -340,7 +340,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         );
     }
 
-    private static void startJettyHttpServer(final AbsoluteUrl serverUrl,
+    private static void startJettyHttpServer(final AbsoluteUrl httpServerUrl,
                                              final LineEnding lineEnding,
                                              final Locale defaultLocale,
                                              final Optional<EmailAddress> user,
@@ -357,9 +357,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         final SpreadsheetHttpServer server = SpreadsheetHttpServer.with(
             ApacheTikaMediaTypeDetectors.apacheTika(),
             fileServer,
-            jettyHttpServer(serverUrl),
+            jettyHttpServer(httpServerUrl),
             (u) -> SpreadsheetServerContexts.basic(
-                    serverUrl,
+                    httpServerUrl,
                     createSpreadsheetStoreRepository(
                         spreadsheetIdSpreadsheetStoreRepositoryMap,
                         metadataStore
