@@ -34,7 +34,7 @@ public final class JettyHttpServerSpreadsheetHttpServerDominoKit {
                     "file:///Users/miroslav/repos-github/walkingkooka-spreadsheet-dominokit/target/gwt/out/walkingkooka.spreadsheet.dominokit.App/", // gwt output
                     "jar:file:///Users/miroslav/.m2/repository/org/dominokit/domino-ui/2.0.5/domino-ui-2.0.5.jar!META-INF/resources/webjars/" // domino-ui *.css
                 ),
-                "systemUser@example.com" // systemUser
+                "defaultAuthenticatedUser@example.com" // systemUser
             }
         );
     }
