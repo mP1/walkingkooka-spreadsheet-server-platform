@@ -343,7 +343,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                 .cells()
         );
 
-        final SpreadsheetHttpServer server = SpreadsheetHttpServer.with(
+        final SpreadsheetHttpServer httpServer = SpreadsheetHttpServer.with(
             ApacheTikaMediaTypeDetectors.apacheTika(),
             fileServer,
             jettyHttpServer(httpServerUrl),
@@ -400,7 +400,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             (r) -> defaultUser // hard-coded web user because authentication is not yet implemented
         );
 
-        server.start();
+        httpServer.start();
     }
 
     private static Function<SpreadsheetId, SpreadsheetStoreRepository> createSpreadsheetStoreRepository(final Map<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository,
