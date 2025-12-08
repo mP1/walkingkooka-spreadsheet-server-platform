@@ -57,6 +57,8 @@ import walkingkooka.spreadsheet.compare.provider.SpreadsheetComparatorProviders;
 import walkingkooka.spreadsheet.convert.provider.SpreadsheetConvertersConverterProviders;
 import walkingkooka.spreadsheet.engine.SpreadsheetEngineContexts;
 import walkingkooka.spreadsheet.engine.SpreadsheetMetadataMode;
+import walkingkooka.spreadsheet.environment.SpreadsheetEnvironmentContext;
+import walkingkooka.spreadsheet.environment.SpreadsheetEnvironmentContexts;
 import walkingkooka.spreadsheet.export.provider.SpreadsheetExporterProviders;
 import walkingkooka.spreadsheet.expression.SpreadsheetExpressionFunctions;
 import walkingkooka.spreadsheet.expression.function.provider.SpreadsheetExpressionFunctionProviders;
@@ -157,15 +159,21 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
 
     private final static HasNow HAS_NOW = LocalDateTime::now;
 
-    private static EnvironmentContext environmentContext(final LineEnding lineEnding,
-                                                         final Locale locale,
-                                                         final Optional<EmailAddress> user) {
-        return EnvironmentContexts.map(
-            EnvironmentContexts.empty(
-                lineEnding,
-                locale,
-                HAS_NOW,
-                user
+    private static SpreadsheetEnvironmentContext spreadsheetEnvironmentContext(final LineEnding lineEnding,
+                                                                               final Locale locale,
+                                                                               final Optional<EmailAddress> user,
+                                                                               final AbsoluteUrl serverUrl) {
+        return SpreadsheetEnvironmentContexts.basic(
+            EnvironmentContexts.map(
+                EnvironmentContexts.empty(
+                    lineEnding,
+                    locale,
+                    HAS_NOW,
+                    user
+                )
+            ).setEnvironmentValue(
+                SpreadsheetEnvironmentContext.SERVER_URL,
+                serverUrl
             )
         );
     }
@@ -374,7 +382,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             fileServer,
             jettyHttpServer(httpServerUrl),
             (u) -> SpreadsheetServerContexts.basic(
-                    httpServerUrl,
                     createSpreadsheetStoreRepository(
                         spreadsheetIdSpreadsheetStoreRepositoryMap,
                         metadataStore
@@ -385,10 +392,11 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                         c,
                         TerminalContexts.fake()
                     ),
-                    environmentContext(
+                    spreadsheetEnvironmentContext(
                         lineEnding,
                         defaultLocale,
-                        u
+                        u,
+                        httpServerUrl
                     ),
                     LocaleContexts.jre(defaultLocale),
                     SpreadsheetMetadataContexts.basic(
@@ -417,7 +425,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                         HAS_NOW,
                         lineEnding,
                         defaultLocale,
-                        u
+                        u,
+                        httpServerUrl
                     ),
                     TerminalServerContexts.userFiltered(
                         (uu) -> uu.equals(u), // only show current user TerminalContext.
@@ -432,10 +441,11 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             (u, p) -> p.length() > 0, // TODO password authenticator https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/355
             (u, pubKey) -> false, // TODO public key authentication not currently supported https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/356
             TerminalShells.basic(50),
-            environmentContext(
+            spreadsheetEnvironmentContext(
                 lineEnding,
                 defaultLocale,
-                EnvironmentContext.ANONYMOUS // initial context has no user, user will be set by ApacheSshdServer
+                EnvironmentContext.ANONYMOUS, // initial context has no user, user will be set by ApacheSshdServer
+                httpServerUrl
             ),
             terminalServerContext
         );
@@ -543,7 +553,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
     private static ProviderContext providerContext(final HasNow hasNow,
                                                    final LineEnding lineEnding,
                                                    final Locale locale,
-                                                   final Optional<EmailAddress> user) {
+                                                   final Optional<EmailAddress> user,
+                                                   final AbsoluteUrl serverUrl) {
         final PluginStore pluginStore = PluginStores.treeMap();
 
         final Map<String, byte[]> fileToContent = Maps.sorted();
@@ -587,10 +598,11 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
 
         return SpreadsheetProviderContexts.spreadsheet(
             pluginStore,
-            environmentContext(
+            spreadsheetEnvironmentContext(
                 lineEnding,
                 locale,
-                user
+                user,
+                serverUrl
             ),
             JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT,
             LocaleContexts.jre(locale)
