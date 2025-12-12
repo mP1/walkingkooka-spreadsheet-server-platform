@@ -441,6 +441,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             (u, p) -> p.length() > 0, // TODO password authenticator https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/355
             (u, pubKey) -> false, // TODO public key authentication not currently supported https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/356
             TerminalShells.basic(50),
+            (t) -> {
+                throw new UnsupportedOperationException();
+            },
             spreadsheetEnvironmentContext(
                 lineEnding,
                 defaultLocale,
