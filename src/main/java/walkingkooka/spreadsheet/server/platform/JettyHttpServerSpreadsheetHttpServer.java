@@ -386,7 +386,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                         metadataStore
                     ),
                     systemSpreadsheetProvider(defaultLocale),
-                    (c) -> SpreadsheetEngineContexts.basic(
+                    (c) -> SpreadsheetEngineContexts.spreadsheetContext(
                         SpreadsheetMetadataMode.FORMULA,
                         c,
                         TerminalContexts.fake()
