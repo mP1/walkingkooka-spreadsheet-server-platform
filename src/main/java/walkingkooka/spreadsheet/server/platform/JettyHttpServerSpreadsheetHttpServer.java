@@ -439,6 +439,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             sshdPort,
             (u, p) -> p.length() > 0, // TODO password authenticator https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/355
             (u, pubKey) -> false, // TODO public key authentication not currently supported https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/356
+            (final String expression, final TerminalContext terminalContext) -> {
+                throw new UnsupportedOperationException();
+            },
             (final TerminalContext terminalContext, final EnvironmentContext environmentContext) -> {
                 throw new UnsupportedOperationException();
             },
