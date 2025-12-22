@@ -442,9 +442,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             (final String expression, final TerminalContext terminalContext) -> {
                 throw new UnsupportedOperationException();
             },
-            (final TerminalContext terminalContext, final EnvironmentContext environmentContext) -> {
-                throw new UnsupportedOperationException();
-            },
             spreadsheetEnvironmentContext(
                 lineEnding,
                 defaultLocale,
