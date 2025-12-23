@@ -436,6 +436,26 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         );
     }
 
+    /**
+     * Creates a {@link JettyHttpServer} given the given host and port.
+     */
+    @GwtIncompatible
+    private Function<HttpHandler, HttpServer> jettyHttpServer() {
+        final AbsoluteUrl serverUrl = this.httpServerUrl;
+
+        return (handler) -> JettyHttpServer.with(
+            serverUrl.host(),
+            serverUrl.port()
+                .orElse(
+                    serverUrl.scheme()
+                        .equals(UrlScheme.HTTP) ?
+                        IpPort.HTTP :
+                        IpPort.HTTPS
+                ),
+            handler
+        );
+    }
+
     private SpreadsheetMetadataContext spreadsheetMetadataContext() {
         return SpreadsheetMetadataContexts.basic(
             (final EmailAddress creator,
@@ -457,26 +477,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     }
 
     private final SpreadsheetMetadataContext spreadsheetMetadataContext;
-
-    /**
-     * Creates a {@link JettyHttpServer} given the given host and port.
-     */
-    @GwtIncompatible
-    private Function<HttpHandler, HttpServer> jettyHttpServer() {
-        final AbsoluteUrl serverUrl = this.httpServerUrl;
-
-        return (handler) -> JettyHttpServer.with(
-            serverUrl.host(),
-            serverUrl.port()
-                .orElse(
-                    serverUrl.scheme()
-                        .equals(UrlScheme.HTTP) ?
-                        IpPort.HTTP :
-                        IpPort.HTTPS
-                ),
-            handler
-        );
-    }
 
     /**
      * Allocates globally unique {@link TerminalId} for any created {@link TerminalContext}.
