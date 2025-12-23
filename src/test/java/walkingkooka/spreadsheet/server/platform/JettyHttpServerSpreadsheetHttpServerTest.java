@@ -36,7 +36,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
     SpreadsheetMetadataTesting {
 
     @Test
-    public void testPrepareMetadataCreateTemplate() {
+    public void testMetadataCreateTemplate() {
         final SpreadsheetMetadata metadata = JettyHttpServerSpreadsheetHttpServer.with(
             SERVER_URL,
             IpPort.with(2000), // sshdPort
@@ -49,7 +49,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
                 EmailAddress.parse("default-user@example.com")
             ),
             LocalDateTime::now
-        ).prepareMetadataCreateTemplate();
+        ).metadataCreateTemplate();
 
         metadata.spreadsheetConverterContext(
             SpreadsheetMetadata.NO_CELL,

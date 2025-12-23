@@ -379,7 +379,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                 .cells()
         );
 
-        this.metadataCreateTemplate = this.prepareMetadataCreateTemplate();
+        this.metadataCreateTemplate = this.metadataCreateTemplate();
 
         this.spreadsheetMetadataContext = this.spreadsheetMetadataContext();
 
@@ -456,44 +456,11 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         );
     }
 
-    private SpreadsheetMetadataContext spreadsheetMetadataContext() {
-        return SpreadsheetMetadataContexts.basic(
-            (final EmailAddress creator,
-             final Optional<Locale> creatorLocale) -> {
-                final LocalDateTime now = this.hasNow.now();
-
-                return this.metadataStore.save(
-                    this.metadataCreateTemplate.set(
-                        SpreadsheetMetadataPropertyName.AUDIT_INFO,
-                        AuditInfo.create(
-                            creator,
-                            now
-                        )
-                    )
-                );
-            },
-            this.metadataStore
-        );
-    }
-
-    private final SpreadsheetMetadataContext spreadsheetMetadataContext;
-
-    /**
-     * Allocates globally unique {@link TerminalId} for any created {@link TerminalContext}.
-     */
-    private TerminalId nextTerminalId() {
-        return TerminalId.with(
-            this.nextTerminalId.incrementAndGet()
-        );
-    }
-
-    private final AtomicLong nextTerminalId = new AtomicLong();
-
     /**
      * Prepares and merges the default and user locale, loading defaults and more.
      */
     // @VisibleForTesting
-    SpreadsheetMetadata prepareMetadataCreateTemplate() {
+    SpreadsheetMetadata metadataCreateTemplate() {
         final Locale defaultLocale = this.defaultLocale;
 
         return SpreadsheetMetadata.EMPTY
@@ -557,6 +524,41 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                     )
             );
     }
+
+    private final SpreadsheetMetadata metadataCreateTemplate;
+
+    private SpreadsheetMetadataContext spreadsheetMetadataContext() {
+        return SpreadsheetMetadataContexts.basic(
+            (final EmailAddress creator,
+             final Optional<Locale> creatorLocale) -> {
+                final LocalDateTime now = this.hasNow.now();
+
+                return this.metadataStore.save(
+                    this.metadataCreateTemplate.set(
+                        SpreadsheetMetadataPropertyName.AUDIT_INFO,
+                        AuditInfo.create(
+                            creator,
+                            now
+                        )
+                    )
+                );
+            },
+            this.metadataStore
+        );
+    }
+
+    private final SpreadsheetMetadataContext spreadsheetMetadataContext;
+
+    /**
+     * Allocates globally unique {@link TerminalId} for any created {@link TerminalContext}.
+     */
+    private TerminalId nextTerminalId() {
+        return TerminalId.with(
+            this.nextTerminalId.incrementAndGet()
+        );
+    }
+
+    private final AtomicLong nextTerminalId = new AtomicLong();
 
     /**
      * Creates a {@link ProviderContext} with the given {@link EmailAddress user} and {@link Locale}, all other
@@ -730,8 +732,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     private final LocaleContext localeContext;
 
     private final SpreadsheetMetadataStore metadataStore;
-
-    private final SpreadsheetMetadata metadataCreateTemplate;
 
     private final TerminalServerContext terminalServerContext;
 }
