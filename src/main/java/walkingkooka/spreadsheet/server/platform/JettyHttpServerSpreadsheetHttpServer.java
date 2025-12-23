@@ -404,6 +404,50 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         );
     }
 
+    private SpreadsheetHttpServer httpServer() {
+        return SpreadsheetHttpServer.with(
+            ApacheTikaMediaTypeDetectors.apacheTika(),
+            this.fileServer,
+            jettyHttpServer(),
+            (u) -> SpreadsheetServerContexts.basic(
+                this::spreadsheetStoreRepository,
+                spreadsheetProvider(),
+                (c) -> SpreadsheetEngineContexts.spreadsheetContext(
+                    SpreadsheetMetadataMode.FORMULA,
+                    c,
+                    TerminalContexts.fake()
+                ),
+                this.spreadsheetEnvironmentContext(u),
+                this.localeContext,
+                SpreadsheetMetadataContexts.basic(
+                    (final EmailAddress creator,
+                     final Optional<Locale> creatorLocale) -> {
+                        final LocalDateTime now = this.hasNow.now();
+
+                        return this.metadataStore.save(
+                            prepareMetadataCreateTemplate()
+                                .set(
+                                    SpreadsheetMetadataPropertyName.AUDIT_INFO,
+                                    AuditInfo.create(
+                                        creator,
+                                        now
+                                    )
+                                )
+                        );
+                    },
+                    this.metadataStore
+                ),
+                this.hateosResourceHandlerContext(),
+                providerContext(u),
+                TerminalServerContexts.userFiltered(
+                    (uu) -> uu.equals(u), // only show current user TerminalContext.
+                    this.terminalServerContext
+                )
+            ),
+            (r) -> this.defaultUser // hard-coded web user because authentication is not yet implemented
+        );
+    }
+
     /**
      * Creates a {@link JettyHttpServer} given the given host and port.
      */
@@ -563,49 +607,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
      * Starts the http and terminal servers.
      */
     private void start() throws IOException {
-        final SpreadsheetMetadata createMetadataTemplate = prepareMetadataCreateTemplate();
-
-        final SpreadsheetHttpServer httpServer = SpreadsheetHttpServer.with(
-            ApacheTikaMediaTypeDetectors.apacheTika(),
-            this.fileServer,
-            jettyHttpServer(),
-            (u) -> SpreadsheetServerContexts.basic(
-                this::spreadsheetStoreRepository,
-                spreadsheetProvider(),
-                (c) -> SpreadsheetEngineContexts.spreadsheetContext(
-                    SpreadsheetMetadataMode.FORMULA,
-                    c,
-                    TerminalContexts.fake()
-                ),
-                this.spreadsheetEnvironmentContext(u),
-                this.localeContext,
-                SpreadsheetMetadataContexts.basic(
-                    (final EmailAddress creator,
-                     final Optional<Locale> creatorLocale) -> {
-                        final LocalDateTime now = this.hasNow.now();
-
-                        return this.metadataStore.save(
-                            createMetadataTemplate.set(
-                                SpreadsheetMetadataPropertyName.AUDIT_INFO,
-                                AuditInfo.create(
-                                    creator,
-                                    now
-                                )
-                            )
-                        );
-                    },
-                    this.metadataStore
-                ),
-                this.hateosResourceHandlerContext(),
-                providerContext(u),
-                TerminalServerContexts.userFiltered(
-                    (uu) -> uu.equals(u), // only show current user TerminalContext.
-                    this.terminalServerContext
-                )
-            ),
-            (r) -> this.defaultUser // hard-coded web user because authentication is not yet implemented
-        );
-
+        final SpreadsheetHttpServer httpServer = this.httpServer();
         final ApacheSshdServer sshdServer = this.apacheSshdServer();
 
         httpServer.start();
