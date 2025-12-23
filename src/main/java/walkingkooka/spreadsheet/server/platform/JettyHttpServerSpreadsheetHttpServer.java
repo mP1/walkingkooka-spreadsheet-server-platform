@@ -500,9 +500,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             ).setDefaults(
                 SpreadsheetMetadata.NON_LOCALE_DEFAULTS
                     .set(SpreadsheetMetadataPropertyName.LOCALE, defaultLocale)
-                    .loadFromLocale(
-                        LocaleContexts.jre(defaultLocale)
-                    ).set(
+                    .loadFromLocale(this.localeContext)
+                    .set(
                         SpreadsheetMetadataPropertyName.CELL_CHARACTER_WIDTH,
                         1
                     ).set(
