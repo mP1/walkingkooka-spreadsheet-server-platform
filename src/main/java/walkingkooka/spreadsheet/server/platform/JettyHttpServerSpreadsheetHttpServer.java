@@ -416,7 +416,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             jettyHttpServer(),
             (u) -> SpreadsheetServerContexts.basic(
                 this::spreadsheetStoreRepository,
-                spreadsheetProvider(),
+                this.spreadsheetProvider(),
                 (c) -> SpreadsheetEngineContexts.spreadsheetContext(
                     SpreadsheetMetadataMode.FORMULA,
                     c,
@@ -426,7 +426,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                 this.localeContext,
                 this.spreadsheetMetadataContext,
                 this.hateosResourceHandlerContext(),
-                providerContext(u),
+                this.providerContext(u),
                 TerminalServerContexts.userFiltered(
                     (uu) -> uu.equals(u), // only show current user TerminalContext.
                     this.terminalServerContext
