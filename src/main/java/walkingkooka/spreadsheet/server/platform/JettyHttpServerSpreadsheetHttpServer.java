@@ -27,6 +27,7 @@ import walkingkooka.datetime.HasNow;
 import walkingkooka.environment.AuditInfo;
 import walkingkooka.environment.EnvironmentContext;
 import walkingkooka.environment.EnvironmentContexts;
+import walkingkooka.locale.LocaleContext;
 import walkingkooka.locale.LocaleContexts;
 import walkingkooka.net.AbsoluteUrl;
 import walkingkooka.net.IpPort;
@@ -41,6 +42,7 @@ import walkingkooka.net.http.server.HttpHandler;
 import walkingkooka.net.http.server.HttpServer;
 import walkingkooka.net.http.server.WebFile;
 import walkingkooka.net.http.server.WebFiles;
+import walkingkooka.net.http.server.hateos.HateosResourceHandlerContext;
 import walkingkooka.net.http.server.hateos.HateosResourceHandlerContexts;
 import walkingkooka.net.http.server.jetty.JettyHttpServer;
 import walkingkooka.plugin.JarFileTesting;
@@ -50,7 +52,6 @@ import walkingkooka.plugin.ProviderContext;
 import walkingkooka.plugin.store.Plugin;
 import walkingkooka.plugin.store.PluginStore;
 import walkingkooka.plugin.store.PluginStores;
-import walkingkooka.reflect.PublicStaticHelper;
 import walkingkooka.spreadsheet.SpreadsheetId;
 import walkingkooka.spreadsheet.SpreadsheetName;
 import walkingkooka.spreadsheet.compare.provider.SpreadsheetComparatorProviders;
@@ -93,7 +94,6 @@ import walkingkooka.text.CharSequences;
 import walkingkooka.text.Indentation;
 import walkingkooka.text.LineEnding;
 import walkingkooka.tree.expression.ExpressionNumberKind;
-import walkingkooka.tree.expression.function.provider.ExpressionFunctionAliasSet;
 import walkingkooka.tree.json.marshall.JsonNodeMarshallContexts;
 import walkingkooka.tree.json.marshall.JsonNodeMarshallUnmarshallContext;
 import walkingkooka.tree.json.marshall.JsonNodeMarshallUnmarshallContexts;
@@ -118,13 +118,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
-import java.util.function.Supplier;
 
 /**
  * Creates a {@link SpreadsheetHttpServer} with memory stores using a Jetty server using the scheme/host/port from cmd line arguments.
  */
-public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticHelper,
-    JarFileTesting {
+public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTesting {
 
     /**
      * Starts a server on the scheme/host/port passed as arguments, serving files from the current directory.
@@ -144,37 +142,17 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             case 5:
                 throw new IllegalArgumentException("Missing defaultUser for jetty HttpServer");
             default:
-                startJettyHttpServer(
+                with(
                     httpServerUrl(args[0]),
                     sshdPort(args[1]),
                     lineEnding(args[2]),
                     locale(args[3]),
                     fileServer(args[4]),
-                    user(args[5])
-                );
+                    user(args[5]),
+                    LocalDateTime::now
+                ).start();
                 break;
         }
-    }
-
-    private final static HasNow HAS_NOW = LocalDateTime::now;
-
-    private static SpreadsheetEnvironmentContext spreadsheetEnvironmentContext(final LineEnding lineEnding,
-                                                                               final Locale locale,
-                                                                               final Optional<EmailAddress> user,
-                                                                               final AbsoluteUrl serverUrl) {
-        return SpreadsheetEnvironmentContexts.basic(
-            EnvironmentContexts.map(
-                EnvironmentContexts.empty(
-                    lineEnding,
-                    locale,
-                    HAS_NOW,
-                    user
-                )
-            ).setEnvironmentValue(
-                SpreadsheetEnvironmentContext.SERVER_URL,
-                serverUrl
-            )
-        );
     }
 
     private static AbsoluteUrl httpServerUrl(final String string) {
@@ -207,7 +185,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         }
         return lineEnding;
     }
-    
+
     private static Locale locale(final String string) {
         final Locale defaultLocale;
         try {
@@ -357,96 +335,273 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         return Optional.ofNullable(emailAddress);
     }
 
-    private static void startJettyHttpServer(final AbsoluteUrl httpServerUrl,
-                                             final IpPort sshdPort,
-                                             final LineEnding lineEnding,
-                                             final Locale defaultLocale,
-                                             final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer,
-                                             final Optional<EmailAddress> defaultUser) throws IOException {
-        final Map<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToSpreadsheetStoreRepository = Maps.concurrent();
-        final SpreadsheetMetadata createMetadataTemplate = prepareMetadataCreateTemplate(defaultLocale);
+    public static JettyHttpServerSpreadsheetHttpServer with(final AbsoluteUrl httpServerUrl,
+                                                            final IpPort sshdPort,
+                                                            final LineEnding lineEnding,
+                                                            final Locale defaultLocale,
+                                                            final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer,
+                                                            final Optional<EmailAddress> defaultUser,
+                                                            final HasNow hasNow) {
+        return new JettyHttpServerSpreadsheetHttpServer(
+            httpServerUrl,
+            sshdPort,
+            lineEnding,
+            defaultLocale,
+            fileServer,
+            defaultUser,
+            hasNow
+        );
+    }
 
-        final SpreadsheetMetadataStore metadataStore = SpreadsheetMetadataStores.spreadsheetCellStoreAction(
-            SpreadsheetMetadataStores.treeMap(),
-            (id) -> spreadsheetIdToSpreadsheetStoreRepository.get(id)
-                .cells()
+    private JettyHttpServerSpreadsheetHttpServer(final AbsoluteUrl httpServerUrl,
+                                                 final IpPort sshdPort,
+                                                 final LineEnding lineEnding,
+                                                 final Locale defaultLocale,
+                                                 final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer,
+                                                 final Optional<EmailAddress> defaultUser,
+                                                 final HasNow hasNow) {
+        this.httpServerUrl = httpServerUrl;
+        this.sshdPort = sshdPort;
+        this.lineEnding = lineEnding;
+        this.defaultLocale = defaultLocale;
+        this.fileServer = fileServer;
+        this.defaultUser = defaultUser;
+        this.hasNow = hasNow;
+
+        this.localeContext = LocaleContexts.readOnly(
+            LocaleContexts.jre(this.defaultLocale)
         );
 
-        final Supplier<TerminalId> nextTerminalId = nextTerminalId();
+        this.metadataStore = SpreadsheetMetadataStores.spreadsheetCellStoreAction(
+            SpreadsheetMetadataStores.treeMap(),
+            (id) -> this.spreadsheetStoreRepository(id)
+                .cells()
+        );
+    }
 
-        final TerminalServerContext terminalServerContext = TerminalServerContexts.basic(nextTerminalId);
+    private HateosResourceHandlerContext hateosResourceHandlerContext() {
+        return HateosResourceHandlerContexts.basic(
+            Indentation.SPACES2,
+            this.lineEnding,
+            JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT
+        );
+    }
+
+    /**
+     * Creates a {@link JettyHttpServer} given the given host and port.
+     */
+    @GwtIncompatible
+    private Function<HttpHandler, HttpServer> jettyHttpServer() {
+        final AbsoluteUrl serverUrl = this.httpServerUrl;
+
+        return (handler) -> JettyHttpServer.with(
+            serverUrl.host(),
+            serverUrl.port()
+                .orElse(
+                    serverUrl.scheme()
+                        .equals(UrlScheme.HTTP) ?
+                        IpPort.HTTP :
+                        IpPort.HTTPS
+                ),
+            handler
+        );
+    }
+
+    /**
+     * Allocates globally unique {@link TerminalId} for any created {@link TerminalContext}.
+     */
+    private TerminalId nextTerminalId() {
+        return TerminalId.with(
+            this.nextTerminalId.incrementAndGet()
+        );
+    }
+
+    private final AtomicLong nextTerminalId = new AtomicLong();
+
+    /**
+     * Prepares and merges the default and user locale, loading defaults and more.
+     */
+    // @VisibleForTesting
+    SpreadsheetMetadata prepareMetadataCreateTemplate() {
+        final Locale defaultLocale = this.defaultLocale;
+
+        return SpreadsheetMetadata.EMPTY
+            .set(
+                SpreadsheetMetadataPropertyName.SPREADSHEET_NAME,
+                SpreadsheetName.with("Untitled")
+            ).set(
+                SpreadsheetMetadataPropertyName.LOCALE,
+                defaultLocale
+            ).set(
+                SpreadsheetMetadataPropertyName.VIEWPORT_HOME,
+                SpreadsheetSelection.A1
+            ).setDefaults(
+                SpreadsheetMetadata.NON_LOCALE_DEFAULTS
+                    .set(SpreadsheetMetadataPropertyName.LOCALE, defaultLocale)
+                    .loadFromLocale(
+                        LocaleContexts.jre(defaultLocale)
+                    ).set(
+                        SpreadsheetMetadataPropertyName.CELL_CHARACTER_WIDTH,
+                        1
+                    ).set(
+                        SpreadsheetMetadataPropertyName.DATE_TIME_OFFSET,
+                        Converters.EXCEL_1900_DATE_SYSTEM_OFFSET
+                    ).set(
+                        SpreadsheetMetadataPropertyName.DEFAULT_YEAR,
+                        1900
+                    ).set(
+                        SpreadsheetMetadataPropertyName.ERROR_FORMATTER,
+                        SpreadsheetFormatterSelector.parse("badge-error default-text")
+                    ).set(
+                        SpreadsheetMetadataPropertyName.EXPRESSION_NUMBER_KIND,
+                        ExpressionNumberKind.DOUBLE
+                    ).set(
+                        SpreadsheetMetadataPropertyName.FIND_FUNCTIONS,
+                        SpreadsheetExpressionFunctionProviders.FIND
+                    ).set(
+                        SpreadsheetMetadataPropertyName.FORMULA_FUNCTIONS,
+                        SpreadsheetExpressionFunctionProviders.FORMULA
+                    ).set(
+                        SpreadsheetMetadataPropertyName.FORMATTING_FUNCTIONS,
+                        SpreadsheetExpressionFunctionProviders.FORMATTING
+                    ).set(
+                        SpreadsheetMetadataPropertyName.FUNCTIONS,
+                        SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(SpreadsheetExpressionFunctions.NAME_CASE_SENSITIVITY)
+                            .expressionFunctionInfos()
+                            .aliasSet()
+                    ).set(
+                        SpreadsheetMetadataPropertyName.PRECISION,
+                        MathContext.DECIMAL32.getPrecision())
+                    .set(
+                        SpreadsheetMetadataPropertyName.ROUNDING_MODE,
+                        RoundingMode.HALF_UP)
+                    .set(
+                        SpreadsheetMetadataPropertyName.TEXT_FORMATTER,
+                        SpreadsheetPattern.DEFAULT_TEXT_FORMAT_PATTERN.spreadsheetFormatterSelector())
+                    .set(
+                        SpreadsheetMetadataPropertyName.TWO_DIGIT_YEAR,
+                        20
+                    ).set(
+                        SpreadsheetMetadataPropertyName.VALIDATION_FUNCTIONS,
+                        SpreadsheetExpressionFunctionProviders.VALIDATION
+                    )
+            );
+    }
+
+    /**
+     * Creates a {@link ProviderContext} with the given {@link EmailAddress user} and {@link Locale}, all other
+     * state is common for all users
+     */
+    private ProviderContext providerContext(final Optional<EmailAddress> user) {
+        final PluginStore pluginStore = PluginStores.treeMap();
+
+        final Map<String, byte[]> fileToContent = Maps.sorted();
+        fileToContent.put(
+            "dir111/file111.txt",
+            "Hello".getBytes(StandardCharsets.UTF_8)
+        );
+        fileToContent.put(
+            "file-2.bin",
+            new byte[0]
+        );
+        for (int i = 3; i < 100; i++) {
+            fileToContent.put(
+                "file" + i + ".txt",
+                "Hello".getBytes(StandardCharsets.UTF_8)
+            );
+        }
+
+        final byte[] archive = JarFileTesting.jarFile(
+            "Manifest-Version: 1.0\r\n" +
+                "plugin-provider-factory-className: sample.TestPlugin123\r\n" +
+                "plugin-name: test-plugin-123\r\n" +
+                "\r\n",
+            fileToContent
+        );
+
+        // will fail if the manifest is missing required entries.
+        PluginArchiveManifest.fromArchive(
+            Binary.with(archive)
+        );
+
+        pluginStore.save(
+            Plugin.with(
+                PluginName.with("test-plugin-123"),
+                "TestPlugin123-filename.jar", // filename
+                Binary.with(archive), // archive
+                EmailAddress.parse("plugin-author@example.com"),
+                this.hasNow.now()
+            )
+        );
+
+        return SpreadsheetProviderContexts.spreadsheet(
+            pluginStore,
+            this.spreadsheetEnvironmentContext(user),
+            JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT,
+            LocaleContexts.jre(this.defaultLocale)
+        );
+    }
+
+    /**
+     * Starts the http and terminal servers.
+     */
+    private void start() throws IOException {
+        final SpreadsheetMetadata createMetadataTemplate = prepareMetadataCreateTemplate();
+
+        final HasNow hasNow = this.hasNow;
+
+        final TerminalServerContext terminalServerContext = TerminalServerContexts.basic(this::nextTerminalId);
 
         final SpreadsheetHttpServer httpServer = SpreadsheetHttpServer.with(
             ApacheTikaMediaTypeDetectors.apacheTika(),
-            fileServer,
-            jettyHttpServer(httpServerUrl),
+            this.fileServer,
+            jettyHttpServer(),
             (u) -> SpreadsheetServerContexts.basic(
-                    createSpreadsheetStoreRepository(
-                        spreadsheetIdToSpreadsheetStoreRepository,
-                        metadataStore
-                    ),
-                    systemSpreadsheetProvider(defaultLocale),
-                    (c) -> SpreadsheetEngineContexts.spreadsheetContext(
-                        SpreadsheetMetadataMode.FORMULA,
-                        c,
-                        TerminalContexts.fake()
-                    ),
-                    spreadsheetEnvironmentContext(
-                        lineEnding,
-                        defaultLocale,
-                        u,
-                        httpServerUrl
-                    ),
-                    LocaleContexts.jre(defaultLocale),
-                    SpreadsheetMetadataContexts.basic(
-                        (final EmailAddress creator,
-                         final Optional<Locale> creatorLocale) -> {
-                            final LocalDateTime now = HAS_NOW.now();
-
-                            return metadataStore.save(
-                                createMetadataTemplate.set(
-                                    SpreadsheetMetadataPropertyName.AUDIT_INFO,
-                                    AuditInfo.create(
-                                        creator,
-                                        now
-                                    )
-                                )
-                            );
-                        },
-                        metadataStore
-                    ),
-                    HateosResourceHandlerContexts.basic(
-                        Indentation.SPACES2,
-                        lineEnding,
-                        JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT
-                    ),
-                    providerContext(
-                        HAS_NOW,
-                        lineEnding,
-                        defaultLocale,
-                        u,
-                        httpServerUrl
-                    ),
-                    TerminalServerContexts.userFiltered(
-                        (uu) -> uu.equals(u), // only show current user TerminalContext.
-                        terminalServerContext
-                    )
+                this::spreadsheetStoreRepository,
+                spreadsheetProvider(),
+                (c) -> SpreadsheetEngineContexts.spreadsheetContext(
+                    SpreadsheetMetadataMode.FORMULA,
+                    c,
+                    TerminalContexts.fake()
                 ),
-            (r) -> defaultUser // hard-coded web user because authentication is not yet implemented
+                this.spreadsheetEnvironmentContext(u),
+                this.localeContext,
+                SpreadsheetMetadataContexts.basic(
+                    (final EmailAddress creator,
+                     final Optional<Locale> creatorLocale) -> {
+                        final LocalDateTime now = hasNow.now();
+
+                        return metadataStore.save(
+                            createMetadataTemplate.set(
+                                SpreadsheetMetadataPropertyName.AUDIT_INFO,
+                                AuditInfo.create(
+                                    creator,
+                                    now
+                                )
+                            )
+                        );
+                    },
+                    metadataStore
+                ),
+                this.hateosResourceHandlerContext(),
+                providerContext(u),
+                TerminalServerContexts.userFiltered(
+                    (uu) -> uu.equals(u), // only show current user TerminalContext.
+                    terminalServerContext
+                )
+            ),
+            (r) -> this.defaultUser // hard-coded web user because authentication is not yet implemented
         );
 
         final ApacheSshdServer sshdServer = ApacheSshdServer.with(
-            sshdPort,
+            this.sshdPort,
             (u, p) -> p.length() > 0, // TODO password authenticator https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/355
             (u, pubKey) -> false, // TODO public key authentication not currently supported https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/356
             (final String expression, final TerminalContext terminalContext) -> {
                 throw new UnsupportedOperationException();
             },
-            spreadsheetEnvironmentContext(
-                lineEnding,
-                defaultLocale,
-                EnvironmentContext.ANONYMOUS, // initial context has no user, user will be set by ApacheSshdServer
-                httpServerUrl
+            this.spreadsheetEnvironmentContext(
+                EnvironmentContext.ANONYMOUS // initial context has no user, user will be set by ApacheSshdServer
             ),
             terminalServerContext
         );
@@ -455,38 +610,26 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         sshdServer.start();
     }
 
-    private static Function<SpreadsheetId, SpreadsheetStoreRepository> createSpreadsheetStoreRepository(final Map<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository,
-                                                                                                        final SpreadsheetMetadataStore metadataStore) {
-        return (id) -> {
-            SpreadsheetStoreRepository repo = spreadsheetIdToStoreRepository.get(id);
-            if (null == repo) {
-                repo = SpreadsheetStoreRepositories.treeMap(metadataStore);
-
-                spreadsheetIdToStoreRepository.put(
-                    id,
-                    repo
-                );
-            }
-
-            return repo;
-        };
-    }
-
-    /**
-     * Allocates globally unique {@link TerminalId} for any created {@link TerminalContext}.
-     */
-    private static Supplier<TerminalId> nextTerminalId() {
-        final AtomicLong nextTerminalId = new AtomicLong();
-
-        return () -> TerminalId.with(
-            nextTerminalId.incrementAndGet()
+    private SpreadsheetEnvironmentContext spreadsheetEnvironmentContext(final Optional<EmailAddress> user) {
+        return SpreadsheetEnvironmentContexts.basic(
+            EnvironmentContexts.map(
+                EnvironmentContexts.empty(
+                    this.lineEnding,
+                    this.defaultLocale,
+                    this.hasNow,
+                    user
+                )
+            ).setEnvironmentValue(
+                SpreadsheetEnvironmentContext.SERVER_URL,
+                this.httpServerUrl
+            )
         );
     }
 
     /**
      * Creates a global or system {@link SpreadsheetProvider} which maybe shared given the system {@link Locale}.
      */
-    private static SpreadsheetProvider systemSpreadsheetProvider(final Locale locale) {
+    private SpreadsheetProvider spreadsheetProvider() {
         final SpreadsheetFormatterProvider spreadsheetFormatterProvider = SpreadsheetFormatterProviders.spreadsheetFormatters();
         final SpreadsheetParserProvider spreadsheetParserProvider = SpreadsheetParserProviders.spreadsheetParsePattern(
             spreadsheetFormatterProvider
@@ -494,7 +637,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
 
         final SpreadsheetMetadata metadata = SpreadsheetMetadata.EMPTY.set(
             SpreadsheetMetadataPropertyName.LOCALE,
-            locale
+            this.defaultLocale
         ).set(
             SpreadsheetMetadataPropertyName.DATE_FORMATTER,
             SpreadsheetMetadataTesting.METADATA_EN_AU.getOrFail(SpreadsheetMetadataPropertyName.DATE_FORMATTER)
@@ -547,159 +690,31 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
         );
     }
 
-    /**
-     * Creates a {@link ProviderContext} with the given {@link EmailAddress user} and {@link Locale}, all other
-     * state is common for all users
-     */
-    private static ProviderContext providerContext(final HasNow hasNow,
-                                                   final LineEnding lineEnding,
-                                                   final Locale locale,
-                                                   final Optional<EmailAddress> user,
-                                                   final AbsoluteUrl serverUrl) {
-        final PluginStore pluginStore = PluginStores.treeMap();
+    private SpreadsheetStoreRepository spreadsheetStoreRepository(final SpreadsheetId spreadsheetId) {
+        SpreadsheetStoreRepository repo = this.spreadsheetIdToStoreRepository.get(spreadsheetId);
+        if (null == repo) {
+            repo = SpreadsheetStoreRepositories.treeMap(this.metadataStore);
 
-        final Map<String, byte[]> fileToContent = Maps.sorted();
-        fileToContent.put(
-            "dir111/file111.txt",
-            "Hello".getBytes(StandardCharsets.UTF_8)
-        );
-        fileToContent.put(
-            "file-2.bin",
-            new byte[0]
-        );
-        for (int i = 3; i < 100; i++) {
-            fileToContent.put(
-                "file" + i + ".txt",
-                "Hello".getBytes(StandardCharsets.UTF_8)
+            this.spreadsheetIdToStoreRepository.put(
+                spreadsheetId,
+                repo
             );
         }
 
-        final byte[] archive = JarFileTesting.jarFile(
-            "Manifest-Version: 1.0\r\n" +
-                "plugin-provider-factory-className: sample.TestPlugin123\r\n" +
-                "plugin-name: test-plugin-123\r\n" +
-                "\r\n",
-            fileToContent
-        );
-
-        // will fail if the manifest is missing required entries.
-        PluginArchiveManifest.fromArchive(
-            Binary.with(archive)
-        );
-
-        pluginStore.save(
-            Plugin.with(
-                PluginName.with("test-plugin-123"),
-                "TestPlugin123-filename.jar", // filename
-                Binary.with(archive), // archive
-                EmailAddress.parse("plugin-author@example.com"),
-                hasNow.now()
-            )
-        );
-
-        return SpreadsheetProviderContexts.spreadsheet(
-            pluginStore,
-            spreadsheetEnvironmentContext(
-                lineEnding,
-                locale,
-                user,
-                serverUrl
-            ),
-            JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT,
-            LocaleContexts.jre(locale)
-        );
+        return repo;
     }
 
-    /**
-     * The default name given to all empty spreadsheets
-     */
-    private final static SpreadsheetName DEFAULT_NAME = SpreadsheetName.with("Untitled");
+    private final Map<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository = Maps.concurrent();
 
-    private final static ExpressionFunctionAliasSet FUNCTION_ALIASES = SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(SpreadsheetExpressionFunctions.NAME_CASE_SENSITIVITY)
-        .expressionFunctionInfos()
-        .aliasSet();
+    private final AbsoluteUrl httpServerUrl;
+    private final IpPort sshdPort;
+    private final LineEnding lineEnding;
+    private final Locale defaultLocale;
+    private final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer;
+    private final Optional<EmailAddress> defaultUser;
+    private final HasNow hasNow;
 
-    /**
-     * Prepares and merges the default and user locale, loading defaults and more.
-     */
-    static SpreadsheetMetadata prepareMetadataCreateTemplate(final Locale defaultLocale) {
-        return SpreadsheetMetadata.EMPTY
-            .set(SpreadsheetMetadataPropertyName.SPREADSHEET_NAME, DEFAULT_NAME)
-            .set(SpreadsheetMetadataPropertyName.LOCALE, defaultLocale)
-            .set(SpreadsheetMetadataPropertyName.VIEWPORT_HOME, SpreadsheetSelection.A1)
-            .setDefaults(
-                SpreadsheetMetadata.NON_LOCALE_DEFAULTS
-                    .set(SpreadsheetMetadataPropertyName.LOCALE, defaultLocale)
-                    .loadFromLocale(
-                        LocaleContexts.jre(defaultLocale)
-                    ).set(
-                        SpreadsheetMetadataPropertyName.CELL_CHARACTER_WIDTH,
-                        1
-                    ).set(
-                        SpreadsheetMetadataPropertyName.DATE_TIME_OFFSET,
-                        Converters.EXCEL_1900_DATE_SYSTEM_OFFSET
-                    ).set(
-                        SpreadsheetMetadataPropertyName.DEFAULT_YEAR,
-                        1900
-                    ).set(
-                        SpreadsheetMetadataPropertyName.ERROR_FORMATTER,
-                        SpreadsheetFormatterSelector.parse("badge-error default-text")
-                    ).set(
-                        SpreadsheetMetadataPropertyName.EXPRESSION_NUMBER_KIND,
-                        ExpressionNumberKind.DOUBLE
-                    ).set(
-                        SpreadsheetMetadataPropertyName.FIND_FUNCTIONS,
-                        SpreadsheetExpressionFunctionProviders.FIND
-                    ).set(
-                        SpreadsheetMetadataPropertyName.FORMULA_FUNCTIONS,
-                        SpreadsheetExpressionFunctionProviders.FORMULA
-                    ).set(
-                        SpreadsheetMetadataPropertyName.FORMATTING_FUNCTIONS,
-                        SpreadsheetExpressionFunctionProviders.FORMATTING
-                    ).set(
-                        SpreadsheetMetadataPropertyName.FUNCTIONS,
-                        FUNCTION_ALIASES
-                    ).set(
-                        SpreadsheetMetadataPropertyName.PRECISION,
-                        MathContext.DECIMAL32.getPrecision())
-                    .set(
-                        SpreadsheetMetadataPropertyName.ROUNDING_MODE,
-                        RoundingMode.HALF_UP)
-                    .set(
-                        SpreadsheetMetadataPropertyName.TEXT_FORMATTER,
-                        SpreadsheetPattern.DEFAULT_TEXT_FORMAT_PATTERN.spreadsheetFormatterSelector())
-                    .set(
-                        SpreadsheetMetadataPropertyName.TWO_DIGIT_YEAR,
-                        20
-                    ).set(
-                        SpreadsheetMetadataPropertyName.VALIDATION_FUNCTIONS,
-                        SpreadsheetExpressionFunctionProviders.VALIDATION
-                    )
-            );
-    }
+    private final LocaleContext localeContext;
 
-    /**
-     * Creates a {@link JettyHttpServer} given the given host and port.
-     */
-    @GwtIncompatible
-    private static Function<HttpHandler, HttpServer> jettyHttpServer(final AbsoluteUrl serverUrl) {
-        return (handler) -> JettyHttpServer.with(
-            serverUrl.host(),
-            serverUrl.port()
-                .orElse(
-                    serverUrl.scheme()
-                        .equals(UrlScheme.HTTP) ?
-                        IpPort.HTTP :
-                        IpPort.HTTPS
-                ),
-            handler
-        );
-    }
-
-    /**
-     * Stop creation
-     */
-    private JettyHttpServerSpreadsheetHttpServer() {
-        throw new UnsupportedOperationException();
-    }
+    private final SpreadsheetMetadataStore metadataStore;
 }
