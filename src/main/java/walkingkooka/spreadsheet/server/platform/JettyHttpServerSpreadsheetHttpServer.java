@@ -392,9 +392,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             this.sshdPort,
             (u, p) -> p.length() > 0, // TODO password authenticator https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/355
             (u, pubKey) -> false, // TODO public key authentication not currently supported https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/356
-            (final String expression, final TerminalContext terminalContext) -> {
-                throw new UnsupportedOperationException();
-            },
+            this::terminalContext,
             this.spreadsheetEnvironmentContext(
                 EnvironmentContext.ANONYMOUS // initial context has no user, user will be set by ApacheSshdServer
             ),
@@ -739,6 +737,27 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             spreadsheetParserProvider,
             ValidatorProviders.validators()
         );
+    }
+
+    /**
+     * Creates a new {@link TerminalContext}, whenever a user connects.
+     */
+    private TerminalContext terminalContext(final String expression,
+                                            final TerminalContext apacheSshdServerTerminalContext) {
+        final TerminalContext terminalContext = TerminalContexts.basic(
+            apacheSshdServerTerminalContext.terminalId(),
+            apacheSshdServerTerminalContext::isTerminalOpen,
+            apacheSshdServerTerminalContext::exitTerminal,
+            apacheSshdServerTerminalContext.input(),
+            apacheSshdServerTerminalContext.output(),
+            apacheSshdServerTerminalContext.error(),
+            (final String e, final TerminalContext t) -> {
+                throw new UnsupportedOperationException();
+            },
+            apacheSshdServerTerminalContext
+        );
+        terminalContext.evaluate(expression);
+        return terminalContext;
     }
 
     private final AbsoluteUrl httpServerUrl;
