@@ -376,7 +376,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
         this.metadataStore = SpreadsheetMetadataStores.spreadsheetCellStoreAction(
             SpreadsheetMetadataStores.treeMap(),
-            (id) -> this.spreadsheetStoreRepository(id)
+            (id) -> this.getOrCreateSpreadsheetStoreRepository(id)
                 .cells()
         );
 
@@ -409,7 +409,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         SpreadsheetServerContext spreadsheetServerContext = this.userToSpreadsheetServerContext.get(user);
         if (null == spreadsheetServerContext) {
             spreadsheetServerContext = SpreadsheetServerContexts.basic(
-                this::spreadsheetStoreRepository,
+                this::getOrCreateSpreadsheetStoreRepository,
                 this.spreadsheetProvider(),
                 (c) -> SpreadsheetEngineContexts.spreadsheetContext(
                     SpreadsheetMetadataMode.FORMULA,
@@ -437,6 +437,22 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
     private final Map<Optional<EmailAddress>, SpreadsheetServerContext> userToSpreadsheetServerContext = Maps.concurrent();
 
+
+    private SpreadsheetStoreRepository getOrCreateSpreadsheetStoreRepository(final SpreadsheetId spreadsheetId) {
+        SpreadsheetStoreRepository repo = this.spreadsheetIdToStoreRepository.get(spreadsheetId);
+        if (null == repo) {
+            repo = SpreadsheetStoreRepositories.treeMap(this.metadataStore);
+
+            this.spreadsheetIdToStoreRepository.put(
+                spreadsheetId,
+                repo
+            );
+        }
+
+        return repo;
+    }
+
+    private final Map<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository = Maps.concurrent();
 
     private HateosResourceHandlerContext hateosResourceHandlerContext() {
         return HateosResourceHandlerContexts.basic(
@@ -724,22 +740,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             ValidatorProviders.validators()
         );
     }
-
-    private SpreadsheetStoreRepository spreadsheetStoreRepository(final SpreadsheetId spreadsheetId) {
-        SpreadsheetStoreRepository repo = this.spreadsheetIdToStoreRepository.get(spreadsheetId);
-        if (null == repo) {
-            repo = SpreadsheetStoreRepositories.treeMap(this.metadataStore);
-
-            this.spreadsheetIdToStoreRepository.put(
-                spreadsheetId,
-                repo
-            );
-        }
-
-        return repo;
-    }
-
-    private final Map<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository = Maps.concurrent();
 
     private final AbsoluteUrl httpServerUrl;
     private final IpPort sshdPort;
