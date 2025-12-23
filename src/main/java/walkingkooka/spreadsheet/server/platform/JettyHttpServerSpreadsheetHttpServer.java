@@ -378,6 +378,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                 .cells()
         );
 
+        this.metadataCreateTemplate = this.prepareMetadataCreateTemplate();
+
         this.terminalServerContext = TerminalServerContexts.basic(this::nextTerminalId);
     }
 
@@ -425,8 +427,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                         final LocalDateTime now = this.hasNow.now();
 
                         return this.metadataStore.save(
-                            prepareMetadataCreateTemplate()
-                                .set(
+                            this.metadataCreateTemplate.set(
                                     SpreadsheetMetadataPropertyName.AUDIT_INFO,
                                     AuditInfo.create(
                                         creator,
@@ -721,6 +722,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     private final LocaleContext localeContext;
 
     private final SpreadsheetMetadataStore metadataStore;
+
+    private final SpreadsheetMetadata metadataCreateTemplate;
 
     private final TerminalServerContext terminalServerContext;
 }
