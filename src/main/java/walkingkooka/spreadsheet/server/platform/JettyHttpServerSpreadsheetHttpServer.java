@@ -548,8 +548,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     private void start() throws IOException {
         final SpreadsheetMetadata createMetadataTemplate = prepareMetadataCreateTemplate();
 
-        final HasNow hasNow = this.hasNow;
-
         final TerminalServerContext terminalServerContext = TerminalServerContexts.basic(this::nextTerminalId);
 
         final SpreadsheetHttpServer httpServer = SpreadsheetHttpServer.with(
@@ -569,9 +567,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                 SpreadsheetMetadataContexts.basic(
                     (final EmailAddress creator,
                      final Optional<Locale> creatorLocale) -> {
-                        final LocalDateTime now = hasNow.now();
+                        final LocalDateTime now = this.hasNow.now();
 
-                        return metadataStore.save(
+                        return this.metadataStore.save(
                             createMetadataTemplate.set(
                                 SpreadsheetMetadataPropertyName.AUDIT_INFO,
                                 AuditInfo.create(
@@ -581,7 +579,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                             )
                         );
                     },
-                    metadataStore
+                    this.metadataStore
                 ),
                 this.hateosResourceHandlerContext(),
                 providerContext(u),
