@@ -69,6 +69,7 @@ import walkingkooka.spreadsheet.format.provider.SpreadsheetFormatterProviders;
 import walkingkooka.spreadsheet.format.provider.SpreadsheetFormatterSelector;
 import walkingkooka.spreadsheet.importer.provider.SpreadsheetImporterProviders;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
+import walkingkooka.spreadsheet.meta.SpreadsheetMetadataContext;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataContexts;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataPropertyName;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataTesting;
@@ -380,6 +381,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
         this.metadataCreateTemplate = this.prepareMetadataCreateTemplate();
 
+        this.spreadsheetMetadataContext = this.spreadsheetMetadataContext();
+
         this.terminalServerContext = TerminalServerContexts.basic(this::nextTerminalId);
     }
 
@@ -421,23 +424,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                 ),
                 this.spreadsheetEnvironmentContext(u),
                 this.localeContext,
-                SpreadsheetMetadataContexts.basic(
-                    (final EmailAddress creator,
-                     final Optional<Locale> creatorLocale) -> {
-                        final LocalDateTime now = this.hasNow.now();
-
-                        return this.metadataStore.save(
-                            this.metadataCreateTemplate.set(
-                                    SpreadsheetMetadataPropertyName.AUDIT_INFO,
-                                    AuditInfo.create(
-                                        creator,
-                                        now
-                                    )
-                                )
-                        );
-                    },
-                    this.metadataStore
-                ),
+                this.spreadsheetMetadataContext,
                 this.hateosResourceHandlerContext(),
                 providerContext(u),
                 TerminalServerContexts.userFiltered(
@@ -448,6 +435,28 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             (r) -> this.defaultUser // hard-coded web user because authentication is not yet implemented
         );
     }
+
+    private SpreadsheetMetadataContext spreadsheetMetadataContext() {
+        return SpreadsheetMetadataContexts.basic(
+            (final EmailAddress creator,
+             final Optional<Locale> creatorLocale) -> {
+                final LocalDateTime now = this.hasNow.now();
+
+                return this.metadataStore.save(
+                    this.metadataCreateTemplate.set(
+                        SpreadsheetMetadataPropertyName.AUDIT_INFO,
+                        AuditInfo.create(
+                            creator,
+                            now
+                        )
+                    )
+                );
+            },
+            this.metadataStore
+        );
+    }
+
+    private final SpreadsheetMetadataContext spreadsheetMetadataContext;
 
     /**
      * Creates a {@link JettyHttpServer} given the given host and port.
