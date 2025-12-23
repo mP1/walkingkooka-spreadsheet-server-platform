@@ -363,12 +363,12 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
                                              final Locale defaultLocale,
                                              final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer,
                                              final Optional<EmailAddress> defaultUser) throws IOException {
-        final Map<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdSpreadsheetStoreRepositoryMap = Maps.concurrent();
+        final Map<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToSpreadsheetStoreRepository = Maps.concurrent();
         final SpreadsheetMetadata createMetadataTemplate = prepareMetadataCreateTemplate(defaultLocale);
 
         final SpreadsheetMetadataStore metadataStore = SpreadsheetMetadataStores.spreadsheetCellStoreAction(
             SpreadsheetMetadataStores.treeMap(),
-            (id) -> spreadsheetIdSpreadsheetStoreRepositoryMap.get(id)
+            (id) -> spreadsheetIdToSpreadsheetStoreRepository.get(id)
                 .cells()
         );
 
@@ -382,7 +382,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements PublicStaticH
             jettyHttpServer(httpServerUrl),
             (u) -> SpreadsheetServerContexts.basic(
                     createSpreadsheetStoreRepository(
-                        spreadsheetIdSpreadsheetStoreRepositoryMap,
+                        spreadsheetIdToSpreadsheetStoreRepository,
                         metadataStore
                     ),
                     systemSpreadsheetProvider(defaultLocale),
