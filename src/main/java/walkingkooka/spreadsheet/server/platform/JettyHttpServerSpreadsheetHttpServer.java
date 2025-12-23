@@ -381,6 +381,21 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         this.terminalServerContext = TerminalServerContexts.basic(this::nextTerminalId);
     }
 
+    private ApacheSshdServer apacheSshdServer() {
+        return ApacheSshdServer.with(
+            this.sshdPort,
+            (u, p) -> p.length() > 0, // TODO password authenticator https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/355
+            (u, pubKey) -> false, // TODO public key authentication not currently supported https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/356
+            (final String expression, final TerminalContext terminalContext) -> {
+                throw new UnsupportedOperationException();
+            },
+            this.spreadsheetEnvironmentContext(
+                EnvironmentContext.ANONYMOUS // initial context has no user, user will be set by ApacheSshdServer
+            ),
+            this.terminalServerContext
+        );
+    }
+
     private HateosResourceHandlerContext hateosResourceHandlerContext() {
         return HateosResourceHandlerContexts.basic(
             Indentation.SPACES2,
@@ -591,18 +606,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             (r) -> this.defaultUser // hard-coded web user because authentication is not yet implemented
         );
 
-        final ApacheSshdServer sshdServer = ApacheSshdServer.with(
-            this.sshdPort,
-            (u, p) -> p.length() > 0, // TODO password authenticator https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/355
-            (u, pubKey) -> false, // TODO public key authentication not currently supported https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/356
-            (final String expression, final TerminalContext terminalContext) -> {
-                throw new UnsupportedOperationException();
-            },
-            this.spreadsheetEnvironmentContext(
-                EnvironmentContext.ANONYMOUS // initial context has no user, user will be set by ApacheSshdServer
-            ),
-            this.terminalServerContext
-        );
+        final ApacheSshdServer sshdServer = this.apacheSshdServer();
 
         httpServer.start();
         sshdServer.start();
