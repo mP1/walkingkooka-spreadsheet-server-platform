@@ -377,6 +377,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             (id) -> this.spreadsheetStoreRepository(id)
                 .cells()
         );
+
+        this.terminalServerContext = TerminalServerContexts.basic(this::nextTerminalId);
     }
 
     private HateosResourceHandlerContext hateosResourceHandlerContext() {
@@ -548,8 +550,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     private void start() throws IOException {
         final SpreadsheetMetadata createMetadataTemplate = prepareMetadataCreateTemplate();
 
-        final TerminalServerContext terminalServerContext = TerminalServerContexts.basic(this::nextTerminalId);
-
         final SpreadsheetHttpServer httpServer = SpreadsheetHttpServer.with(
             ApacheTikaMediaTypeDetectors.apacheTika(),
             this.fileServer,
@@ -585,7 +585,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                 providerContext(u),
                 TerminalServerContexts.userFiltered(
                     (uu) -> uu.equals(u), // only show current user TerminalContext.
-                    terminalServerContext
+                    this.terminalServerContext
                 )
             ),
             (r) -> this.defaultUser // hard-coded web user because authentication is not yet implemented
@@ -601,7 +601,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             this.spreadsheetEnvironmentContext(
                 EnvironmentContext.ANONYMOUS // initial context has no user, user will be set by ApacheSshdServer
             ),
-            terminalServerContext
+            this.terminalServerContext
         );
 
         httpServer.start();
@@ -715,4 +715,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     private final LocaleContext localeContext;
 
     private final SpreadsheetMetadataStore metadataStore;
+
+    private final TerminalServerContext terminalServerContext;
 }
