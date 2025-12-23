@@ -82,6 +82,7 @@ import walkingkooka.spreadsheet.provider.SpreadsheetProviderContexts;
 import walkingkooka.spreadsheet.provider.SpreadsheetProviders;
 import walkingkooka.spreadsheet.reference.SpreadsheetSelection;
 import walkingkooka.spreadsheet.server.SpreadsheetHttpServer;
+import walkingkooka.spreadsheet.server.SpreadsheetServerContext;
 import walkingkooka.spreadsheet.server.SpreadsheetServerContexts;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepositories;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepository;
@@ -401,6 +402,42 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         );
     }
 
+    /**
+     * Get or create a {@link SpreadsheetServerContext} for the given {@link EmailAddress}.
+     */
+    private SpreadsheetServerContext getOrCreateSpreadsheetServerContext(final Optional<EmailAddress> user) {
+        SpreadsheetServerContext spreadsheetServerContext = this.userToSpreadsheetServerContext.get(user);
+        if (null == spreadsheetServerContext) {
+            spreadsheetServerContext = SpreadsheetServerContexts.basic(
+                this::spreadsheetStoreRepository,
+                this.spreadsheetProvider(),
+                (c) -> SpreadsheetEngineContexts.spreadsheetContext(
+                    SpreadsheetMetadataMode.FORMULA,
+                    c,
+                    TerminalContexts.fake()
+                ),
+                this.spreadsheetEnvironmentContext(user),
+                this.localeContext,
+                this.spreadsheetMetadataContext,
+                this.hateosResourceHandlerContext(),
+                this.providerContext(user),
+                TerminalServerContexts.userFiltered(
+                    (uu) -> uu.equals(user), // only show current user TerminalContext.
+                    this.terminalServerContext
+                )
+            );
+
+            this.userToSpreadsheetServerContext.put(
+                user,
+                spreadsheetServerContext
+            );
+        }
+        return spreadsheetServerContext;
+    }
+
+    private final Map<Optional<EmailAddress>, SpreadsheetServerContext> userToSpreadsheetServerContext = Maps.concurrent();
+
+
     private HateosResourceHandlerContext hateosResourceHandlerContext() {
         return HateosResourceHandlerContexts.basic(
             Indentation.SPACES2,
@@ -414,24 +451,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             ApacheTikaMediaTypeDetectors.apacheTika(),
             this.fileServer,
             jettyHttpServer(),
-            (u) -> SpreadsheetServerContexts.basic(
-                this::spreadsheetStoreRepository,
-                this.spreadsheetProvider(),
-                (c) -> SpreadsheetEngineContexts.spreadsheetContext(
-                    SpreadsheetMetadataMode.FORMULA,
-                    c,
-                    TerminalContexts.fake()
-                ),
-                this.spreadsheetEnvironmentContext(u),
-                this.localeContext,
-                this.spreadsheetMetadataContext,
-                this.hateosResourceHandlerContext(),
-                this.providerContext(u),
-                TerminalServerContexts.userFiltered(
-                    (uu) -> uu.equals(u), // only show current user TerminalContext.
-                    this.terminalServerContext
-                )
-            ),
+            this::getOrCreateSpreadsheetServerContext,
             (r) -> this.defaultUser // hard-coded web user because authentication is not yet implemented
         );
     }
