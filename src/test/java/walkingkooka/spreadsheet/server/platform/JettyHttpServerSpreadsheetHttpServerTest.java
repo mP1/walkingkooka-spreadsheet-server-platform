@@ -18,24 +18,38 @@
 package walkingkooka.spreadsheet.server.platform;
 
 import org.junit.jupiter.api.Test;
+import walkingkooka.net.IpPort;
+import walkingkooka.net.email.EmailAddress;
+import walkingkooka.reflect.ClassTesting2;
 import walkingkooka.reflect.JavaVisibility;
-import walkingkooka.reflect.PublicStaticHelperTesting;
 import walkingkooka.spreadsheet.convert.SpreadsheetConverterContexts;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataPropertyName;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataTesting;
+import walkingkooka.text.LineEnding;
 
-import java.lang.reflect.Method;
+import java.time.LocalDateTime;
 import java.util.Locale;
+import java.util.Optional;
 
-public final class JettyHttpServerSpreadsheetHttpServerTest implements PublicStaticHelperTesting<JettyHttpServerSpreadsheetHttpServer>,
+public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTesting2<JettyHttpServerSpreadsheetHttpServer>,
     SpreadsheetMetadataTesting {
 
     @Test
     public void testPrepareMetadataCreateTemplate() {
-        final SpreadsheetMetadata metadata = JettyHttpServerSpreadsheetHttpServer.prepareMetadataCreateTemplate(
-            Locale.FRENCH
-        );
+        final SpreadsheetMetadata metadata = JettyHttpServerSpreadsheetHttpServer.with(
+            SERVER_URL,
+            IpPort.with(2000), // sshdPort
+            LineEnding.NL,
+            Locale.ENGLISH,
+            (u) -> {
+                throw new UnsupportedOperationException();
+            },
+            Optional.of(
+                EmailAddress.parse("default-user@example.com")
+            ),
+            LocalDateTime::now
+        ).prepareMetadataCreateTemplate();
 
         metadata.spreadsheetConverterContext(
             SpreadsheetMetadata.NO_CELL,
@@ -58,10 +72,5 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements PublicSta
     @Override
     public JavaVisibility typeVisibility() {
         return JavaVisibility.PUBLIC;
-    }
-
-    @Override
-    public boolean canHavePublicTypes(final Method method) {
-        return false;
     }
 }
