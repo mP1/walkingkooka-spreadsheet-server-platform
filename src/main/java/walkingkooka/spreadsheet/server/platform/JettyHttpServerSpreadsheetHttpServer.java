@@ -19,6 +19,7 @@ package walkingkooka.spreadsheet.server.platform;
 
 import javaemul.internal.annotations.GwtIncompatible;
 import walkingkooka.Binary;
+import walkingkooka.Cast;
 import walkingkooka.Either;
 import walkingkooka.collect.list.Lists;
 import walkingkooka.collect.map.Maps;
@@ -27,6 +28,7 @@ import walkingkooka.datetime.HasNow;
 import walkingkooka.environment.AuditInfo;
 import walkingkooka.environment.EnvironmentContext;
 import walkingkooka.environment.EnvironmentContexts;
+import walkingkooka.environment.EnvironmentValueName;
 import walkingkooka.locale.LocaleContext;
 import walkingkooka.locale.LocaleContexts;
 import walkingkooka.net.AbsoluteUrl;
@@ -56,9 +58,13 @@ import walkingkooka.spreadsheet.SpreadsheetId;
 import walkingkooka.spreadsheet.SpreadsheetName;
 import walkingkooka.spreadsheet.compare.provider.SpreadsheetComparatorProviders;
 import walkingkooka.spreadsheet.convert.provider.SpreadsheetConvertersConverterProviders;
+import walkingkooka.spreadsheet.engine.SpreadsheetEngine;
+import walkingkooka.spreadsheet.engine.SpreadsheetEngineContext;
 import walkingkooka.spreadsheet.engine.SpreadsheetEngineContexts;
+import walkingkooka.spreadsheet.engine.SpreadsheetEngines;
 import walkingkooka.spreadsheet.engine.SpreadsheetMetadataMode;
 import walkingkooka.spreadsheet.environment.SpreadsheetEnvironmentContext;
+import walkingkooka.spreadsheet.environment.SpreadsheetEnvironmentContextFactory;
 import walkingkooka.spreadsheet.environment.SpreadsheetEnvironmentContexts;
 import walkingkooka.spreadsheet.export.provider.SpreadsheetExporterProviders;
 import walkingkooka.spreadsheet.expression.SpreadsheetExpressionFunctions;
@@ -393,10 +399,59 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             (u, p) -> p.length() > 0, // TODO password authenticator https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/355
             (u, pubKey) -> false, // TODO public key authentication not currently supported https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/356
             this::terminalContext,
-            this.spreadsheetEnvironmentContext(
-                EnvironmentContext.ANONYMOUS // initial context has no user, user will be set by ApacheSshdServer
-            ),
+            terminalSpreadsheetEnvironmentContext(),
             this.terminalServerContext
+        );
+    }
+
+    private SpreadsheetServerContext createSpreadsheetServerContext(final Optional<EmailAddress> user,
+                                                                    final TerminalContext terminalContext) {
+        return SpreadsheetServerContexts.basic(
+            this::getOrCreateSpreadsheetStoreRepository,
+            this.spreadsheetProvider(),
+            (c) -> SpreadsheetEngineContexts.spreadsheetContext(
+                SpreadsheetMetadataMode.FORMULA,
+                c,
+                terminalContext
+            ),
+            this.spreadsheetEnvironmentContext(user),
+            this.localeContext,
+            this.spreadsheetMetadataContext,
+            this.hateosResourceHandlerContext(),
+            this.providerContext(user),
+            TerminalServerContexts.userFiltered(
+                (uu) -> uu.equals(user), // only show current user TerminalContext.
+                this.terminalServerContext
+            )
+        );
+    }
+
+    /**
+     * Starts a new shell session.
+     */
+    private Object evaluateTerminalExpression(final String expression,
+                                              final TerminalContext terminalContext) {
+        final Optional<EmailAddress> user = terminalContext.user();
+
+        final SpreadsheetServerContext spreadsheetServerContext = this.createSpreadsheetServerContext(
+            user,
+            terminalContext
+        );
+
+        final SpreadsheetEngine engine = SpreadsheetEngines.basic();
+        final SpreadsheetEngineContext engineContext = SpreadsheetEngineContexts.spreadsheetEnvironmentContext(
+            spreadsheetServerContext, // SpreadsheetContextSupplier
+            SpreadsheetEnvironmentContexts.basic(terminalContext), // SpreadsheetEnvironmentContext
+            this.localeContext,
+            this.spreadsheetMetadataContext,
+            terminalContext,
+            this.spreadsheetProvider(),
+            this.providerContext(user)
+        );
+
+        return engine.evaluate(
+            expression,
+            engineContext
         );
     }
 
@@ -406,23 +461,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     private SpreadsheetServerContext getOrCreateSpreadsheetServerContext(final Optional<EmailAddress> user) {
         SpreadsheetServerContext spreadsheetServerContext = this.userToSpreadsheetServerContext.get(user);
         if (null == spreadsheetServerContext) {
-            spreadsheetServerContext = SpreadsheetServerContexts.basic(
-                this::getOrCreateSpreadsheetStoreRepository,
-                this.spreadsheetProvider(),
-                (c) -> SpreadsheetEngineContexts.spreadsheetContext(
-                    SpreadsheetMetadataMode.FORMULA,
-                    c,
-                    TerminalContexts.fake()
-                ),
-                this.spreadsheetEnvironmentContext(user),
-                this.localeContext,
-                this.spreadsheetMetadataContext,
-                this.hateosResourceHandlerContext(),
-                this.providerContext(user),
-                TerminalServerContexts.userFiltered(
-                    (uu) -> uu.equals(user), // only show current user TerminalContext.
-                    this.terminalServerContext
-                )
+            spreadsheetServerContext = this.createSpreadsheetServerContext(
+                user,
+                TerminalContexts.fake() // no terminalContext
             );
 
             this.userToSpreadsheetServerContext.put(
@@ -751,13 +792,64 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             apacheSshdServerTerminalContext.input(),
             apacheSshdServerTerminalContext.output(),
             apacheSshdServerTerminalContext.error(),
-            (final String e, final TerminalContext t) -> {
-                throw new UnsupportedOperationException();
-            },
+            this::evaluateTerminalExpression,
             apacheSshdServerTerminalContext
         );
-        terminalContext.evaluate(expression);
+
+        try {
+            final Object value = terminalContext.evaluate(expression);
+        } catch (final RuntimeException cause) {
+            cause.printStackTrace(); // TODO remove later, leave for now
+            throw cause;
+        }
         return terminalContext;
+    }
+
+    private SpreadsheetEnvironmentContext terminalSpreadsheetEnvironmentContext() {
+        final SpreadsheetEnvironmentContext spreadsheetEnvironmentContext = this.spreadsheetEnvironmentContext(
+            EnvironmentContext.ANONYMOUS // initial context has no user, user will be set by ApacheSshdServer
+        );
+
+        // copy SpreadsheetEnvironmentContextFactory required EnvironmentValueNames
+        final SpreadsheetMetadata spreadsheetMetadata = SpreadsheetMetadata.NON_LOCALE_DEFAULTS.set(
+            SpreadsheetMetadataPropertyName.LOCALE,
+            this.defaultLocale
+        ).loadFromLocale(this.localeContext);
+
+        for (final EnvironmentValueName<?> environmentValueName : SpreadsheetEnvironmentContextFactory.ENVIRONMENT_VALUE_NAMES) {
+
+            // hardcode CONVERTER and FUNCTIONS for now
+            if(environmentValueName.equals(SpreadsheetEnvironmentContextFactory.CONVERTER)) {
+                spreadsheetEnvironmentContext.setEnvironmentValue(
+                    SpreadsheetEnvironmentContextFactory.CONVERTER,
+                    spreadsheetMetadata.getOrFail(SpreadsheetMetadataPropertyName.SCRIPTING_CONVERTER)
+                );
+                continue;
+            }
+            if(environmentValueName.equals(SpreadsheetEnvironmentContextFactory.FUNCTIONS)) {
+                spreadsheetEnvironmentContext.setEnvironmentValue(
+                    SpreadsheetEnvironmentContextFactory.FUNCTIONS,
+                    SpreadsheetExpressionFunctionProviders.TERMINAL
+                );
+                continue;
+            }
+
+            // dont copy
+            if(environmentValueName.equals(SpreadsheetEnvironmentContextFactory.LOCALE)) {
+                continue;
+            }
+
+            spreadsheetEnvironmentContext.setEnvironmentValue(
+                environmentValueName,
+                Cast.to(
+                    spreadsheetMetadata.getOrFail(
+                        SpreadsheetMetadataPropertyName.fromEnvironmentValueName(environmentValueName)
+                    )
+                )
+            );
+        }
+
+        return SpreadsheetEnvironmentContexts.readOnly(spreadsheetEnvironmentContext);
     }
 
     private final AbsoluteUrl httpServerUrl;
