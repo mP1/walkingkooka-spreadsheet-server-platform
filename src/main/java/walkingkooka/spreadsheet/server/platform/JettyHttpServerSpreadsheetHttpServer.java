@@ -607,19 +607,15 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     private SpreadsheetMetadataContext spreadsheetMetadataContext() {
         return SpreadsheetMetadataContexts.basic(
             (final EmailAddress creator,
-             final Optional<Locale> creatorLocale) -> {
-                final LocalDateTime now = this.hasNow.now();
-
-                return this.metadataStore.save(
-                    this.metadataCreateTemplate.set(
-                        SpreadsheetMetadataPropertyName.AUDIT_INFO,
-                        AuditInfo.create(
-                            creator,
-                            now
-                        )
+             final Optional<Locale> creatorLocale) -> this.metadataStore.save(
+                this.metadataCreateTemplate.set(
+                    SpreadsheetMetadataPropertyName.AUDIT_INFO,
+                    AuditInfo.create(
+                        creator,
+                        this.hasNow.now()
                     )
-                );
-            },
+                )
+            ),
             this.metadataStore
         );
     }
