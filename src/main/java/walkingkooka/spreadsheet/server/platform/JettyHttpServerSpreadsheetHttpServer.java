@@ -390,6 +390,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
         this.spreadsheetMetadataContext = this.spreadsheetMetadataContext();
 
+        this.spreadsheetProvider = this.spreadsheetProvider();
+
         this.terminalServerContext = TerminalServerContexts.basic(this::nextTerminalId);
     }
 
@@ -408,7 +410,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                                                                     final TerminalContext terminalContext) {
         return SpreadsheetServerContexts.basic(
             this::getOrCreateSpreadsheetStoreRepository,
-            this.spreadsheetProvider(),
+            this.spreadsheetProvider,
             (c) -> SpreadsheetEngineContexts.spreadsheetContext(
                 SpreadsheetMetadataMode.FORMULA,
                 c,
@@ -445,7 +447,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             this.localeContext,
             this.spreadsheetMetadataContext,
             terminalContext,
-            this.spreadsheetProvider(),
+            this.spreadsheetProvider,
             this.providerContext(user)
         );
 
@@ -779,6 +781,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             ValidatorProviders.validators()
         );
     }
+
+    private final SpreadsheetProvider spreadsheetProvider;
 
     /**
      * Creates a new {@link TerminalContext}, whenever a user connects.
