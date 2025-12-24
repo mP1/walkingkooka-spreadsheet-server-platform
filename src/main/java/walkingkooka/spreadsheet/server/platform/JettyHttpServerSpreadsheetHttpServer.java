@@ -849,7 +849,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             );
         }
 
-        return SpreadsheetEnvironmentContexts.readOnly(spreadsheetEnvironmentContext);
+        return SpreadsheetEnvironmentContexts.readOnly(
+            spreadsheetEnvironmentContext.setLineEnding(TerminalContext.TERMINAL_LINE_ENDING)
+        );
     }
 
     private final AbsoluteUrl httpServerUrl;
