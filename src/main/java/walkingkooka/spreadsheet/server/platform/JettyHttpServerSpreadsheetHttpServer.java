@@ -406,6 +406,10 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         );
     }
 
+    private final IpPort sshdPort;
+
+    private final TerminalServerContext terminalServerContext;
+
     private SpreadsheetServerContext createSpreadsheetServerContext(final Optional<EmailAddress> user,
                                                                     final TerminalContext terminalContext) {
         return SpreadsheetServerContexts.basic(
@@ -493,6 +497,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         return repo;
     }
 
+    private final SpreadsheetMetadataStore metadataStore;
+
     private final Map<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository = Maps.concurrent();
 
     private HateosResourceHandlerContext hateosResourceHandlerContext() {
@@ -513,6 +519,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         );
     }
 
+    private final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer;
+
     /**
      * Creates a {@link JettyHttpServer} given the given host and port.
      */
@@ -532,6 +540,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             handler
         );
     }
+
+    private final AbsoluteUrl httpServerUrl;
 
     /**
      * Prepares and merges the default and user locale, loading defaults and more.
@@ -714,6 +724,11 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         );
     }
 
+    private final LineEnding lineEnding;
+    private final Locale defaultLocale;
+    private final Optional<EmailAddress> defaultUser;
+    private final HasNow hasNow;
+
     /**
      * Creates a global or system {@link SpreadsheetProvider} which maybe shared given the system {@link Locale}.
      */
@@ -854,17 +869,5 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         );
     }
 
-    private final AbsoluteUrl httpServerUrl;
-    private final IpPort sshdPort;
-    private final LineEnding lineEnding;
-    private final Locale defaultLocale;
-    private final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer;
-    private final Optional<EmailAddress> defaultUser;
-    private final HasNow hasNow;
-
     private final LocaleContext localeContext;
-
-    private final SpreadsheetMetadataStore metadataStore;
-
-    private final TerminalServerContext terminalServerContext;
 }
