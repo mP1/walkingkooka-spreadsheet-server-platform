@@ -461,14 +461,14 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
      * Get or create a {@link SpreadsheetServerContext} for the given {@link EmailAddress}.
      */
     private SpreadsheetServerContext getOrCreateSpreadsheetServerContext(final Optional<EmailAddress> user) {
-        SpreadsheetServerContext spreadsheetServerContext = this.userToSpreadsheetServerContext.get(user);
+        SpreadsheetServerContext spreadsheetServerContext = this.userEmailAddressToSpreadsheetServerContext.get(user);
         if (null == spreadsheetServerContext) {
             spreadsheetServerContext = this.createSpreadsheetServerContext(
                 user,
                 TerminalContexts.fake() // no terminalContext
             );
 
-            this.userToSpreadsheetServerContext.put(
+            this.userEmailAddressToSpreadsheetServerContext.put(
                 user,
                 spreadsheetServerContext
             );
@@ -476,7 +476,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         return spreadsheetServerContext;
     }
 
-    private final Map<Optional<EmailAddress>, SpreadsheetServerContext> userToSpreadsheetServerContext = Maps.concurrent();
+    private final Map<Optional<EmailAddress>, SpreadsheetServerContext> userEmailAddressToSpreadsheetServerContext = Maps.concurrent();
 
 
     private SpreadsheetStoreRepository getOrCreateSpreadsheetStoreRepository(final SpreadsheetId spreadsheetId) {
