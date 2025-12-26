@@ -513,7 +513,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         return SpreadsheetHttpServer.with(
             ApacheTikaMediaTypeDetectors.apacheTika(),
             this.fileServer,
-            jettyHttpServer(),
+            this::jettyHttpServer,
             this::getOrCreateSpreadsheetServerContext,
             (r) -> this.defaultUser // hard-coded web user because authentication is not yet implemented
         );
@@ -525,10 +525,10 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
      * Creates a {@link JettyHttpServer} given the given host and port.
      */
     @GwtIncompatible
-    private Function<HttpHandler, HttpServer> jettyHttpServer() {
+    private HttpServer jettyHttpServer(final HttpHandler httpHandler) {
         final AbsoluteUrl serverUrl = this.httpServerUrl;
 
-        return (handler) -> JettyHttpServer.with(
+        return JettyHttpServer.with(
             serverUrl.host(),
             serverUrl.port()
                 .orElse(
@@ -537,7 +537,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                         IpPort.HTTP :
                         IpPort.HTTPS
                 ),
-            handler
+            httpHandler
         );
     }
 
