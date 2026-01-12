@@ -56,6 +56,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             SpreadsheetConverterContexts.NO_VALIDATION_REFERENCE,
             SpreadsheetMetadataPropertyName.FORMULA_CONVERTER,
             SPREADSHEET_LABEL_NAME_RESOLVER,
+            LINE_ENDING,
             CONVERTER_PROVIDER,
             LOCALE_CONTEXT,
             PROVIDER_CONTEXT
