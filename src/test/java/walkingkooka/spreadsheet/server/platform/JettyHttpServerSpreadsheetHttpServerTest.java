@@ -26,7 +26,6 @@ import walkingkooka.spreadsheet.convert.SpreadsheetConverterContexts;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataPropertyName;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataTesting;
-import walkingkooka.text.LineEnding;
 
 import java.time.LocalDateTime;
 import java.util.Locale;
@@ -40,7 +39,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
         final SpreadsheetMetadata metadata = JettyHttpServerSpreadsheetHttpServer.with(
             SERVER_URL,
             IpPort.with(2000), // sshdPort
-            LineEnding.NL,
+            LINE_ENDING,
             Locale.ENGLISH,
             (u) -> {
                 throw new UnsupportedOperationException();
