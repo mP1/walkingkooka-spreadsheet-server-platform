@@ -713,19 +713,19 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     }
 
     private SpreadsheetEnvironmentContext spreadsheetEnvironmentContext(final Optional<EmailAddress> user) {
-        return SpreadsheetEnvironmentContexts.basic(
-            EnvironmentContexts.map(
-                EnvironmentContexts.empty(
-                    this.lineEnding,
-                    this.defaultLocale,
-                    this.hasNow,
-                    user
-                )
-            ).setEnvironmentValue(
-                SpreadsheetEnvironmentContext.SERVER_URL,
-                this.httpServerUrl
+        final EnvironmentContext environmentContext = EnvironmentContexts.map(
+            EnvironmentContexts.empty(
+                this.lineEnding,
+                this.defaultLocale,
+                this.hasNow,
+                user
             )
         );
+        environmentContext.setEnvironmentValue(
+            SpreadsheetEnvironmentContext.SERVER_URL,
+            this.httpServerUrl
+        );
+        return SpreadsheetEnvironmentContexts.basic(environmentContext);
     }
 
     private final LineEnding lineEnding;
@@ -868,9 +868,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             );
         }
 
-        return SpreadsheetEnvironmentContexts.readOnly(
-            spreadsheetEnvironmentContext.setLineEnding(TerminalContext.TERMINAL_LINE_ENDING)
-        );
+        spreadsheetEnvironmentContext.setLineEnding(TerminalContext.TERMINAL_LINE_ENDING);
+
+        return SpreadsheetEnvironmentContexts.readOnly(spreadsheetEnvironmentContext);
     }
 
     private final LocaleContext localeContext;
