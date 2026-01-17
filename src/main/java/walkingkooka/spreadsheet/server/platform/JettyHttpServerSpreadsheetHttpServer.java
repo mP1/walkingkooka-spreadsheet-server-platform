@@ -90,8 +90,10 @@ import walkingkooka.spreadsheet.reference.SpreadsheetSelection;
 import walkingkooka.spreadsheet.server.SpreadsheetHttpServer;
 import walkingkooka.spreadsheet.server.SpreadsheetServerContext;
 import walkingkooka.spreadsheet.server.SpreadsheetServerContexts;
+import walkingkooka.spreadsheet.storage.SpreadsheetStorageContext;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepositories;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepository;
+import walkingkooka.storage.Storage;
 import walkingkooka.storage.Storages;
 import walkingkooka.terminal.TerminalContext;
 import walkingkooka.terminal.TerminalContexts;
@@ -125,6 +127,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
 
@@ -383,8 +386,10 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
         this.metadataStore = SpreadsheetMetadataStores.spreadsheetCellStoreAction(
             SpreadsheetMetadataStores.treeMap(),
-            (id) -> this.getOrCreateSpreadsheetStoreRepository(id)
-                .cells()
+            (id) -> this.getOrCreateSpreadsheetStoreRepository(
+                    id,
+                    Storages.fake() // https://github.com/mP1/walkingkooka-spreadsheet/issues/8502 SpreadsheetStoreRepository.storage should be removed
+                ).cells()
         );
 
         this.metadataCreateTemplate = this.metadataCreateTemplate();
@@ -414,7 +419,10 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     private SpreadsheetServerContext createSpreadsheetServerContext(final Optional<EmailAddress> user,
                                                                     final TerminalContext terminalContext) {
         return SpreadsheetServerContexts.basic(
-            this::getOrCreateSpreadsheetStoreRepository,
+            (i) -> this.getOrCreateSpreadsheetStoreRepository(
+                i,
+                this.storage(user.orElseThrow(() -> new IllegalArgumentException("Missing user")))
+            ),
             this.spreadsheetProvider,
             (c) -> SpreadsheetEngineContexts.spreadsheetContext(
                 SpreadsheetMetadataMode.FORMULA,
@@ -433,27 +441,48 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         );
     }
 
+    private Storage<SpreadsheetStorageContext> storage(final EmailAddress user) {
+        Storage<SpreadsheetStorageContext> storage = this.userToStorage.get(user);
+        if (null == storage) {
+            storage = Storages.tree();
+            this.userToStorage.put(
+                user,
+                storage
+            );
+        }
+
+        return storage;
+    }
+
+    /**
+     * Each user is given a separate {@link Storage}.
+     */
+    private final Map<EmailAddress, Storage<SpreadsheetStorageContext>> userToStorage = new ConcurrentHashMap<>();
+
     /**
      * Starts a new shell session.
      */
     private Object evaluateTerminalExpression(final String expression,
                                               final TerminalContext terminalContext) {
-        final Optional<EmailAddress> user = terminalContext.user();
+        final EmailAddress user = terminalContext.userOrFail();
 
         final SpreadsheetServerContext spreadsheetServerContext = this.createSpreadsheetServerContext(
-            user,
+            Optional.of(user),
             terminalContext
         );
 
         final SpreadsheetEngine engine = SpreadsheetEngines.basic();
         final SpreadsheetEngineContext engineContext = SpreadsheetEngineContexts.spreadsheetEnvironmentContext(
+            this.storage(user),
             spreadsheetServerContext, // SpreadsheetContextSupplier
             SpreadsheetEnvironmentContexts.basic(terminalContext), // SpreadsheetEnvironmentContext
             this.localeContext,
             this.spreadsheetMetadataContext,
             terminalContext,
             this.spreadsheetProvider,
-            this.providerContext(user)
+            this.providerContext(
+                Optional.of(user)
+            )
         );
 
         return engine.evaluate(
@@ -484,12 +513,13 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     private final Map<Optional<EmailAddress>, SpreadsheetServerContext> userEmailAddressToSpreadsheetServerContext = Maps.concurrent();
 
 
-    private SpreadsheetStoreRepository getOrCreateSpreadsheetStoreRepository(final SpreadsheetId spreadsheetId) {
+    private SpreadsheetStoreRepository getOrCreateSpreadsheetStoreRepository(final SpreadsheetId spreadsheetId,
+                                                                             final Storage<SpreadsheetStorageContext> storage) {
         SpreadsheetStoreRepository repo = this.spreadsheetIdToStoreRepository.get(spreadsheetId);
         if (null == repo) {
             repo = SpreadsheetStoreRepositories.treeMap(
                 this.metadataStore,
-                Storages.tree()
+                storage
             );
 
             this.spreadsheetIdToStoreRepository.put(
