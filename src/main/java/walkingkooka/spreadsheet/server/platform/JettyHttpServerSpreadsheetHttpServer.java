@@ -421,7 +421,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         return SpreadsheetServerContexts.basic(
             (i) -> this.getOrCreateSpreadsheetStoreRepository(
                 i,
-                this.storage(user.orElseThrow(() -> new IllegalArgumentException("Missing user")))
+                this.storage(user)
             ),
             this.spreadsheetProvider,
             (c) -> SpreadsheetEngineContexts.spreadsheetContext(
@@ -435,13 +435,15 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             this.hateosResourceHandlerContext(),
             this.providerContext(user),
             TerminalServerContexts.userFiltered(
-                (uu) -> uu.equals(user), // only show current user TerminalContext.
+                (uu) -> user.equals(
+                    uu.orElse(null)
+                ), // only show current user TerminalContext.
                 this.terminalServerContext
             )
         );
     }
 
-    private Storage<SpreadsheetStorageContext> storage(final EmailAddress user) {
+    private Storage<SpreadsheetStorageContext> storage(final Optional<EmailAddress> user) {
         Storage<SpreadsheetStorageContext> storage = this.userToStorage.get(user);
         if (null == storage) {
             storage = Storages.tree();
@@ -457,32 +459,32 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     /**
      * Each user is given a separate {@link Storage}.
      */
-    private final Map<EmailAddress, Storage<SpreadsheetStorageContext>> userToStorage = new ConcurrentHashMap<>();
+    private final Map<Optional<EmailAddress>, Storage<SpreadsheetStorageContext>> userToStorage = new ConcurrentHashMap<>();
 
     /**
      * Starts a new shell session.
      */
     private Object evaluateTerminalExpression(final String expression,
                                               final TerminalContext terminalContext) {
-        final EmailAddress user = terminalContext.userOrFail();
+        final Optional<EmailAddress> user = terminalContext.user();
 
         final SpreadsheetServerContext spreadsheetServerContext = this.createSpreadsheetServerContext(
-            Optional.of(user),
+            user,
             terminalContext
         );
 
         final SpreadsheetEngine engine = SpreadsheetEngines.basic();
         final SpreadsheetEngineContext engineContext = SpreadsheetEngineContexts.spreadsheetEnvironmentContext(
-            this.storage(user),
             spreadsheetServerContext, // SpreadsheetContextSupplier
-            SpreadsheetEnvironmentContexts.basic(terminalContext), // SpreadsheetEnvironmentContext
+            SpreadsheetEnvironmentContexts.basic(
+                this.storage(user),
+                terminalContext
+            ),
             this.localeContext,
             this.spreadsheetMetadataContext,
             terminalContext,
             this.spreadsheetProvider,
-            this.providerContext(
-                Optional.of(user)
-            )
+            this.providerContext(user)
         );
 
         return engine.evaluate(
@@ -548,7 +550,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             ApacheTikaMediaTypeDetectors.apacheTika(),
             this.fileServer,
             this::jettyHttpServer,
-            this::getOrCreateSpreadsheetServerContext,
+            (final Optional<EmailAddress> user) -> this.getOrCreateSpreadsheetServerContext(user),
             (r) -> this.defaultUser // hard-coded web user because authentication is not yet implemented
         );
     }
@@ -755,7 +757,10 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             SpreadsheetEnvironmentContext.SERVER_URL,
             this.httpServerUrl
         );
-        return SpreadsheetEnvironmentContexts.basic(environmentContext);
+        return SpreadsheetEnvironmentContexts.basic(
+            this.storage(user),
+            environmentContext
+        );
     }
 
     private final LineEnding lineEnding;
