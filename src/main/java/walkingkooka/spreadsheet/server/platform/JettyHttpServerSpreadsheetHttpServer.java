@@ -136,6 +136,8 @@ import java.util.function.Function;
  */
 public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTesting {
 
+    private final static SpreadsheetEngine SPREADSHEET_ENGINE = SpreadsheetEngines.basic();
+
     /**
      * Starts a server on the scheme/host/port passed as arguments, serving files from the current directory.
      */
@@ -417,6 +419,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     private SpreadsheetServerContext createSpreadsheetServerContext(final Optional<EmailAddress> user,
                                                                     final TerminalContext terminalContext) {
         return SpreadsheetServerContexts.basic(
+            SPREADSHEET_ENGINE,
             this::getOrCreateSpreadsheetStoreRepository,
             this.spreadsheetProvider,
             (c) -> SpreadsheetEngineContexts.spreadsheetContext(
@@ -468,7 +471,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             terminalContext
         );
 
-        final SpreadsheetEngine engine = SpreadsheetEngines.basic();
         final SpreadsheetEngineContext engineContext = SpreadsheetEngineContexts.spreadsheetEnvironmentContext(
             spreadsheetServerContext, // SpreadsheetContextSupplier
             SpreadsheetEnvironmentContexts.basic(
@@ -482,7 +484,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             this.providerContext(user)
         );
 
-        return engine.evaluate(
+        return SPREADSHEET_ENGINE.evaluate(
             expression,
             engineContext
         );
