@@ -386,10 +386,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
         this.metadataStore = SpreadsheetMetadataStores.spreadsheetCellStoreAction(
             SpreadsheetMetadataStores.treeMap(),
-            (id) -> this.getOrCreateSpreadsheetStoreRepository(
-                    id,
-                    Storages.fake() // https://github.com/mP1/walkingkooka-spreadsheet/issues/8502 SpreadsheetStoreRepository.storage should be removed
-                ).cells()
+            (id) -> this.getOrCreateSpreadsheetStoreRepository(id)
+                .cells()
         );
 
         this.metadataCreateTemplate = this.metadataCreateTemplate();
@@ -419,10 +417,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     private SpreadsheetServerContext createSpreadsheetServerContext(final Optional<EmailAddress> user,
                                                                     final TerminalContext terminalContext) {
         return SpreadsheetServerContexts.basic(
-            (i) -> this.getOrCreateSpreadsheetStoreRepository(
-                i,
-                this.storage(user)
-            ),
+            this::getOrCreateSpreadsheetStoreRepository,
             this.spreadsheetProvider,
             (c) -> SpreadsheetEngineContexts.spreadsheetContext(
                 SpreadsheetMetadataMode.FORMULA,
@@ -515,14 +510,10 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     private final Map<Optional<EmailAddress>, SpreadsheetServerContext> userEmailAddressToSpreadsheetServerContext = Maps.concurrent();
 
 
-    private SpreadsheetStoreRepository getOrCreateSpreadsheetStoreRepository(final SpreadsheetId spreadsheetId,
-                                                                             final Storage<SpreadsheetStorageContext> storage) {
+    private SpreadsheetStoreRepository getOrCreateSpreadsheetStoreRepository(final SpreadsheetId spreadsheetId) {
         SpreadsheetStoreRepository repo = this.spreadsheetIdToStoreRepository.get(spreadsheetId);
         if (null == repo) {
-            repo = SpreadsheetStoreRepositories.treeMap(
-                this.metadataStore,
-                storage
-            );
+            repo = SpreadsheetStoreRepositories.treeMap(this.metadataStore);
 
             this.spreadsheetIdToStoreRepository.put(
                 spreadsheetId,
