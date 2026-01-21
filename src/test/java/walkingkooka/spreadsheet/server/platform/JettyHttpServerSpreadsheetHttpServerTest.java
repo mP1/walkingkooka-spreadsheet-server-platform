@@ -18,18 +18,34 @@
 package walkingkooka.spreadsheet.server.platform;
 
 import org.junit.jupiter.api.Test;
+import walkingkooka.collect.list.Lists;
+import walkingkooka.environment.AuditInfo;
 import walkingkooka.net.IpPort;
 import walkingkooka.net.email.EmailAddress;
 import walkingkooka.reflect.ClassTesting2;
 import walkingkooka.reflect.JavaVisibility;
+import walkingkooka.spreadsheet.SpreadsheetContext;
 import walkingkooka.spreadsheet.convert.SpreadsheetConverterContexts;
+import walkingkooka.spreadsheet.engine.SpreadsheetEngine;
+import walkingkooka.spreadsheet.engine.SpreadsheetEngineContext;
+import walkingkooka.spreadsheet.expression.SpreadsheetExpressionEvaluationContext;
+import walkingkooka.spreadsheet.formula.SpreadsheetFormula;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataPropertyName;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataTesting;
+import walkingkooka.spreadsheet.reference.SpreadsheetExpressionReferenceLoaders;
+import walkingkooka.spreadsheet.reference.SpreadsheetSelection;
+import walkingkooka.spreadsheet.server.SpreadsheetServerContext;
+import walkingkooka.spreadsheet.value.SpreadsheetCell;
+import walkingkooka.storage.StoragePath;
+import walkingkooka.storage.StorageValueInfo;
+import walkingkooka.terminal.TerminalContexts;
 
 import java.time.LocalDateTime;
 import java.util.Locale;
 import java.util.Optional;
+
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTesting2<JettyHttpServerSpreadsheetHttpServer>,
     SpreadsheetMetadataTesting {
@@ -59,6 +75,127 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             CONVERTER_PROVIDER,
             LOCALE_CONTEXT,
             PROVIDER_CONTEXT
+        );
+    }
+
+    @Test
+    public void testCreateSpreadsheetListSpreadsheets() {
+        final LocalDateTime now = LocalDateTime.MIN;
+
+        final JettyHttpServerSpreadsheetHttpServer server = JettyHttpServerSpreadsheetHttpServer.with(
+            SERVER_URL,
+            IpPort.with(2000), // sshdPort
+            LINE_ENDING,
+            Locale.ENGLISH,
+            (u) -> {
+                throw new UnsupportedOperationException();
+            },
+            Optional.of(
+                EmailAddress.parse("default-user@example.com")
+            ),
+            () -> now
+        );
+
+        final EmailAddress user = EmailAddress.parse("testCreateSpreadsheetListSpreadsheet@example.com");
+
+        final SpreadsheetServerContext spreadsheetServerContext = server.createSpreadsheetServerContext(
+            Optional.of(user),
+            TerminalContexts.fake()
+        );
+
+        final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createSpreadsheetContext(
+            user,
+            Optional.of(Locale.ENGLISH)
+        );
+
+        final SpreadsheetEngineContext engineContext = spreadsheetContext.spreadsheetEngineContext();
+
+        this.checkEquals(
+            Lists.of(
+                StorageValueInfo.with(
+                    StoragePath.parse("/spreadsheet/1"),
+                    AuditInfo.create(
+                        user,
+                        now
+                    )
+                )
+            ),
+            engineContext.spreadsheetExpressionEvaluationContext(
+                SpreadsheetExpressionEvaluationContext.NO_CELL,
+                SpreadsheetExpressionReferenceLoaders.empty()
+            ).listStorage(
+                StoragePath.parse("/spreadsheet"),
+                0,
+                2
+            )
+        );
+    }
+
+    @Test
+    public void testCreateSpreadsheetListSpreadsheetCellFails() {
+        final LocalDateTime now = LocalDateTime.MIN;
+
+        final JettyHttpServerSpreadsheetHttpServer server = JettyHttpServerSpreadsheetHttpServer.with(
+            SERVER_URL,
+            IpPort.with(2000), // sshdPort
+            LINE_ENDING,
+            Locale.ENGLISH,
+            (u) -> {
+                throw new UnsupportedOperationException();
+            },
+            Optional.of(
+                EmailAddress.parse("default-user@example.com")
+            ),
+            () -> now
+        );
+
+        final EmailAddress user = EmailAddress.parse("testCreateSpreadsheetListSpreadsheetCellFails@example.com");
+
+        final SpreadsheetServerContext spreadsheetServerContext = server.createSpreadsheetServerContext(
+            Optional.of(user),
+            TerminalContexts.fake()
+        );
+
+        final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createSpreadsheetContext(
+            user,
+            Optional.of(Locale.ENGLISH)
+        );
+
+        final SpreadsheetEngine engine = spreadsheetContext.spreadsheetEngine();
+        final SpreadsheetEngineContext engineContext = spreadsheetContext.spreadsheetEngineContext();
+
+        final SpreadsheetCell cell = engine.saveCell(
+                SpreadsheetSelection.A1.setFormula(
+                    SpreadsheetFormula.EMPTY.setText("=1+2")
+                ),
+                engineContext
+            ).cells()
+            .iterator()
+            .next();
+
+        assertThrows(
+            IllegalArgumentException.class,
+            () -> {
+                this.checkEquals(
+                    Lists.of(
+                        StorageValueInfo.with(
+                            StoragePath.parse("/spreadsheet/1/cell/"),
+                            AuditInfo.create(
+                                user,
+                                now
+                            )
+                        )
+                    ),
+                    engineContext.spreadsheetExpressionEvaluationContext(
+                        SpreadsheetExpressionEvaluationContext.NO_CELL,
+                        SpreadsheetExpressionReferenceLoaders.empty()
+                    ).listStorage(
+                        StoragePath.parse("/spreadsheet/1/cell"),
+                        0,
+                        2
+                    )
+                );
+            }
         );
     }
 
