@@ -39,7 +39,6 @@ import walkingkooka.spreadsheet.server.SpreadsheetServerContext;
 import walkingkooka.spreadsheet.value.SpreadsheetCell;
 import walkingkooka.storage.StoragePath;
 import walkingkooka.storage.StorageValueInfo;
-import walkingkooka.terminal.TerminalContexts;
 
 import java.time.LocalDateTime;
 import java.util.Optional;
@@ -78,7 +77,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
     }
 
     @Test
-    public void testCreateSpreadsheetListSpreadsheets() {
+    public void testStorageListSpreadsheets() {
         final JettyHttpServerSpreadsheetHttpServer server = JettyHttpServerSpreadsheetHttpServer.with(
             SERVER_URL,
             IpPort.with(2000), // sshdPort
@@ -93,11 +92,10 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             HAS_NOW
         );
 
-        final EmailAddress user = EmailAddress.parse("testCreateSpreadsheetListSpreadsheet@example.com");
+        final EmailAddress user = EmailAddress.parse("testStorageListSpreadsheets@example.com");
 
-        final SpreadsheetServerContext spreadsheetServerContext = server.createSpreadsheetServerContext(
-            Optional.of(user),
-            TerminalContexts.fake()
+        final SpreadsheetServerContext spreadsheetServerContext = server.getOrCreateSpreadsheetServerContext(
+            Optional.of(user)
         );
 
         final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createSpreadsheetContext(
@@ -129,7 +127,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
     }
 
     @Test
-    public void testCreateSpreadsheetListSpreadsheetCellFails() {
+    public void testStorageListCellsFails() {
         final LocalDateTime now = LocalDateTime.MIN;
 
         final JettyHttpServerSpreadsheetHttpServer server = JettyHttpServerSpreadsheetHttpServer.with(
@@ -146,11 +144,10 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             HAS_NOW
         );
 
-        final EmailAddress user = EmailAddress.parse("testCreateSpreadsheetListSpreadsheetCellFails@example.com");
+        final EmailAddress user = EmailAddress.parse("testStorageListCellsFails@example.com");
 
-        final SpreadsheetServerContext spreadsheetServerContext = server.createSpreadsheetServerContext(
-            Optional.of(user),
-            TerminalContexts.fake()
+        final SpreadsheetServerContext spreadsheetServerContext = server.getOrCreateSpreadsheetServerContext(
+            Optional.of(user)
         );
 
         final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createSpreadsheetContext(
@@ -170,7 +167,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             .iterator()
             .next();
 
-        assertThrows(
+        final IllegalArgumentException thrown = assertThrows(
             IllegalArgumentException.class,
             () -> {
                 this.checkEquals(
@@ -193,6 +190,10 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
                     )
                 );
             }
+        );
+        this.checkEquals(
+            "Unable to set spreadsheetId with value 1",
+            thrown.getMessage()
         );
     }
 
