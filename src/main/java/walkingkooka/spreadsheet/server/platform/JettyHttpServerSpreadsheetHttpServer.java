@@ -417,9 +417,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
     private final TerminalServerContext terminalServerContext;
 
-    // @VisibleForTesting
-    SpreadsheetServerContext createSpreadsheetServerContext(final Optional<EmailAddress> user,
-                                                            final TerminalContext terminalContext) {
+    private SpreadsheetServerContext createSpreadsheetServerContext(final Optional<EmailAddress> user,
+                                                                    final TerminalContext terminalContext) {
         return SpreadsheetServerContexts.basic(
             SPREADSHEET_ENGINE,
             this::getOrCreateSpreadsheetStoreRepository,
@@ -501,7 +500,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     /**
      * Get or create a {@link SpreadsheetServerContext} for the given {@link EmailAddress}.
      */
-    private SpreadsheetServerContext getOrCreateSpreadsheetServerContext(final Optional<EmailAddress> user) {
+    // @VisibleForTesting
+    SpreadsheetServerContext getOrCreateSpreadsheetServerContext(final Optional<EmailAddress> user) {
         SpreadsheetServerContext spreadsheetServerContext = this.userEmailAddressToSpreadsheetServerContext.get(user);
         if (null == spreadsheetServerContext) {
             spreadsheetServerContext = this.createSpreadsheetServerContext(
