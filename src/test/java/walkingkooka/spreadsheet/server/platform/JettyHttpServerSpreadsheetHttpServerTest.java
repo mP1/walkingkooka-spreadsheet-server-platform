@@ -42,7 +42,6 @@ import walkingkooka.storage.StorageValueInfo;
 import walkingkooka.terminal.TerminalContexts;
 
 import java.time.LocalDateTime;
-import java.util.Locale;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -56,14 +55,14 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             SERVER_URL,
             IpPort.with(2000), // sshdPort
             LINE_ENDING,
-            Locale.ENGLISH,
+            LOCALE,
             (u) -> {
                 throw new UnsupportedOperationException();
             },
             Optional.of(
                 EmailAddress.parse("default-user@example.com")
             ),
-            LocalDateTime::now
+            HAS_NOW
         ).metadataCreateTemplate();
 
         metadata.spreadsheetConverterContext(
@@ -80,20 +79,18 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
 
     @Test
     public void testCreateSpreadsheetListSpreadsheets() {
-        final LocalDateTime now = LocalDateTime.MIN;
-
         final JettyHttpServerSpreadsheetHttpServer server = JettyHttpServerSpreadsheetHttpServer.with(
             SERVER_URL,
             IpPort.with(2000), // sshdPort
             LINE_ENDING,
-            Locale.ENGLISH,
+            LOCALE,
             (u) -> {
                 throw new UnsupportedOperationException();
             },
             Optional.of(
                 EmailAddress.parse("default-user@example.com")
             ),
-            () -> now
+            HAS_NOW
         );
 
         final EmailAddress user = EmailAddress.parse("testCreateSpreadsheetListSpreadsheet@example.com");
@@ -105,7 +102,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
 
         final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createSpreadsheetContext(
             user,
-            Optional.of(Locale.ENGLISH)
+            Optional.of(LOCALE)
         );
 
         final SpreadsheetEngineContext engineContext = spreadsheetContext.spreadsheetEngineContext();
@@ -116,7 +113,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
                     StoragePath.parse("/spreadsheet/1"),
                     AuditInfo.create(
                         user,
-                        now
+                        HAS_NOW.now()
                     )
                 )
             ),
@@ -139,14 +136,14 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             SERVER_URL,
             IpPort.with(2000), // sshdPort
             LINE_ENDING,
-            Locale.ENGLISH,
+            LOCALE,
             (u) -> {
                 throw new UnsupportedOperationException();
             },
             Optional.of(
                 EmailAddress.parse("default-user@example.com")
             ),
-            () -> now
+            HAS_NOW
         );
 
         final EmailAddress user = EmailAddress.parse("testCreateSpreadsheetListSpreadsheetCellFails@example.com");
@@ -158,7 +155,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
 
         final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createSpreadsheetContext(
             user,
-            Optional.of(Locale.ENGLISH)
+            Optional.of(LOCALE)
         );
 
         final SpreadsheetEngine engine = spreadsheetContext.spreadsheetEngine();
