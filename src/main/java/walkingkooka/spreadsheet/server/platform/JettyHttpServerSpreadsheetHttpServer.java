@@ -91,6 +91,7 @@ import walkingkooka.spreadsheet.server.SpreadsheetHttpServer;
 import walkingkooka.spreadsheet.server.SpreadsheetServerContext;
 import walkingkooka.spreadsheet.server.SpreadsheetServerContexts;
 import walkingkooka.spreadsheet.storage.SpreadsheetStorageContext;
+import walkingkooka.spreadsheet.storage.SpreadsheetStorages;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepositories;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepository;
 import walkingkooka.storage.Storage;
@@ -416,8 +417,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
     private final TerminalServerContext terminalServerContext;
 
-    private SpreadsheetServerContext createSpreadsheetServerContext(final Optional<EmailAddress> user,
-                                                                    final TerminalContext terminalContext) {
+    // @VisibleForTesting
+    SpreadsheetServerContext createSpreadsheetServerContext(final Optional<EmailAddress> user,
+                                                            final TerminalContext terminalContext) {
         return SpreadsheetServerContexts.basic(
             SPREADSHEET_ENGINE,
             this::getOrCreateSpreadsheetStoreRepository,
@@ -444,7 +446,13 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     private Storage<SpreadsheetStorageContext> storage(final Optional<EmailAddress> user) {
         Storage<SpreadsheetStorageContext> storage = this.userToStorage.get(user);
         if (null == storage) {
-            storage = Storages.tree();
+            storage = SpreadsheetStorages.router(
+                SpreadsheetStorages.cell(),
+                SpreadsheetStorages.label(),
+                SpreadsheetStorages.metadata(),
+                Storages.tree()
+            );
+
             this.userToStorage.put(
                 user,
                 storage
