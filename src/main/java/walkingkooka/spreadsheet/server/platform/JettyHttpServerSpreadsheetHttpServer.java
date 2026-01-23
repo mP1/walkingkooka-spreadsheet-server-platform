@@ -402,6 +402,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         this.terminalServerContext = TerminalServerContexts.basic(this::nextTerminalId);
     }
 
+    /**
+     * Creates but does not start the {@link ApacheSshdServer} instance.
+     */
     private ApacheSshdServer apacheSshdServer() {
         return ApacheSshdServer.with(
             this.sshdPort,
@@ -417,6 +420,10 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
     private final TerminalServerContext terminalServerContext;
 
+    /**
+     * Creates the {@link SpreadsheetServerContext} for the given user. Note this instance will be shared by the
+     * {@link EmailAddress user} across all spreadsheet instances.
+     */
     private SpreadsheetServerContext createSpreadsheetServerContext(final Optional<EmailAddress> user,
                                                                     final TerminalContext terminalContext) {
         return SpreadsheetServerContexts.basic(
@@ -442,6 +449,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         );
     }
 
+    /**
+     * Fetches or lazily creates a {@link Storage} for the given user, so each has their own individual and separate..
+     */
     private Storage<SpreadsheetStorageContext> storage(final Optional<EmailAddress> user) {
         Storage<SpreadsheetStorageContext> storage = this.userToStorage.get(user);
         if (null == storage) {
@@ -498,7 +508,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     }
 
     /**
-     * Get or create a {@link SpreadsheetServerContext} for the given {@link EmailAddress}.
+     * Gets an existing or create a {@link SpreadsheetServerContext} for the given {@link EmailAddress}.
      */
     // @VisibleForTesting
     SpreadsheetServerContext getOrCreateSpreadsheetServerContext(final Optional<EmailAddress> user) {
@@ -519,7 +529,10 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
     private final Map<Optional<EmailAddress>, SpreadsheetServerContext> userEmailAddressToSpreadsheetServerContext = Maps.concurrent();
 
-
+    /**
+     * Lazily creates or returns a shared {@link SpreadsheetStoreRepository} for the given {@link SpreadsheetId}.
+     * Instances may be shared across different users.
+     */
     private SpreadsheetStoreRepository getOrCreateSpreadsheetStoreRepository(final SpreadsheetId spreadsheetId) {
         SpreadsheetStoreRepository repo = this.spreadsheetIdToStoreRepository.get(spreadsheetId);
         if (null == repo) {
@@ -534,6 +547,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         return repo;
     }
 
+    /**
+     * The global shared {@link SpreadsheetMetadataStore}.
+     */
     private final SpreadsheetMetadataStore metadataStore;
 
     private final Map<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository = Maps.concurrent();
@@ -546,6 +562,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         );
     }
 
+    /**
+     * Creates the {@link SpreadsheetHttpServer} which will serve all web requests.
+     */
     private SpreadsheetHttpServer httpServer() {
         return SpreadsheetHttpServer.with(
             ApacheTikaMediaTypeDetectors.apacheTika(),
@@ -735,7 +754,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     }
 
     /**
-     * Starts the http and terminal servers.
+     * Starts both the http and terminal servers.
      */
     private void start() throws IOException {
         final SpreadsheetHttpServer httpServer = this.httpServer();
@@ -745,6 +764,11 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         sshdServer.start();
     }
 
+    /**
+     * Creates a {@link SpreadsheetEnvironmentContext} for the given {@link EmailAddress user}. The shared / unique {@link Storage} will
+     * also be fetched. The default environment properties given to the command line are set here, and may be changed
+     * later by the {@link EmailAddress user}.
+     */
     private SpreadsheetEnvironmentContext spreadsheetEnvironmentContext(final Optional<EmailAddress> user) {
         final EnvironmentContext environmentContext = EnvironmentContexts.map(
             EnvironmentContexts.empty(
@@ -836,7 +860,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     private final SpreadsheetProvider spreadsheetProvider;
 
     /**
-     * Creates a new {@link TerminalContext}, whenever a user connects.
+     * Creates a new {@link TerminalContext}, whenever a user connects via SSH.
      */
     private TerminalContext terminalContext(final String expression,
                                             final TerminalContext apacheSshdServerTerminalContext) {
@@ -860,6 +884,10 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         return terminalContext;
     }
 
+    /**
+     * Creates a new {@link SpreadsheetEnvironmentContext} for a new terminal connection. Note the environment
+     * will need to be cloned and have the actual {@link EmailAddress user} and {@link Storage} set.
+     */
     private SpreadsheetEnvironmentContext terminalSpreadsheetEnvironmentContext() {
         final SpreadsheetEnvironmentContext spreadsheetEnvironmentContext = this.spreadsheetEnvironmentContext(
             EnvironmentContext.ANONYMOUS // initial context has no user, user will be set by ApacheSshdServer
