@@ -98,7 +98,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             Optional.of(user)
         );
 
-        final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createSpreadsheetContext(
+        final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createEmptySpreadsheet(
             user,
             Optional.of(LOCALE)
         );
@@ -150,7 +150,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             Optional.of(user)
         );
 
-        final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createSpreadsheetContext(
+        final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createEmptySpreadsheet(
             user,
             Optional.of(LOCALE)
         );
