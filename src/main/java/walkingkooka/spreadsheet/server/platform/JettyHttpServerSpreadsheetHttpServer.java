@@ -411,7 +411,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             (u, p) -> p.length() > 0, // TODO password authenticator https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/355
             (u, pubKey) -> false, // TODO public key authentication not currently supported https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/356
             this::terminalContext,
-            terminalSpreadsheetEnvironmentContext(),
+            this.terminalSpreadsheetEnvironmentContext(),
             this.terminalServerContext
         );
     }
