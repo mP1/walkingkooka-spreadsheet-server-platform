@@ -20,6 +20,7 @@ package walkingkooka.spreadsheet.server.platform;
 import org.junit.jupiter.api.Test;
 import walkingkooka.collect.list.Lists;
 import walkingkooka.environment.AuditInfo;
+import walkingkooka.environment.ReadOnlyEnvironmentValueException;
 import walkingkooka.net.IpPort;
 import walkingkooka.net.email.EmailAddress;
 import walkingkooka.reflect.ClassTesting2;
@@ -99,7 +100,6 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
         );
 
         final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createEmptySpreadsheet(
-            user,
             Optional.of(LOCALE)
         );
 
@@ -151,7 +151,6 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
         );
 
         final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createEmptySpreadsheet(
-            user,
             Optional.of(LOCALE)
         );
 
@@ -167,8 +166,8 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             .iterator()
             .next();
 
-        final IllegalArgumentException thrown = assertThrows(
-            IllegalArgumentException.class,
+        assertThrows(
+            ReadOnlyEnvironmentValueException.class,
             () -> {
                 this.checkEquals(
                     Lists.of(
@@ -190,10 +189,6 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
                     )
                 );
             }
-        );
-        this.checkEquals(
-            "Unable to set spreadsheetId with value 1",
-            thrown.getMessage()
         );
     }
 
