@@ -772,6 +772,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     private SpreadsheetEnvironmentContext spreadsheetEnvironmentContext(final Optional<EmailAddress> user) {
         final EnvironmentContext environmentContext = EnvironmentContexts.map(
             EnvironmentContexts.empty(
+                Indentation.SPACES2,
                 this.lineEnding,
                 this.defaultLocale,
                 this.hasNow,
