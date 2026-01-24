@@ -145,25 +145,28 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     public static void main(final String[] args) throws Exception {
         switch (args.length) {
             case 0:
-                throw new IllegalArgumentException("Missing httpServerUrl, sshdPort, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing httpServerUrl, sshdPort, indentation, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
             case 1:
-                throw new IllegalArgumentException("Missing sshdPort, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing sshdPort, indentation, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
             case 2:
                 throw new IllegalArgumentException("Missing lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
             case 3:
-                throw new IllegalArgumentException("Missing default Locale, file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing indentation, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
             case 4:
-                throw new IllegalArgumentException("Missing file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing default Locale, file server root, defaultUser for jetty HttpServer");
             case 5:
+                throw new IllegalArgumentException("Missing file server root, defaultUser for jetty HttpServer");
+            case 6:
                 throw new IllegalArgumentException("Missing defaultUser for jetty HttpServer");
             default:
                 with(
                     httpServerUrl(args[0]),
                     sshdPort(args[1]),
-                    lineEnding(args[2]),
-                    locale(args[3]),
-                    fileServer(args[4]),
-                    user(args[5]),
+                    indentation(args[2]),
+                    lineEnding(args[3]),
+                    locale(args[4]),
+                    fileServer(args[5]),
+                    user(args[6]),
                     LocalDateTime::now
                 ).start();
                 break;
@@ -190,6 +193,17 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         }
     }
 
+    private static Indentation indentation(final String string) {
+        final Indentation indentation;
+        try {
+            indentation = Indentation.with(string);
+        } catch (final RuntimeException cause) {
+            System.err.println("Invalid Indentation: " + cause.getMessage());
+            throw cause;
+        }
+        return indentation;
+    }
+    
     private static LineEnding lineEnding(final String string) {
         final LineEnding lineEnding;
         try {
@@ -352,6 +366,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
     public static JettyHttpServerSpreadsheetHttpServer with(final AbsoluteUrl httpServerUrl,
                                                             final IpPort sshdPort,
+                                                            final Indentation indentation,
                                                             final LineEnding lineEnding,
                                                             final Locale defaultLocale,
                                                             final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer,
@@ -360,6 +375,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         return new JettyHttpServerSpreadsheetHttpServer(
             httpServerUrl,
             sshdPort,
+            indentation,
             lineEnding,
             defaultLocale,
             fileServer,
@@ -370,6 +386,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
     private JettyHttpServerSpreadsheetHttpServer(final AbsoluteUrl httpServerUrl,
                                                  final IpPort sshdPort,
+                                                 final Indentation indentation,
                                                  final LineEnding lineEnding,
                                                  final Locale defaultLocale,
                                                  final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer,
@@ -377,6 +394,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                                                  final HasNow hasNow) {
         this.httpServerUrl = httpServerUrl;
         this.sshdPort = sshdPort;
+        this.indentation = indentation;
         this.lineEnding = lineEnding;
         this.defaultLocale = defaultLocale;
         this.fileServer = fileServer;
@@ -556,7 +574,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
     private HateosResourceHandlerContext hateosResourceHandlerContext() {
         return HateosResourceHandlerContexts.basic(
-            Indentation.SPACES2,
+            this.indentation,
             this.lineEnding,
             JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT
         );
@@ -772,7 +790,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     private SpreadsheetEnvironmentContext spreadsheetEnvironmentContext(final Optional<EmailAddress> user) {
         final EnvironmentContext environmentContext = EnvironmentContexts.map(
             EnvironmentContexts.empty(
-                Indentation.SPACES2,
+                this.indentation,
                 this.lineEnding,
                 this.defaultLocale,
                 this.hasNow,
@@ -789,6 +807,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         );
     }
 
+    private final Indentation indentation;
     private final LineEnding lineEnding;
     private final Locale defaultLocale;
     private final Optional<EmailAddress> defaultUser;

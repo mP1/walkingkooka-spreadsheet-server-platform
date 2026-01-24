@@ -17,6 +17,7 @@
 
 package walkingkooka.spreadsheet.server.platform;
 
+import walkingkooka.text.Indentation;
 import walkingkooka.text.LineEnding;
 
 /**
@@ -28,6 +29,7 @@ public final class JettyHttpServerSpreadsheetHttpServerDominoKit {
             new String[]{
                 "http://localhost:12345", // httpServerUrl
                 "2000", // apacheSshdPort
+                Indentation.SPACES2.toString(), // indentation
                 LineEnding.NL.name(), // lineEnding
                 "EN-GB", // defaultLocale
                 fileSystemUris(
