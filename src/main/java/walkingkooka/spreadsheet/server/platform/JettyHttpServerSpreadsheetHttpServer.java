@@ -54,7 +54,6 @@ import walkingkooka.plugin.ProviderContext;
 import walkingkooka.plugin.store.Plugin;
 import walkingkooka.plugin.store.PluginStore;
 import walkingkooka.plugin.store.PluginStores;
-import walkingkooka.spreadsheet.FakeSpreadsheetContext;
 import walkingkooka.spreadsheet.compare.provider.SpreadsheetComparatorProviders;
 import walkingkooka.spreadsheet.convert.provider.SpreadsheetConvertersConverterProviders;
 import walkingkooka.spreadsheet.engine.SpreadsheetEngine;
@@ -447,20 +446,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                                                                     final TerminalContext terminalContext) {
         return SpreadsheetServerContexts.basic(
             SPREADSHEET_ENGINE,
-            // https://github.com/mP1/walkingkooka-spreadsheet-server/issues/2211
-            // BasicSpreadsheetServerContext: replace SpreadsheetContextSupplier w/ Function<SpreadsheetId, SpreadsheetStoreRepository>
-            (SpreadsheetId spreadsheetId) -> {
-                final SpreadsheetStoreRepository repo = JettyHttpServerSpreadsheetHttpServer.this.getOrCreateSpreadsheetStoreRepository(spreadsheetId);
-
-                return Optional.of(
-                    new FakeSpreadsheetContext() {
-                        @Override
-                        public SpreadsheetStoreRepository storeRepository() {
-                            return repo;
-                        }
-                    }
-                );
-            },
+            this::getOrCreateSpreadsheetStoreRepository,
             this.spreadsheetProvider,
             (c) -> SpreadsheetEngineContexts.spreadsheetContext(
                 SpreadsheetMetadataMode.FORMULA,
