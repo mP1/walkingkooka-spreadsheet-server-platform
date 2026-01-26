@@ -60,7 +60,6 @@ import walkingkooka.spreadsheet.engine.SpreadsheetEngine;
 import walkingkooka.spreadsheet.engine.SpreadsheetEngineContext;
 import walkingkooka.spreadsheet.engine.SpreadsheetEngineContexts;
 import walkingkooka.spreadsheet.engine.SpreadsheetEngines;
-import walkingkooka.spreadsheet.engine.SpreadsheetMetadataMode;
 import walkingkooka.spreadsheet.environment.SpreadsheetEnvironmentContext;
 import walkingkooka.spreadsheet.environment.SpreadsheetEnvironmentContextFactory;
 import walkingkooka.spreadsheet.environment.SpreadsheetEnvironmentContexts;
@@ -448,11 +447,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             SPREADSHEET_ENGINE,
             this::getOrCreateSpreadsheetStoreRepository,
             this.spreadsheetProvider,
-            (c) -> SpreadsheetEngineContexts.spreadsheetContext(
-                SpreadsheetMetadataMode.FORMULA,
-                c,
-                terminalContext
-            ),
             this.spreadsheetEnvironmentContext(user),
             this.localeContext,
             this.spreadsheetMetadataContext,
