@@ -441,8 +441,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
      * Creates the {@link SpreadsheetServerContext} for the given user. Note this instance will be shared by the
      * {@link EmailAddress user} across all spreadsheet instances.
      */
-    private SpreadsheetServerContext createSpreadsheetServerContext(final Optional<EmailAddress> user,
-                                                                    final TerminalContext terminalContext) {
+    private SpreadsheetServerContext createSpreadsheetServerContext(final Optional<EmailAddress> user) {
         return SpreadsheetServerContexts.basic(
             SPREADSHEET_ENGINE,
             this::getOrCreateSpreadsheetStoreRepository,
@@ -496,8 +495,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         final Optional<EmailAddress> user = terminalContext.user();
 
         final SpreadsheetServerContext spreadsheetServerContext = this.createSpreadsheetServerContext(
-            user,
-            terminalContext
+            user
         );
 
         final SpreadsheetEngineContext engineContext = SpreadsheetEngineContexts.spreadsheetEnvironmentContext(
@@ -526,10 +524,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     SpreadsheetServerContext getOrCreateSpreadsheetServerContext(final Optional<EmailAddress> user) {
         SpreadsheetServerContext spreadsheetServerContext = this.userEmailAddressToSpreadsheetServerContext.get(user);
         if (null == spreadsheetServerContext) {
-            spreadsheetServerContext = this.createSpreadsheetServerContext(
-                user,
-                TerminalContexts.fake() // no terminalContext
-            );
+            spreadsheetServerContext = this.createSpreadsheetServerContext(user);
 
             this.userEmailAddressToSpreadsheetServerContext.put(
                 user,
