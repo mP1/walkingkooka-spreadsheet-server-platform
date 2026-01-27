@@ -407,6 +407,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         this.metadataStore = SpreadsheetMetadataStores.spreadsheetCellStoreAction(
             SpreadsheetMetadataStores.treeMap(),
             (id) -> this.getOrCreateSpreadsheetStoreRepository(id)
+                .orElseThrow(id::missingSpreadsheetException)
                 .cells()
         );
 
@@ -538,7 +539,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
      * Lazily creates or returns a shared {@link SpreadsheetStoreRepository} for the given {@link SpreadsheetId}.
      * Instances may be shared across different users.
      */
-    private SpreadsheetStoreRepository getOrCreateSpreadsheetStoreRepository(final SpreadsheetId spreadsheetId) {
+    private Optional<SpreadsheetStoreRepository> getOrCreateSpreadsheetStoreRepository(final SpreadsheetId spreadsheetId) {
         SpreadsheetStoreRepository repo = this.spreadsheetIdToStoreRepository.get(spreadsheetId);
         if (null == repo) {
             repo = SpreadsheetStoreRepositories.treeMap(this.metadataStore);
@@ -549,7 +550,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             );
         }
 
-        return repo;
+        return Optional.of(repo);
     }
 
     /**
