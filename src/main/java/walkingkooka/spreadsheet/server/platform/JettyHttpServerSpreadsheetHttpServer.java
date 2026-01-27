@@ -452,9 +452,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             this.hateosResourceHandlerContext(),
             this.providerContext(user),
             TerminalServerContexts.userFiltered(
-                (uu) -> user.equals(
-                    uu.orElse(null)
-                ), // only show current user TerminalContext.
+                user::equals, // only show current user TerminalContext.
                 this.terminalServerContext
             )
         );
