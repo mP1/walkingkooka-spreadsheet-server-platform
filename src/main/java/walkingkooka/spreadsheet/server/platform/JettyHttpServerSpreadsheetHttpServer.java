@@ -492,9 +492,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                                               final TerminalContext terminalContext) {
         final Optional<EmailAddress> user = terminalContext.user();
 
-        final SpreadsheetServerContext spreadsheetServerContext = this.createSpreadsheetServerContext(
-            user
-        );
+        final SpreadsheetServerContext spreadsheetServerContext = this.getOrCreateSpreadsheetServerContext(user);
 
         final SpreadsheetEngineContext engineContext = SpreadsheetEngineContexts.spreadsheetEnvironmentContext(
             spreadsheetServerContext, // SpreadsheetContextSupplier
