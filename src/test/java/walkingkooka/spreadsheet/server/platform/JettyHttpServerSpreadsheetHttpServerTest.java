@@ -172,27 +172,25 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
 
         assertThrows(
             ReadOnlyEnvironmentValueException.class,
-            () -> {
-                this.checkEquals(
-                    Lists.of(
-                        StorageValueInfo.with(
-                            StoragePath.parse("/spreadsheet/1/cell/"),
-                            AuditInfo.create(
-                                user,
-                                now
-                            )
+            () -> this.checkEquals(
+                Lists.of(
+                    StorageValueInfo.with(
+                        StoragePath.parse("/spreadsheet/1/cell/"),
+                        AuditInfo.create(
+                            user,
+                            now
                         )
-                    ),
-                    engineContext.spreadsheetExpressionEvaluationContext(
-                        SpreadsheetExpressionEvaluationContext.NO_CELL,
-                        SpreadsheetExpressionReferenceLoaders.empty()
-                    ).listStorage(
-                        StoragePath.parse("/spreadsheet/1/cell"),
-                        0,
-                        2
                     )
-                );
-            }
+                ),
+                engineContext.spreadsheetExpressionEvaluationContext(
+                    SpreadsheetExpressionEvaluationContext.NO_CELL,
+                    SpreadsheetExpressionReferenceLoaders.empty()
+                ).listStorage(
+                    StoragePath.parse("/spreadsheet/1/cell"),
+                    0,
+                    2
+                )
+            )
         );
     }
 
