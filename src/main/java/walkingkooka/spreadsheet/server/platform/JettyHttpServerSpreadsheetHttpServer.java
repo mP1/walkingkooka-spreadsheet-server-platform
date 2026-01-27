@@ -577,7 +577,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             ApacheTikaMediaTypeDetectors.apacheTika(),
             this.fileServer,
             this::jettyHttpServer,
-            (final Optional<EmailAddress> user) -> this.getOrCreateSpreadsheetServerContext(user),
+            this::getOrCreateSpreadsheetServerContext,
             (r) -> this.defaultUser // hard-coded web user because authentication is not yet implemented
         );
     }
