@@ -123,6 +123,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -787,6 +788,10 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             SpreadsheetEnvironmentContext.SERVER_URL,
             this.httpServerUrl
         );
+        environmentContext.setEnvironmentValue(
+            SpreadsheetEnvironmentContext.TIME_OFFSET,
+            ZoneOffset.UTC
+        );
         return SpreadsheetEnvironmentContexts.basic(
             this.storage(user),
             environmentContext
@@ -939,6 +944,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         }
 
         spreadsheetEnvironmentContext.setLineEnding(TerminalContext.TERMINAL_LINE_ENDING);
+        spreadsheetEnvironmentContext.setTimeOffset(ZoneOffset.UTC);
 
         return SpreadsheetEnvironmentContexts.readOnly(spreadsheetEnvironmentContext);
     }
