@@ -878,11 +878,11 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         final TerminalContext terminalContext = TerminalContexts.basic(
             apacheSshdServerTerminalContext.terminalId(),
             apacheSshdServerTerminalContext::isTerminalOpen,
-            apacheSshdServerTerminalContext::exitTerminal,
             apacheSshdServerTerminalContext.input(),
             apacheSshdServerTerminalContext.output(),
             apacheSshdServerTerminalContext.error(),
             this::evaluateTerminalExpression,
+            apacheSshdServerTerminalContext::exitTerminal,
             apacheSshdServerTerminalContext
         );
 
