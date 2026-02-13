@@ -54,6 +54,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
         final SpreadsheetMetadata metadata = JettyHttpServerSpreadsheetHttpServer.with(
             SERVER_URL,
             IpPort.with(2000), // sshdPort
+            CURRENCY,
             INDENTATION,
             LINE_ENDING,
             LOCALE,
@@ -85,6 +86,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
         final JettyHttpServerSpreadsheetHttpServer server = JettyHttpServerSpreadsheetHttpServer.with(
             SERVER_URL,
             IpPort.with(2000), // sshdPort
+            CURRENCY,
             INDENTATION,
             LINE_ENDING,
             LOCALE,
@@ -137,6 +139,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
         final JettyHttpServerSpreadsheetHttpServer server = JettyHttpServerSpreadsheetHttpServer.with(
             SERVER_URL,
             IpPort.with(2000), // sshdPort
+            CURRENCY,
             INDENTATION,
             LINE_ENDING,
             LOCALE,

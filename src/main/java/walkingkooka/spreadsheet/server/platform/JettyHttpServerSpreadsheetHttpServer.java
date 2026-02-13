@@ -124,6 +124,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.Currency;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -147,26 +148,29 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             case 0:
                 throw new IllegalArgumentException("Missing httpServerUrl, sshdPort, indentation, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
             case 1:
-                throw new IllegalArgumentException("Missing sshdPort, indentation, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing sshdPort, currency, indentation, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
             case 2:
-                throw new IllegalArgumentException("Missing lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing currency, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
             case 3:
                 throw new IllegalArgumentException("Missing indentation, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
             case 4:
-                throw new IllegalArgumentException("Missing default Locale, file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
             case 5:
-                throw new IllegalArgumentException("Missing file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing default Locale, file server root, defaultUser for jetty HttpServer");
             case 6:
+                throw new IllegalArgumentException("Missing file server root, defaultUser for jetty HttpServer");
+            case 7:
                 throw new IllegalArgumentException("Missing defaultUser for jetty HttpServer");
             default:
                 with(
                     httpServerUrl(args[0]),
                     sshdPort(args[1]),
-                    indentation(args[2]),
-                    lineEnding(args[3]),
-                    locale(args[4]),
-                    fileServer(args[5]),
-                    user(args[6]),
+                    currency(args[2]),
+                    indentation(args[3]),
+                    lineEnding(args[4]),
+                    locale(args[5]),
+                    fileServer(args[6]),
+                    user(args[7]),
                     LocalDateTime::now
                 ).start();
                 break;
@@ -193,6 +197,17 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         }
     }
 
+    private static Currency currency(final String string) {
+        final Currency currency;
+        try {
+            currency = Currency.getInstance(string);
+        } catch (final RuntimeException cause) {
+            System.err.println("Invalid Currency (currencyCode): " + cause.getMessage());
+            throw cause;
+        }
+        return currency;
+    }
+    
     private static Indentation indentation(final String string) {
         final Indentation indentation;
         try {
@@ -366,6 +381,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
     public static JettyHttpServerSpreadsheetHttpServer with(final AbsoluteUrl httpServerUrl,
                                                             final IpPort sshdPort,
+                                                            final Currency currency,
                                                             final Indentation indentation,
                                                             final LineEnding lineEnding,
                                                             final Locale defaultLocale,
@@ -375,6 +391,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         return new JettyHttpServerSpreadsheetHttpServer(
             httpServerUrl,
             sshdPort,
+            currency,
             indentation,
             lineEnding,
             defaultLocale,
@@ -386,6 +403,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
     private JettyHttpServerSpreadsheetHttpServer(final AbsoluteUrl httpServerUrl,
                                                  final IpPort sshdPort,
+                                                 final Currency currency,
                                                  final Indentation indentation,
                                                  final LineEnding lineEnding,
                                                  final Locale defaultLocale,
@@ -394,6 +412,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                                                  final HasNow hasNow) {
         this.httpServerUrl = httpServerUrl;
         this.sshdPort = sshdPort;
+        this.currency = currency;
         this.indentation = indentation;
         this.lineEnding = lineEnding;
         this.defaultLocale = defaultLocale;
@@ -777,6 +796,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     private SpreadsheetEnvironmentContext spreadsheetEnvironmentContext(final Optional<EmailAddress> user) {
         final EnvironmentContext environmentContext = EnvironmentContexts.map(
             EnvironmentContexts.empty(
+                this.currency,
                 this.indentation,
                 this.lineEnding,
                 this.defaultLocale,
@@ -798,6 +818,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         );
     }
 
+    private final Currency currency;
     private final Indentation indentation;
     private final LineEnding lineEnding;
     private final Locale defaultLocale;

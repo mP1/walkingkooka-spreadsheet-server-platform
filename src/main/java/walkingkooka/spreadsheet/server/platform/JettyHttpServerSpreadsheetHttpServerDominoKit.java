@@ -20,6 +20,8 @@ package walkingkooka.spreadsheet.server.platform;
 import walkingkooka.text.Indentation;
 import walkingkooka.text.LineEnding;
 
+import java.util.Currency;
+
 /**
  * Runs {@link JettyHttpServerSpreadsheetHttpServer#main} on port 12345 and points the file server to read various gwt assets from walkingkooka-spreadsheet-dominokit
  */
@@ -29,6 +31,7 @@ public final class JettyHttpServerSpreadsheetHttpServerDominoKit {
             new String[]{
                 "http://localhost:12345", // httpServerUrl
                 "2000", // apacheSshdPort
+                Currency.getInstance("GBP").toString(),
                 Indentation.SPACES2.toString(), // indentation
                 LineEnding.NL.name(), // lineEnding
                 "EN-GB", // defaultLocale
