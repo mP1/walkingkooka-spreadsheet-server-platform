@@ -10,4 +10,4 @@
 
 Assembles all required modules into a java web app, which provides the engine for a spreadsheet.
 
-- Available [functions](https://github.com/mP1/walkingkooka-spreadsheet-server-expression-function)
+- [functions](https://github.com/mP1/walkingkooka-spreadsheet-expression-function)
