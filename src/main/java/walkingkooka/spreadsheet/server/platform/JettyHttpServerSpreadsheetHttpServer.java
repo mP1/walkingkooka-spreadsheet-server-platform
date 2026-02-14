@@ -24,6 +24,8 @@ import walkingkooka.Either;
 import walkingkooka.collect.list.Lists;
 import walkingkooka.collect.map.Maps;
 import walkingkooka.convert.Converters;
+import walkingkooka.currency.CurrencyContext;
+import walkingkooka.currency.CurrencyContexts;
 import walkingkooka.datetime.HasNow;
 import walkingkooka.environment.AuditInfo;
 import walkingkooka.environment.EnvironmentContext;
@@ -423,6 +425,12 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         this.defaultUser = defaultUser;
         this.hasNow = hasNow;
 
+        this.currencyContext = CurrencyContexts.readOnly(
+            CurrencyContexts.jdk(
+                Currency.getInstance(this.defaultLocale),
+                (f, t) -> 1.0f * f.getDisplayName().length() / t.getDisplayName().length()
+            )
+        );
         this.localeContext = LocaleContexts.readOnly(
             LocaleContexts.jre(this.defaultLocale)
         );
@@ -470,6 +478,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             SPREADSHEET_ENGINE,
             this::getOrCreateSpreadsheetStoreRepository,
             this.spreadsheetProvider,
+            this.currencyContext,
             this.spreadsheetEnvironmentContext(user),
             this.localeContext,
             this.spreadsheetMetadataContext,
@@ -520,6 +529,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
         final SpreadsheetEngineContext engineContext = SpreadsheetEngineContexts.spreadsheetEnvironmentContext(
             spreadsheetServerContext, // SpreadsheetContextSupplier
+            this.currencyContext,
             SpreadsheetEnvironmentContexts.basic(
                 this.storage(user),
                 terminalContext
@@ -972,6 +982,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
         return SpreadsheetEnvironmentContexts.readOnly(spreadsheetEnvironmentContext);
     }
+
+    private final CurrencyContext currencyContext;
 
     private final LocaleContext localeContext;
 }
