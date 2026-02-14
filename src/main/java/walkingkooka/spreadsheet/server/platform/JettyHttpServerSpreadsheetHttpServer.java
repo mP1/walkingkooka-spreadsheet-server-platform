@@ -354,6 +354,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     private static final JsonNodeMarshallUnmarshallContext JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT = JsonNodeMarshallUnmarshallContexts.basic(
         JsonNodeMarshallContexts.basic(),
         JsonNodeUnmarshallContexts.basic(
+            (String cc) -> Optional.ofNullable(
+                Currency.getInstance(cc)
+            ),
             ExpressionNumberKind.DEFAULT,
             MathContext.DECIMAL32
         )
