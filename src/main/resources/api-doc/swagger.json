@@ -3545,6 +3545,10 @@
           "99"
         ]
       },
+      "Currency": {
+        "type": "string",
+        "example": "AUD"
+      },
       "DateTime": {
         "type": "string",
         "format": "date-time",
@@ -3954,6 +3958,9 @@
         "properties": {
           "reference": {
             "$ref" : "#/components/schemas/SpreadsheetCellReference"
+          },
+          "currency": {
+            "$ref" : "#/components/schemas/Currency"
           },
           "dateTimeSymbols": {
             "$ref" : "#/components/schemas/DateTimeSymbols"
