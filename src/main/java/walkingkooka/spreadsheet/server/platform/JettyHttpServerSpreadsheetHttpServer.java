@@ -428,7 +428,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         this.currencyContext = CurrencyContexts.readOnly(
             CurrencyContexts.jre(
                 Currency.getInstance(this.defaultLocale),
-                (f, t) -> 1.0f * f.getDisplayName().length() / t.getDisplayName().length()
+                (f, t) -> 1.0f * f.getDisplayName().length() / t.getDisplayName().length(),
+                () -> this.defaultLocale
             )
         );
         this.localeContext = LocaleContexts.readOnly(
