@@ -203,6 +203,14 @@
             "schema": {
               "#ref": "#/components/schemas/Count"
             }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Locale"
+            }
           }
         ],
         "produces": [
@@ -238,6 +246,14 @@
             "required": true,
             "schema": {
               "$ref": "#/components/schemas/LocaleTag"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Locale"
             }
           }
         ],
