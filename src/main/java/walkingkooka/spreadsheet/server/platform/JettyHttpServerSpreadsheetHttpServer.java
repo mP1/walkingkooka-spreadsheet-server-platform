@@ -359,6 +359,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             (String cc) -> Optional.ofNullable(
                 Currency.getInstance(cc)
             ),
+            (String lt) -> Optional.of(
+                Locale.forLanguageTag(lt)
+            ),
             ExpressionNumberKind.DEFAULT,
             MathContext.DECIMAL32
         )
@@ -785,6 +788,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
         return SpreadsheetProviderContexts.spreadsheet(
             pluginStore,
+            this.currencyContext,
             this.spreadsheetEnvironmentContext(user),
             JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT,
             LocaleContexts.jre(this.defaultLocale)
