@@ -660,8 +660,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             ).setDefaults(
                 SpreadsheetMetadata.NON_LOCALE_DEFAULTS
                     .set(SpreadsheetMetadataPropertyName.LOCALE, defaultLocale)
-                    .loadFromLocale(this.localeContext)
-                    .set(
+                    .loadFromLocale(
+                        this.currencyContext.setLocaleContext(this.localeContext)
+                    ).set(
                         SpreadsheetMetadataPropertyName.CELL_CHARACTER_WIDTH,
                         1
                     ).set(
@@ -947,7 +948,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         final SpreadsheetMetadata spreadsheetMetadata = SpreadsheetMetadata.NON_LOCALE_DEFAULTS.set(
             SpreadsheetMetadataPropertyName.LOCALE,
             this.defaultLocale
-        ).loadFromLocale(this.localeContext);
+        ).loadFromLocale(
+            this.currencyContext.setLocaleContext(this.localeContext)
+        );
 
         for (final EnvironmentValueName<?> environmentValueName : SpreadsheetEnvironmentContextFactory.ENVIRONMENT_VALUE_NAMES) {
 
