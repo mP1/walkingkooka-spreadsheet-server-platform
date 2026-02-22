@@ -502,6 +502,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         if (null == storage) {
             storage = SpreadsheetStorages.router(
                 SpreadsheetStorages.cell(),
+                SpreadsheetStorages.env(),
                 SpreadsheetStorages.label(),
                 SpreadsheetStorages.metadata(),
                 Storages.tree()
