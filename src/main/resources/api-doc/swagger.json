@@ -5,6 +5,102 @@
     "version": "v1.0.0"
   },
   "paths": {
+    "/api/currency/*": {
+      "get": {
+        "tags": [
+          "currency"
+        ],
+        "summary": "Gets all the currencies for the requested range",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Offset"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Count"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/LocaleTag"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrencyHateosResourceSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/currency/{currency-code}": {
+      "get": {
+        "tags": [
+          "currency"
+        ],
+        "summary": "Retrieves a Currency given a CurrencyCode",
+        "parameters": [
+          {
+            "name": "currency-code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CurrencyCode"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/LocaleTag"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrencyHateosResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/dateTimeSymbols/*/localeStartsWith/{locale-starts-with}": {
       "get": {
         "tags": [
@@ -3565,6 +3661,27 @@
         "type": "string",
         "example": "AUD"
       },
+      "CurrencyCode": {
+        "type": "string",
+        "example": "AUD"
+      },
+      "CurrencyHateosResource": {
+        "type": "object",
+        "properties": {
+          "localeTag": {
+            "$ref" : "#/components/schemas/CurrencyCode"
+          },
+          "text": {
+            "type": "string"
+          }
+        }
+      },
+      "CurrencyHateosResourceSet": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/CurrencyHateosResource"
+        }
+      },
       "DateTime": {
         "type": "string",
         "format": "date-time",
@@ -3644,7 +3761,7 @@
             "minLength": 1,
             "maxLength": 1
           },
-          "currencySymbol": {
+          "currenciesymbol": {
             "type": "string",
             "minLength": 1
           },
