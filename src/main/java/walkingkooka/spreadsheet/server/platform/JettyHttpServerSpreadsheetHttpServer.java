@@ -505,7 +505,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                 SpreadsheetStorages.env(),
                 SpreadsheetStorages.label(),
                 SpreadsheetStorages.metadata(),
-                Storages.tree()
+                Storages.treeMapStore()
             );
 
             this.userToStorage.put(
