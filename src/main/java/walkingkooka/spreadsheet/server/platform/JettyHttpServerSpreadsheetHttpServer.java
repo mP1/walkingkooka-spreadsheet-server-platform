@@ -789,10 +789,11 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
         return SpreadsheetProviderContexts.spreadsheet(
             pluginStore,
-            this.currencyContext,
+            this.currencyContext.setLocaleContext(
+                LocaleContexts.jre(this.defaultLocale)
+            ),
             this.spreadsheetEnvironmentContext(user),
-            JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT,
-            LocaleContexts.jre(this.defaultLocale)
+            JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT
         );
     }
 
