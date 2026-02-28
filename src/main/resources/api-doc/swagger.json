@@ -3668,7 +3668,7 @@
       "CurrencyHateosResource": {
         "type": "object",
         "properties": {
-          "localeTag": {
+          "currencyCode": {
             "$ref" : "#/components/schemas/CurrencyCode"
           },
           "text": {
