@@ -33,7 +33,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "#ref": "#/components/schemas/LocaleTag"
+              "#ref": "#/components/schemas/LocaleLanguageTag"
             }
           }
         ],
@@ -77,7 +77,7 @@
             "in": "query",
             "required": false,
             "schema": {
-              "#ref": "#/components/schemas/LocaleTag"
+              "#ref": "#/components/schemas/LocaleLanguageTag"
             }
           }
         ],
@@ -113,7 +113,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/LocaleTag"
+              "$ref": "#/components/schemas/LocaleLanguageTag"
             }
           },
           {
@@ -158,14 +158,14 @@
         "tags": [
           "dateTimeSymbols"
         ],
-        "summary": "Retrieves the DateTimeSymbols given a LocaleTag",
+        "summary": "Retrieves the DateTimeSymbols given a LocaleLanguageTag",
         "parameters": [
           {
             "name": "locale-tag",
             "in": "path",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/LocaleTag"
+              "$ref": "#/components/schemas/LocaleLanguageTag"
             }
           }
         ],
@@ -201,7 +201,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/LocaleTag"
+              "$ref": "#/components/schemas/LocaleLanguageTag"
             }
           },
           {
@@ -246,14 +246,14 @@
         "tags": [
           "decimalNumberSymbols"
         ],
-        "summary": "Retrieves the DecimalNumberSymbols given a LocaleTag",
+        "summary": "Retrieves the DecimalNumberSymbols given a LocaleLanguageTag",
         "parameters": [
           {
             "name": "locale-tag",
             "in": "path",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/LocaleTag"
+              "$ref": "#/components/schemas/LocaleLanguageTag"
             }
           }
         ],
@@ -334,14 +334,14 @@
         "tags": [
           "locale"
         ],
-        "summary": "Retrieves a Locale given a LocaleTag",
+        "summary": "Retrieves a Locale given a LocaleLanguageTag",
         "parameters": [
           {
             "name": "locale-tag",
             "in": "path",
             "required": true,
             "schema": {
-              "$ref": "#/components/schemas/LocaleTag"
+              "$ref": "#/components/schemas/LocaleLanguageTag"
             }
           },
           {
@@ -3726,7 +3726,7 @@
         "type": "object",
         "properties": {
           "locale": {
-            "$ref": "#/components/schemas/LocaleTag"
+            "$ref": "#/components/schemas/LocaleLanguageTag"
           },
           "text": {
             "type": "string",
@@ -3808,7 +3808,7 @@
         "type": "object",
         "properties": {
           "locale": {
-            "$ref": "#/components/schemas/LocaleTag"
+            "$ref": "#/components/schemas/LocaleLanguageTag"
           },
           "text": {
             "type": "string",
@@ -3992,7 +3992,7 @@
         "type": "object",
         "properties": {
           "locale": {
-            "$ref" : "#/components/schemas/LocaleTag"
+            "$ref" : "#/components/schemas/LocaleLanguageTag"
           },
           "text": {
             "type": "string"
@@ -4005,7 +4005,7 @@
           "$ref" : "#/components/schemas/LocaleHateosResource"
         }
       },
-      "LocaleTag": {
+      "LocaleLanguageTag": {
         "type": "string"
       },
       "MissingConverter": {
