@@ -3991,7 +3991,7 @@
       "LocaleHateosResource": {
         "type": "object",
         "properties": {
-          "localeTag": {
+          "locale": {
             "$ref" : "#/components/schemas/LocaleTag"
           },
           "text": {
