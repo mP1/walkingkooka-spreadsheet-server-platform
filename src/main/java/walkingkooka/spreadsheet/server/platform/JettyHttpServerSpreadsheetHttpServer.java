@@ -428,15 +428,16 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         this.defaultUser = defaultUser;
         this.hasNow = hasNow;
 
+        this.localeContext = LocaleContexts.readOnly(
+            LocaleContexts.jre(this.defaultLocale)
+        );
+
         this.currencyContext = CurrencyContexts.readOnly(
             CurrencyContexts.jre(
                 Currency.getInstance(this.defaultLocale),
                 (f, t) -> 1.0f * f.getDisplayName().length() / t.getDisplayName().length(),
-                () -> this.defaultLocale
+                this.localeContext
             )
-        );
-        this.localeContext = LocaleContexts.readOnly(
-            LocaleContexts.jre(this.defaultLocale)
         );
 
         this.metadataStore = SpreadsheetMetadataStores.spreadsheetCellStoreAction(
