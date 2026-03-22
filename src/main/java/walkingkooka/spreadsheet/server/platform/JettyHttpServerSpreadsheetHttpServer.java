@@ -692,9 +692,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                         SpreadsheetMetadataPropertyName.EXPRESSION_NUMBER_KIND,
                         ExpressionNumberKind.DOUBLE
                     ).set(
-                        SpreadsheetMetadataPropertyName.FIND_FUNCTIONS,
-                        SpreadsheetExpressionFunctionProviders.FIND
-                    ).set(
                         SpreadsheetMetadataPropertyName.FORMULA_FUNCTIONS,
                         SpreadsheetExpressionFunctionProviders.FORMULA
                     ).set(
@@ -707,8 +704,11 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                             .aliasSet()
                     ).set(
                         SpreadsheetMetadataPropertyName.PRECISION,
-                        MathContext.DECIMAL32.getPrecision())
-                    .set(
+                        MathContext.DECIMAL32.getPrecision()
+                    ).set(
+                        SpreadsheetMetadataPropertyName.QUERY_FUNCTIONS,
+                        SpreadsheetExpressionFunctionProviders.FIND
+                    ).set(
                         SpreadsheetMetadataPropertyName.ROUNDING_MODE,
                         RoundingMode.HALF_UP)
                     .set(
