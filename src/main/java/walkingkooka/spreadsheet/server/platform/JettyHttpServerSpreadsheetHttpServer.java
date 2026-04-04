@@ -24,8 +24,6 @@ import walkingkooka.Either;
 import walkingkooka.collect.list.Lists;
 import walkingkooka.collect.map.Maps;
 import walkingkooka.convert.Converters;
-import walkingkooka.currency.CurrencyCode;
-import walkingkooka.currency.CurrencyCodeLanguageTagContext;
 import walkingkooka.currency.CurrencyContext;
 import walkingkooka.currency.CurrencyContexts;
 import walkingkooka.datetime.HasNow;
@@ -35,7 +33,6 @@ import walkingkooka.environment.EnvironmentContexts;
 import walkingkooka.environment.EnvironmentValueName;
 import walkingkooka.locale.LocaleContext;
 import walkingkooka.locale.LocaleContexts;
-import walkingkooka.locale.LocaleLanguageTag;
 import walkingkooka.net.AbsoluteUrl;
 import walkingkooka.net.IpPort;
 import walkingkooka.net.Url;
@@ -356,32 +353,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
     private final static Either<WebFile, HttpStatus> NOT_FOUND = Either.right(HttpStatusCode.NOT_FOUND.status());
 
-    private static final JsonNodeMarshallUnmarshallContext JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT = JsonNodeMarshallUnmarshallContexts.basic(
-        JsonNodeMarshallContexts.basic(),
-        JsonNodeUnmarshallContexts.basic(
-            ExpressionNumberKind.DEFAULT,
-            new CurrencyCodeLanguageTagContext() {
-                @Override
-                public Optional<Currency> currencyForCurrencyCode(final CurrencyCode currencyCode) {
-                    return Optional.ofNullable(
-                        Currency.getInstance(
-                            currencyCode.value()
-                        )
-                    );
-                }
-
-                @Override
-                public Optional<Locale> localeForLanguageTag(final LocaleLanguageTag languageTag) {
-                    return Optional.of(
-                        Locale.forLanguageTag(
-                            languageTag.value()
-                        )
-                    );
-                }
-            },
-            MathContext.DECIMAL32
-        )
-    );
+    private final JsonNodeMarshallUnmarshallContext jsonNodeMarshallUnmarshallContext;
 
     private static WebFile webFile(final Path file) {
         return WebFiles.file(
@@ -456,6 +428,15 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                  final Optional<LocalDateTime> dateTime) ->
                     1.0f * from.getDisplayName().length() / to.getDisplayName().length(),
                 this.localeContext
+            )
+        );
+
+        this.jsonNodeMarshallUnmarshallContext = JsonNodeMarshallUnmarshallContexts.basic(
+            JsonNodeMarshallContexts.basic(),
+            JsonNodeUnmarshallContexts.basic(
+                ExpressionNumberKind.DEFAULT,
+                this.currencyContext.setLocaleContext(this.localeContext),
+                MathContext.DECIMAL32
             )
         );
 
@@ -620,7 +601,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         return HateosResourceHandlerContexts.basic(
             this.indentation,
             this.lineEnding,
-            JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT
+            jsonNodeMarshallUnmarshallContext
         );
     }
 
@@ -814,7 +795,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                 LocaleContexts.jre(this.defaultLocale)
             ),
             this.spreadsheetEnvironmentContext(user),
-            JSON_NODE_MARSHALL_UNMARSHALL_CONTEXT
+            jsonNodeMarshallUnmarshallContext
         );
     }
 
