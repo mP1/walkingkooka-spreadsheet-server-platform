@@ -24,9 +24,11 @@ import walkingkooka.Either;
 import walkingkooka.collect.list.Lists;
 import walkingkooka.collect.map.Maps;
 import walkingkooka.convert.Converters;
+import walkingkooka.currency.CurrencyCode;
 import walkingkooka.currency.CurrencyContext;
 import walkingkooka.currency.CurrencyContexts;
 import walkingkooka.currency.CurrencyExchange;
+import walkingkooka.currency.CurrencyExchangeRater;
 import walkingkooka.datetime.HasNow;
 import walkingkooka.environment.AuditInfo;
 import walkingkooka.environment.EnvironmentContext;
@@ -132,6 +134,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Function;
@@ -424,21 +427,35 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         this.currencyContext = CurrencyContexts.readOnly(
             CurrencyContexts.jre(
                 Currency.getInstance(this.defaultLocale),
-                (final CurrencyExchange currencyExchange,
-                 final Optional<LocalDateTime> dateTime) ->
-                    Optional.of(
-                        1.0f *
-                            Currency.getInstance(
-                                    currencyExchange.from()
-                                        .value()
-                                ).getDisplayName()
-                                .length() /
-                            Currency.getInstance(
-                                    currencyExchange.to()
-                                        .value()
-                                ).getDisplayName()
-                                .length()
-                    ),
+                new CurrencyExchangeRater() {
+                    @Override
+                    public Set<CurrencyExchange> currencyExchanges() {
+                        return Set.of(
+                            CurrencyExchange.with(
+                                CurrencyCode.parse("AUD"),
+                                CurrencyCode.parse("NZD")
+                            )
+                        );
+                    }
+
+                    @Override
+                    public Optional<Number> exchangeRate(final CurrencyExchange currencyExchange,
+                                                         final Optional<LocalDateTime> dateTime) {
+                        return Optional.of(
+                            1.0f *
+                                Currency.getInstance(
+                                        currencyExchange.from()
+                                            .value()
+                                    ).getDisplayName()
+                                    .length() /
+                                Currency.getInstance(
+                                        currencyExchange.to()
+                                            .value()
+                                    ).getDisplayName()
+                                    .length()
+                        );
+                    }
+                },
                 this.localeContext
             )
         );
