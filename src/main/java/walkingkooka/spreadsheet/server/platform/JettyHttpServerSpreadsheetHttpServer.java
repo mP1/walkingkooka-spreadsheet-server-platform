@@ -24,9 +24,9 @@ import walkingkooka.Either;
 import walkingkooka.collect.list.Lists;
 import walkingkooka.collect.map.Maps;
 import walkingkooka.convert.Converters;
-import walkingkooka.currency.CurrencyCode;
 import walkingkooka.currency.CurrencyContext;
 import walkingkooka.currency.CurrencyContexts;
+import walkingkooka.currency.CurrencyExchange;
 import walkingkooka.datetime.HasNow;
 import walkingkooka.environment.AuditInfo;
 import walkingkooka.environment.EnvironmentContext;
@@ -424,16 +424,21 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         this.currencyContext = CurrencyContexts.readOnly(
             CurrencyContexts.jre(
                 Currency.getInstance(this.defaultLocale),
-                (final CurrencyCode from,
-                 final CurrencyCode to,
+                (final CurrencyExchange currencyExchange,
                  final Optional<LocalDateTime> dateTime) ->
-                    1.0f *
-                        Currency.getInstance(
-                            from.value()
-                        ).getDisplayName().length() /
-                        Currency.getInstance(
-                            to.value()
-                        ).getDisplayName().length(),
+                    Optional.of(
+                        1.0f *
+                            Currency.getInstance(
+                                    currencyExchange.from()
+                                        .value()
+                                ).getDisplayName()
+                                .length() /
+                            Currency.getInstance(
+                                    currencyExchange.to()
+                                        .value()
+                                ).getDisplayName()
+                                .length()
+                    ),
                 this.localeContext
             )
         );
