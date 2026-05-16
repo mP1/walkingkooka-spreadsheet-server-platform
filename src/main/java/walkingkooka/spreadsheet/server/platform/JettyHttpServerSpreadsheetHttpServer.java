@@ -23,6 +23,7 @@ import walkingkooka.Cast;
 import walkingkooka.Either;
 import walkingkooka.collect.list.Lists;
 import walkingkooka.collect.map.Maps;
+import walkingkooka.convert.BinaryNumberConverterFunction;
 import walkingkooka.convert.Converters;
 import walkingkooka.currency.CurrencyCode;
 import walkingkooka.currency.CurrencyContext;
@@ -60,6 +61,7 @@ import walkingkooka.plugin.store.Plugin;
 import walkingkooka.plugin.store.PluginStore;
 import walkingkooka.plugin.store.PluginStores;
 import walkingkooka.spreadsheet.compare.provider.SpreadsheetComparatorProviders;
+import walkingkooka.spreadsheet.convert.SpreadsheetConverterContext;
 import walkingkooka.spreadsheet.convert.provider.SpreadsheetConvertersConverterProviders;
 import walkingkooka.spreadsheet.engine.SpreadsheetEngine;
 import walkingkooka.spreadsheet.engine.SpreadsheetEngineContext;
@@ -110,6 +112,7 @@ import walkingkooka.text.CharSequences;
 import walkingkooka.text.Indentation;
 import walkingkooka.text.LineEnding;
 import walkingkooka.tree.expression.ExpressionNumberKind;
+import walkingkooka.tree.expression.convert.ExpressionNumberBinaryNumberConverterFunctions;
 import walkingkooka.tree.json.marshall.JsonNodeMarshallContexts;
 import walkingkooka.tree.json.marshall.JsonNodeMarshallUnmarshallContext;
 import walkingkooka.tree.json.marshall.JsonNodeMarshallUnmarshallContexts;
@@ -143,6 +146,8 @@ import java.util.function.Function;
  * Creates a {@link SpreadsheetHttpServer} with memory stores using a Jetty server using the scheme/host/port from cmd line arguments.
  */
 public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTesting {
+
+    private final static BinaryNumberConverterFunction<SpreadsheetConverterContext> MULTIPLER = ExpressionNumberBinaryNumberConverterFunctions.multiply();
 
     private final static SpreadsheetEngine SPREADSHEET_ENGINE = SpreadsheetEngines.basic();
 
@@ -509,6 +514,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
      */
     private SpreadsheetServerContext createSpreadsheetServerContext(final Optional<EmailAddress> user) {
         return SpreadsheetServerContexts.basic(
+            MULTIPLER,
             SPREADSHEET_ENGINE,
             this::getOrCreateSpreadsheetStoreRepository,
             this.spreadsheetProvider,
@@ -563,6 +569,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         final SpreadsheetServerContext spreadsheetServerContext = this.getOrCreateSpreadsheetServerContext(user);
 
         final SpreadsheetEngineContext engineContext = SpreadsheetEngineContexts.spreadsheetEnvironmentContext(
+            MULTIPLER,
             spreadsheetServerContext, // SpreadsheetContextSupplier
             this.currencyContext,
             SpreadsheetEnvironmentContexts.basic(
@@ -819,6 +826,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         );
 
         return SpreadsheetProviderContexts.spreadsheet(
+            MULTIPLER,
             pluginStore,
             this.currencyContext.setLocaleContext(
                 LocaleContexts.jre(this.defaultLocale)

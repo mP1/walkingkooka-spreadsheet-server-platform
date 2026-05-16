@@ -75,6 +75,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             INDENTATION,
             SPREADSHEET_LABEL_NAME_RESOLVER,
             LINE_ENDING,
+            MULTIPLIER,
             CONVERTER_PROVIDER,
             CURRENCY_LOCALE_CONTEXT,
             PROVIDER_CONTEXT
