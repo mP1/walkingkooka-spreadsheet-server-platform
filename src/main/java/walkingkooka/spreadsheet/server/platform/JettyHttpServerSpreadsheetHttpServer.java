@@ -444,8 +444,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                     }
 
                     @Override
-                    public Optional<Number> exchangeRate(final CurrencyExchange currencyExchange,
-                                                         final Optional<LocalDateTime> dateTime) {
+                    public Optional<Number> currencyExchangeRate(final CurrencyExchange currencyExchange,
+                                                                 final Optional<LocalDateTime> dateTime) {
                         return Optional.of(
                             1.0f *
                                 Currency.getInstance(
