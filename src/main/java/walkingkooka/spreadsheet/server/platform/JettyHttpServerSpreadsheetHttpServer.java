@@ -124,6 +124,7 @@ import walkingkooka.validation.provider.ValidatorProviders;
 import java.io.IOException;
 import java.math.MathContext;
 import java.math.RoundingMode;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.FileSystem;
 import java.nio.file.FileSystems;
@@ -146,6 +147,8 @@ import java.util.function.Function;
  * Creates a {@link SpreadsheetHttpServer} with memory stores using a Jetty server using the scheme/host/port from cmd line arguments.
  */
 public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTesting {
+
+    private final static Charset CHARSET = StandardCharsets.UTF_8;
 
     private final static BinaryNumberConverterFunction<SpreadsheetConverterContext> MULTIPLER = ExpressionNumberBinaryNumberConverterFunctions.multiply();
 
@@ -514,6 +517,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
      */
     private SpreadsheetServerContext createSpreadsheetServerContext(final Optional<EmailAddress> user) {
         return SpreadsheetServerContexts.basic(
+            CHARSET,
             MULTIPLER,
             SPREADSHEET_ENGINE,
             this::getOrCreateSpreadsheetStoreRepository,
@@ -569,6 +573,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         final SpreadsheetServerContext spreadsheetServerContext = this.getOrCreateSpreadsheetServerContext(user);
 
         final SpreadsheetEngineContext engineContext = SpreadsheetEngineContexts.spreadsheetEnvironmentContext(
+            CHARSET,
             MULTIPLER,
             spreadsheetServerContext, // SpreadsheetContextSupplier
             this.currencyContext,
@@ -826,6 +831,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         );
 
         return SpreadsheetProviderContexts.spreadsheet(
+            CHARSET,
             MULTIPLER,
             pluginStore,
             this.currencyContext.setLocaleContext(

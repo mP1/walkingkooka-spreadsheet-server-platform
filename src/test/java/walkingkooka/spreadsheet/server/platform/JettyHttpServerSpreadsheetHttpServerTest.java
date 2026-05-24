@@ -69,6 +69,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
 
         metadata.spreadsheetConverterContext(
             SpreadsheetMetadata.NO_CELL,
+            CHARSET,
             SpreadsheetConverterContexts.NO_VALIDATION_REFERENCE,
             SpreadsheetMetadataPropertyName.FORMULA_CONVERTER,
             HAS_USER_DIRECTORIES,
