@@ -148,8 +148,6 @@ import java.util.function.Function;
  */
 public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTesting {
 
-    private final static Charset CHARSET = StandardCharsets.UTF_8;
-
     private final static BinaryNumberConverterFunction<SpreadsheetConverterContext> MULTIPLER = ExpressionNumberBinaryNumberConverterFunctions.multiply();
 
     private final static SpreadsheetEngine SPREADSHEET_ENGINE = SpreadsheetEngines.basic();
@@ -160,34 +158,46 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     public static void main(final String[] args) throws Exception {
         switch (args.length) {
             case 0:
-                throw new IllegalArgumentException("Missing httpServerUrl, sshdPort, indentation, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing charset, httpServerUrl, sshdPort, indentation, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
             case 1:
-                throw new IllegalArgumentException("Missing sshdPort, currency, indentation, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing httpServerUrl, sshdPort, indentation, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
             case 2:
-                throw new IllegalArgumentException("Missing currency, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing sshdPort, currency, indentation, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
             case 3:
-                throw new IllegalArgumentException("Missing indentation, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing currency, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
             case 4:
-                throw new IllegalArgumentException("Missing lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing indentation, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
             case 5:
-                throw new IllegalArgumentException("Missing default Locale, file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
             case 6:
-                throw new IllegalArgumentException("Missing file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing default Locale, file server root, defaultUser for jetty HttpServer");
             case 7:
+                throw new IllegalArgumentException("Missing file server root, defaultUser for jetty HttpServer");
+            case 8:
                 throw new IllegalArgumentException("Missing defaultUser for jetty HttpServer");
             default:
                 with(
-                    httpServerUrl(args[0]),
-                    sshdPort(args[1]),
-                    currency(args[2]),
-                    indentation(args[3]),
-                    lineEnding(args[4]),
-                    locale(args[5]),
-                    fileServer(args[6]),
-                    user(args[7]),
+                    charset(args[0]),
+                    httpServerUrl(args[1]),
+                    sshdPort(args[2]),
+                    currency(args[3]),
+                    indentation(args[4]),
+                    lineEnding(args[5]),
+                    locale(args[6]),
+                    fileServer(args[7]),
+                    user(args[8]),
                     LocalDateTime::now
                 ).start();
                 break;
+        }
+    }
+
+    private static Charset charset(final String string) {
+        try {
+            return Charset.forName(string);
+        } catch (final IllegalArgumentException cause) {
+            System.err.println("Invalid charset: " + cause.getMessage());
+            throw cause;
         }
     }
 
@@ -387,7 +397,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         return Optional.ofNullable(emailAddress);
     }
 
-    public static JettyHttpServerSpreadsheetHttpServer with(final AbsoluteUrl httpServerUrl,
+    public static JettyHttpServerSpreadsheetHttpServer with(final Charset charset,
+                                                            final AbsoluteUrl httpServerUrl,
                                                             final IpPort sshdPort,
                                                             final Currency currency,
                                                             final Indentation indentation,
@@ -397,6 +408,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                                                             final Optional<EmailAddress> defaultUser,
                                                             final HasNow hasNow) {
         return new JettyHttpServerSpreadsheetHttpServer(
+            charset,
             httpServerUrl,
             sshdPort,
             currency,
@@ -409,7 +421,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         );
     }
 
-    private JettyHttpServerSpreadsheetHttpServer(final AbsoluteUrl httpServerUrl,
+    private JettyHttpServerSpreadsheetHttpServer(final Charset charset,
+                                                 final AbsoluteUrl httpServerUrl,
                                                  final IpPort sshdPort,
                                                  final Currency currency,
                                                  final Indentation indentation,
@@ -418,6 +431,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                                                  final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer,
                                                  final Optional<EmailAddress> defaultUser,
                                                  final HasNow hasNow) {
+        super();
+
+        this.charset = charset;
         this.httpServerUrl = httpServerUrl;
         this.sshdPort = sshdPort;
         this.currency = currency;
@@ -517,7 +533,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
      */
     private SpreadsheetServerContext createSpreadsheetServerContext(final Optional<EmailAddress> user) {
         return SpreadsheetServerContexts.basic(
-            CHARSET,
+            this.charset,
             MULTIPLER,
             SPREADSHEET_ENGINE,
             this::getOrCreateSpreadsheetStoreRepository,
@@ -573,7 +589,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         final SpreadsheetServerContext spreadsheetServerContext = this.getOrCreateSpreadsheetServerContext(user);
 
         final SpreadsheetEngineContext engineContext = SpreadsheetEngineContexts.spreadsheetEnvironmentContext(
-            CHARSET,
+            this.charset,
             MULTIPLER,
             spreadsheetServerContext, // SpreadsheetContextSupplier
             this.currencyContext,
@@ -831,7 +847,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         );
 
         return SpreadsheetProviderContexts.spreadsheet(
-            CHARSET,
+            this.charset,
             MULTIPLER,
             pluginStore,
             this.currencyContext.setLocaleContext(
@@ -883,6 +899,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         );
     }
 
+    private final Charset charset;
     private final Currency currency;
     private final Indentation indentation;
     private final LineEnding lineEnding;

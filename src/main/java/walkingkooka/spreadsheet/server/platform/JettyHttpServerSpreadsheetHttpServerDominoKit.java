@@ -29,6 +29,7 @@ public final class JettyHttpServerSpreadsheetHttpServerDominoKit {
     public static void main(final String[] args) throws Exception {
         JettyHttpServerSpreadsheetHttpServer.main(
             new String[]{
+                "UTF-8", // charset
                 "http://localhost:12345", // httpServerUrl
                 "2000", // apacheSshdPort
                 Currency.getInstance("GBP").toString(),
