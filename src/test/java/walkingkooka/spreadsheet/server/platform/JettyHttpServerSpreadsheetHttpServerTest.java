@@ -52,6 +52,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
     @Test
     public void testMetadataCreateTemplate() {
         final SpreadsheetMetadata metadata = JettyHttpServerSpreadsheetHttpServer.with(
+            CHARSET,
             SERVER_URL,
             IpPort.with(2000), // sshdPort
             CURRENCY,
@@ -86,6 +87,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
     @Test
     public void testStorageListSpreadsheets() {
         final JettyHttpServerSpreadsheetHttpServer server = JettyHttpServerSpreadsheetHttpServer.with(
+            CHARSET,
             SERVER_URL,
             IpPort.with(2000), // sshdPort
             CURRENCY,
@@ -139,6 +141,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
         final LocalDateTime now = LocalDateTime.MIN;
 
         final JettyHttpServerSpreadsheetHttpServer server = JettyHttpServerSpreadsheetHttpServer.with(
+            CHARSET,
             SERVER_URL,
             IpPort.with(2000), // sshdPort
             CURRENCY,
