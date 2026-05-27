@@ -533,7 +533,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
      */
     private SpreadsheetServerContext createSpreadsheetServerContext(final Optional<EmailAddress> user) {
         return SpreadsheetServerContexts.basic(
-            this.charset,
             MULTIPLER,
             SPREADSHEET_ENGINE,
             this::getOrCreateSpreadsheetStoreRepository,
@@ -589,7 +588,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         final SpreadsheetServerContext spreadsheetServerContext = this.getOrCreateSpreadsheetServerContext(user);
 
         final SpreadsheetEngineContext engineContext = SpreadsheetEngineContexts.spreadsheetEnvironmentContext(
-            this.charset,
             MULTIPLER,
             spreadsheetServerContext, // SpreadsheetContextSupplier
             this.currencyContext,
@@ -847,7 +845,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         );
 
         return SpreadsheetProviderContexts.spreadsheet(
-            this.charset,
             MULTIPLER,
             pluginStore,
             this.currencyContext.setLocaleContext(
@@ -877,6 +874,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     private SpreadsheetEnvironmentContext spreadsheetEnvironmentContext(final Optional<EmailAddress> user) {
         final EnvironmentContext environmentContext = EnvironmentContexts.map(
             EnvironmentContexts.empty(
+                this.charset,
                 this.currency,
                 this.indentation,
                 this.lineEnding,
