@@ -43,6 +43,7 @@ import walkingkooka.net.Url;
 import walkingkooka.net.UrlPath;
 import walkingkooka.net.UrlScheme;
 import walkingkooka.net.email.EmailAddress;
+import walkingkooka.net.header.MediaTypeDetector;
 import walkingkooka.net.header.apache.tika.ApacheTikaMediaTypeDetectors;
 import walkingkooka.net.http.HttpStatus;
 import walkingkooka.net.http.HttpStatusCode;
@@ -147,6 +148,8 @@ import java.util.function.Function;
  * Creates a {@link SpreadsheetHttpServer} with memory stores using a Jetty server using the scheme/host/port from cmd line arguments.
  */
 public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTesting {
+
+    private final static MediaTypeDetector MEDIA_TYPE_DETECTOR = ApacheTikaMediaTypeDetectors.apacheTika();
 
     private final static BinaryNumberConverterFunction<SpreadsheetConverterContext> MULTIPLER = ExpressionNumberBinaryNumberConverterFunctions.multiply();
 
@@ -533,6 +536,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
      */
     private SpreadsheetServerContext createSpreadsheetServerContext(final Optional<EmailAddress> user) {
         return SpreadsheetServerContexts.basic(
+            MEDIA_TYPE_DETECTOR,
             MULTIPLER,
             SPREADSHEET_ENGINE,
             this::getOrCreateSpreadsheetStoreRepository,
@@ -588,6 +592,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         final SpreadsheetServerContext spreadsheetServerContext = this.getOrCreateSpreadsheetServerContext(user);
 
         final SpreadsheetEngineContext engineContext = SpreadsheetEngineContexts.spreadsheetEnvironmentContext(
+            MEDIA_TYPE_DETECTOR,
             MULTIPLER,
             spreadsheetServerContext, // SpreadsheetContextSupplier
             this.currencyContext.setLocaleContext(this.localeContext),
@@ -664,7 +669,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
      */
     private SpreadsheetHttpServer httpServer() {
         return SpreadsheetHttpServer.with(
-            ApacheTikaMediaTypeDetectors.apacheTika(),
+            MEDIA_TYPE_DETECTOR,
             this.fileServer,
             this::jettyHttpServer,
             this::getOrCreateSpreadsheetServerContext,
