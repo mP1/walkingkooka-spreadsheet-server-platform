@@ -448,9 +448,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         this.defaultUser = defaultUser;
         this.hasNow = hasNow;
 
-        this.localeContext = LocaleContexts.readOnly(
-            LocaleContexts.jre(this.defaultLocale)
-        );
+        this.localeContext = localeContext(this.defaultLocale);
 
         this.currencyContext = CurrencyContexts.readOnly(
             CurrencyContexts.jre(
@@ -705,6 +703,12 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
     private final AbsoluteUrl httpServerUrl;
 
+    private static LocaleContext localeContext(final Locale locale) {
+        return LocaleContexts.readOnly(
+            LocaleContexts.jre(locale)
+        );
+    }
+
     /**
      * Prepares and merges the default and user locale, loading defaults and more.
      */
@@ -735,7 +739,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                         SpreadsheetMetadataPropertyName.LOCALE,
                         selectedLocale
                     ).loadFromLocale(
-                        this.currencyContext.setLocaleContext(this.localeContext)
+                        this.currencyContext.setLocaleContext(
+                            localeContext(selectedLocale)
+                        )
                     ).set(
                         SpreadsheetMetadataPropertyName.CELL_CHARACTER_WIDTH,
                         1
@@ -854,7 +860,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             MULTIPLER,
             pluginStore,
             this.currencyContext.setLocaleContext(
-                LocaleContexts.jre(this.defaultLocale)
+                localeContext(this.defaultLocale)
             ),
             this.spreadsheetEnvironmentContext(user),
             jsonNodeMarshallUnmarshallContext

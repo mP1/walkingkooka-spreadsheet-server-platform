@@ -42,6 +42,7 @@ import walkingkooka.storage.StoragePath;
 import walkingkooka.storage.StorageValueInfo;
 
 import java.time.LocalDateTime;
+import java.util.Locale;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -50,7 +51,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
     SpreadsheetMetadataTesting {
 
     @Test
-    public void testSpreadsheetMetadataCreator() {
+    public void testSpreadsheetMetadataCreatorWithoutLocale() {
         final SpreadsheetMetadata metadata = JettyHttpServerSpreadsheetHttpServer.with(
             CHARSET,
             SERVER_URL,
@@ -69,6 +70,51 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
         ).spreadsheetMetadataCreator(
             USER,
             Optional.empty()
+        );
+
+        metadata.spreadsheetConverterContext(
+            SpreadsheetMetadata.NO_CELL,
+            CHARSET,
+            SpreadsheetConverterContexts.NO_VALIDATION_REFERENCE,
+            SpreadsheetMetadataPropertyName.FORMULA_CONVERTER,
+            HAS_USER_DIRECTORIES,
+            INDENTATION,
+            SPREADSHEET_LABEL_NAME_RESOLVER,
+            LINE_ENDING,
+            MULTIPLIER,
+            CONVERTER_PROVIDER,
+            CURRENCY_LOCALE_CONTEXT,
+            PROVIDER_CONTEXT
+        );
+    }
+
+    @Test
+    public void testSpreadsheetMetadataCreatorWithDifferentLocale() {
+        final Locale locale = Locale.forLanguageTag("en-NZ");
+
+        this.checkNotEquals(
+            locale,
+            LOCALE
+        );
+
+        final SpreadsheetMetadata metadata = JettyHttpServerSpreadsheetHttpServer.with(
+            CHARSET,
+            SERVER_URL,
+            IpPort.with(2000), // sshdPort
+            CURRENCY,
+            INDENTATION,
+            LINE_ENDING,
+            LOCALE,
+            (u) -> {
+                throw new UnsupportedOperationException();
+            },
+            Optional.of(
+                EmailAddress.parse("default-user@example.com")
+            ),
+            HAS_NOW
+        ).spreadsheetMetadataCreator(
+            USER,
+            Optional.of(locale)
         );
 
         metadata.spreadsheetConverterContext(
