@@ -83,6 +83,7 @@ import walkingkooka.spreadsheet.meta.SpreadsheetId;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataContext;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataContexts;
+import walkingkooka.spreadsheet.meta.SpreadsheetMetadataCreator;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataPropertyName;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataTesting;
 import walkingkooka.spreadsheet.meta.SpreadsheetName;
@@ -503,7 +504,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                 .cells()
         );
 
-        this.metadataCreateTemplate = this.metadataCreateTemplate();
+        this.spreadsheetMetadataCreator = this::spreadsheetMetadataCreator;
 
         this.spreadsheetMetadataContext = this.spreadsheetMetadataContext();
 
@@ -537,6 +538,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     private SpreadsheetServerContext createSpreadsheetServerContext(final Optional<EmailAddress> user) {
         return SpreadsheetServerContexts.basic(
             MEDIA_TYPE_DETECTOR,
+            this.spreadsheetMetadataCreator,
             MULTIPLER,
             SPREADSHEET_ENGINE,
             this::getOrCreateSpreadsheetStoreRepository,
@@ -552,6 +554,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             )
         );
     }
+
+    private final SpreadsheetMetadataCreator spreadsheetMetadataCreator;
 
     /**
      * Fetches or lazily creates a {@link Storage} for the given user, so each has their own individual and separate..
@@ -705,8 +709,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
      * Prepares and merges the default and user locale, loading defaults and more.
      */
     // @VisibleForTesting
-    SpreadsheetMetadata metadataCreateTemplate() {
-        final Locale defaultLocale = this.defaultLocale;
+    SpreadsheetMetadata spreadsheetMetadataCreator(final EmailAddress creator,
+                                                   final Optional<Locale> locale) {
+        final Locale selectedLocale = locale.orElse(this.defaultLocale);
 
         return SpreadsheetMetadata.EMPTY
             .set(
@@ -714,14 +719,22 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                 SpreadsheetName.with("Untitled")
             ).set(
                 SpreadsheetMetadataPropertyName.LOCALE,
-                defaultLocale
+                selectedLocale
+            ).set(
+                SpreadsheetMetadataPropertyName.AUDIT_INFO,
+                AuditInfo.create(
+                    creator,
+                    this.hasNow.now()
+                )
             ).set(
                 SpreadsheetMetadataPropertyName.VIEWPORT_HOME,
                 SpreadsheetSelection.A1
             ).setDefaults(
                 SpreadsheetMetadata.NON_LOCALE_DEFAULTS
-                    .set(SpreadsheetMetadataPropertyName.LOCALE, defaultLocale)
-                    .loadFromLocale(
+                    .set(
+                        SpreadsheetMetadataPropertyName.LOCALE,
+                        selectedLocale
+                    ).loadFromLocale(
                         this.currencyContext.setLocaleContext(this.localeContext)
                     ).set(
                         SpreadsheetMetadataPropertyName.CELL_CHARACTER_WIDTH,
@@ -771,20 +784,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             );
     }
 
-    private final SpreadsheetMetadata metadataCreateTemplate;
-
     private SpreadsheetMetadataContext spreadsheetMetadataContext() {
         return SpreadsheetMetadataContexts.basic(
-            (final EmailAddress creator,
-             final Optional<Locale> creatorLocale) -> this.metadataStore.save(
-                this.metadataCreateTemplate.set(
-                    SpreadsheetMetadataPropertyName.AUDIT_INFO,
-                    AuditInfo.create(
-                        creator,
-                        this.hasNow.now()
-                    )
-                )
-            ),
+            this.spreadsheetMetadataCreator,
             this.metadataStore
         );
     }

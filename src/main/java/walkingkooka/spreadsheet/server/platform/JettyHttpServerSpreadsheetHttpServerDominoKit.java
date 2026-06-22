@@ -35,7 +35,7 @@ public final class JettyHttpServerSpreadsheetHttpServerDominoKit {
                 Currency.getInstance("GBP").toString(),
                 Indentation.SPACES2.toString(), // indentation
                 LineEnding.NL.name(), // lineEnding
-                "EN-GB", // defaultLocale
+                "en-AU", // defaultLocale
                 fileSystemUris(
                     "file:///Users/miroslav/repos-github/walkingkooka-spreadsheet-server-platform/src/main/resources/", // api-doc etc
                     "file:///Users/miroslav/repos-github/walkingkooka-spreadsheet-dominokit/target/gwt/out/walkingkooka.spreadsheet.dominokit.App/", // gwt output
