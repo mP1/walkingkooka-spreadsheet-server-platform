@@ -50,7 +50,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
     SpreadsheetMetadataTesting {
 
     @Test
-    public void testMetadataCreateTemplate() {
+    public void testSpreadsheetMetadataCreator() {
         final SpreadsheetMetadata metadata = JettyHttpServerSpreadsheetHttpServer.with(
             CHARSET,
             SERVER_URL,
@@ -66,7 +66,10 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
                 EmailAddress.parse("default-user@example.com")
             ),
             HAS_NOW
-        ).metadataCreateTemplate();
+        ).spreadsheetMetadataCreator(
+            USER,
+            Optional.empty()
+        );
 
         metadata.spreadsheetConverterContext(
             SpreadsheetMetadata.NO_CELL,
