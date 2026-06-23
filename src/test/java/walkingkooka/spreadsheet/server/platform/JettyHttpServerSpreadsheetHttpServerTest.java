@@ -82,6 +82,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             SPREADSHEET_LABEL_NAME_RESOLVER,
             LINE_ENDING,
             MULTIPLIER,
+            SPREADSHEET_METADATA_LOADER,
             CONVERTER_PROVIDER,
             CURRENCY_LOCALE_CONTEXT,
             PROVIDER_CONTEXT
@@ -127,6 +128,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             SPREADSHEET_LABEL_NAME_RESOLVER,
             LINE_ENDING,
             MULTIPLIER,
+            SPREADSHEET_METADATA_LOADER,
             CONVERTER_PROVIDER,
             CURRENCY_LOCALE_CONTEXT,
             PROVIDER_CONTEXT
