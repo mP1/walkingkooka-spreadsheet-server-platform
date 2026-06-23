@@ -536,7 +536,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     private SpreadsheetServerContext createSpreadsheetServerContext(final Optional<EmailAddress> user) {
         return SpreadsheetServerContexts.basic(
             MEDIA_TYPE_DETECTOR,
-            this.spreadsheetMetadataCreator,
             MULTIPLER,
             SPREADSHEET_ENGINE,
             this::getOrCreateSpreadsheetStoreRepository,
@@ -552,8 +551,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             )
         );
     }
-
-    private final SpreadsheetMetadataCreator spreadsheetMetadataCreator;
 
     /**
      * Fetches or lazily creates a {@link Storage} for the given user, so each has their own individual and separate..
@@ -796,6 +793,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             this.metadataStore
         );
     }
+
+    private final SpreadsheetMetadataCreator spreadsheetMetadataCreator;
 
     private final SpreadsheetMetadataContext spreadsheetMetadataContext;
 
