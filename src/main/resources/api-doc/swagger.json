@@ -1486,7 +1486,7 @@
         }
       }
     },
-    "/api/spreadsheet/{spreadsheet-id}/cell/{cell-OR-cell-range-OR-label}/find": {
+    "/api/spreadsheet/{spreadsheet-id}/cell/{cell-OR-cell-range-OR-label}/query": {
       "get": {
         "tags": [
           "cell"
