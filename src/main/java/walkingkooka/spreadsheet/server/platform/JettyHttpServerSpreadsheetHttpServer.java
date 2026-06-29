@@ -593,6 +593,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         final SpreadsheetEngineContext engineContext = SpreadsheetEngineContexts.spreadsheetEnvironmentContext(
             MEDIA_TYPE_DETECTOR,
             MULTIPLER,
+            SPREADSHEET_ENGINE,
             spreadsheetServerContext, // SpreadsheetContextSupplier
             this.currencyContext.setLocaleContext(this.localeContext),
             SpreadsheetEnvironmentContexts.basic(
