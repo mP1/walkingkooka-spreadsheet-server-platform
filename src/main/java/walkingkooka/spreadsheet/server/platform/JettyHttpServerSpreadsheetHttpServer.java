@@ -48,6 +48,7 @@ import walkingkooka.net.header.apache.tika.ApacheTikaMediaTypeDetectors;
 import walkingkooka.net.http.HttpStatus;
 import walkingkooka.net.http.HttpStatusCode;
 import walkingkooka.net.http.server.HttpHandler;
+import walkingkooka.net.http.server.HttpHandlerContext;
 import walkingkooka.net.http.server.HttpServer;
 import walkingkooka.net.http.server.WebFile;
 import walkingkooka.net.http.server.WebFiles;
@@ -95,6 +96,7 @@ import walkingkooka.spreadsheet.provider.SpreadsheetProvider;
 import walkingkooka.spreadsheet.provider.SpreadsheetProviderContexts;
 import walkingkooka.spreadsheet.provider.SpreadsheetProviders;
 import walkingkooka.spreadsheet.reference.SpreadsheetSelection;
+import walkingkooka.spreadsheet.server.FakeSpreadsheetServerContext;
 import walkingkooka.spreadsheet.server.SpreadsheetHttpServer;
 import walkingkooka.spreadsheet.server.SpreadsheetServerContext;
 import walkingkooka.spreadsheet.server.SpreadsheetServerContexts;
@@ -683,7 +685,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
      * Creates a {@link JettyHttpServer} given the given host and port.
      */
     @GwtIncompatible
-    private HttpServer jettyHttpServer(final HttpHandler httpHandler) {
+    private HttpServer jettyHttpServer(final HttpHandler<HttpHandlerContext> httpHandler) {
         final AbsoluteUrl serverUrl = this.httpServerUrl;
 
         return JettyHttpServer.with(
@@ -695,7 +697,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                         IpPort.HTTP :
                         IpPort.HTTPS
                 ),
-            httpHandler
+            httpHandler,
+            new FakeSpreadsheetServerContext()
         );
     }
 
