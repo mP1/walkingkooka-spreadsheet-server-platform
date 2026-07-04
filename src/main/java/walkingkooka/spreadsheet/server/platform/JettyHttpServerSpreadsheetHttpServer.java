@@ -52,8 +52,8 @@ import walkingkooka.net.http.server.HttpHandlerContext;
 import walkingkooka.net.http.server.HttpServer;
 import walkingkooka.net.http.server.WebFile;
 import walkingkooka.net.http.server.WebFiles;
-import walkingkooka.net.http.server.hateos.HateosResourceHandlerContext;
-import walkingkooka.net.http.server.hateos.HateosResourceHandlerContexts;
+import walkingkooka.net.http.server.hateos.HateosHandlerContext;
+import walkingkooka.net.http.server.hateos.HateosHandlerContexts;
 import walkingkooka.net.http.server.jetty.JettyHttpServer;
 import walkingkooka.plugin.JarFileTesting;
 import walkingkooka.plugin.PluginArchiveManifest;
@@ -545,7 +545,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             this.currencyContext.setLocaleContext(this.localeContext),
             this.spreadsheetEnvironmentContext(user),
             this.spreadsheetMetadataContext,
-            this.hateosResourceHandlerContext(),
+            this.hateosHandlerContext(),
             this.providerContext(user),
             TerminalServerContexts.userFiltered(
                 user::equals, // only show current user TerminalContext.
@@ -658,8 +658,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
     private final Map<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository = Maps.concurrent();
 
-    private HateosResourceHandlerContext hateosResourceHandlerContext() {
-        return HateosResourceHandlerContexts.basic(
+    private HateosHandlerContext hateosHandlerContext() {
+        return HateosHandlerContexts.basic(
             this.indentation,
             this.lineEnding,
             jsonNodeMarshallUnmarshallContext
