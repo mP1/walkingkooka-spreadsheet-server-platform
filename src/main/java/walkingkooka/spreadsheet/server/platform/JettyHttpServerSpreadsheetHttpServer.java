@@ -671,7 +671,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
      */
     private SpreadsheetHttpServer httpServer() {
         return SpreadsheetHttpServer.with(
-            MEDIA_TYPE_DETECTOR,
             this.fileServer,
             this::jettyHttpServer,
             this::getOrCreateSpreadsheetServerContext,
