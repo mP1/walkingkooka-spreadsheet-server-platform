@@ -95,7 +95,6 @@ import walkingkooka.spreadsheet.provider.SpreadsheetProvider;
 import walkingkooka.spreadsheet.provider.SpreadsheetProviderContexts;
 import walkingkooka.spreadsheet.provider.SpreadsheetProviders;
 import walkingkooka.spreadsheet.reference.SpreadsheetSelection;
-import walkingkooka.spreadsheet.server.FakeSpreadsheetServerContext;
 import walkingkooka.spreadsheet.server.SpreadsheetHttpServer;
 import walkingkooka.spreadsheet.server.SpreadsheetServerContext;
 import walkingkooka.spreadsheet.server.SpreadsheetServerContexts;
@@ -696,7 +695,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                         IpPort.HTTPS
                 ),
             httpHandler,
-            new FakeSpreadsheetServerContext()
+            this.createSpreadsheetServerContext(this.defaultUser)
         );
     }
 
