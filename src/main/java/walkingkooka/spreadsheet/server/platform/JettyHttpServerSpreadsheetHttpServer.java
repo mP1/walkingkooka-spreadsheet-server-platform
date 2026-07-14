@@ -857,6 +857,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         );
 
         return SpreadsheetProviderContexts.spreadsheet(
+            MEDIA_TYPE_DETECTOR,
             MULTIPLER,
             pluginStore,
             this.currencyContext.setLocaleContext(
