@@ -74,17 +74,15 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
 
         metadata.spreadsheetConverterContext(
             SpreadsheetMetadata.NO_CELL,
-            CHARSET,
             SpreadsheetConverterContexts.NO_VALIDATION_REFERENCE,
             SpreadsheetMetadataPropertyName.FORMULA_CONVERTER,
             HAS_USER_DIRECTORIES,
-            INDENTATION,
             SPREADSHEET_LABEL_NAME_RESOLVER,
-            LINE_ENDING,
             MEDIA_TYPE_DETECTOR,
             MULTIPLIER,
             SPREADSHEET_METADATA_LOADER,
             CONVERTER_PROVIDER,
+            BINARY_TEXT_CONTEXT,
             CURRENCY_LOCALE_CONTEXT,
             PROVIDER_CONTEXT
         );
@@ -121,17 +119,15 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
 
         metadata.spreadsheetConverterContext(
             SpreadsheetMetadata.NO_CELL,
-            CHARSET,
             SpreadsheetConverterContexts.NO_VALIDATION_REFERENCE,
             SpreadsheetMetadataPropertyName.FORMULA_CONVERTER,
             HAS_USER_DIRECTORIES,
-            INDENTATION,
             SPREADSHEET_LABEL_NAME_RESOLVER,
-            LINE_ENDING,
             MEDIA_TYPE_DETECTOR,
             MULTIPLIER,
             SPREADSHEET_METADATA_LOADER,
             CONVERTER_PROVIDER,
+            BINARY_TEXT_CONTEXT,
             CURRENCY_LOCALE_CONTEXT,
             PROVIDER_CONTEXT
         );
