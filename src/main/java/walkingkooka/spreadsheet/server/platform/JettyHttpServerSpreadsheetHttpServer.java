@@ -113,6 +113,7 @@ import walkingkooka.terminal.server.TerminalServerContexts;
 import walkingkooka.text.CharSequences;
 import walkingkooka.text.Indentation;
 import walkingkooka.text.LineEnding;
+import walkingkooka.text.TextPrinting;
 import walkingkooka.tree.expression.ExpressionNumberKind;
 import walkingkooka.tree.expression.convert.ExpressionNumberBinaryNumberConverterFunctions;
 import walkingkooka.tree.json.marshall.JsonNodeMarshallContexts;
@@ -658,9 +659,11 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
     private HateosHandlerContext hateosHandlerContext() {
         return HateosHandlerContexts.basic(
-            this.indentation,
-            this.lineEnding,
-            jsonNodeMarshallUnmarshallContext
+            jsonNodeMarshallUnmarshallContext,
+            TextPrinting.with(
+                this.indentation,
+                this.lineEnding
+            )
         );
     }
 
