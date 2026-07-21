@@ -659,11 +659,11 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
     private HateosHandlerContext hateosHandlerContext() {
         return HateosHandlerContexts.basic(
-            jsonNodeMarshallUnmarshallContext,
             TextPrinting.with(
                 this.indentation,
                 this.lineEnding
-            )
+            ).setCharset(this.charset),
+            jsonNodeMarshallUnmarshallContext
         );
     }
 
