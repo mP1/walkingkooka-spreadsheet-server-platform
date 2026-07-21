@@ -3197,6 +3197,182 @@
         }
       }
     },
+    "/api/spreadsheet/{spreadsheet-id}/storage/{storage-path}": {
+      "get": {
+        "tags": [
+          "storage"
+        ],
+        "description": "paths ending in slash will list all storage values, while other paths will get the storage value as a file.",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          },
+          {
+            "name": "storage-path",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "#ref": "#/components/schemas/StoragePath"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Offset"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Count"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StorageValueInfoList"
+                }
+              },
+              "application/octet-stream": {
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "storage"
+        ],
+        "summary": "Upload a new or replace an existing StorageValue",
+        "requestBody": {
+          "content": {
+            "application/octet-stream": {
+              "schema": {
+                "type": "string",
+                "format": "binary"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "type:": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            },
+            "text/base64": {
+              "schema": {
+                "type": "string",
+                "format": "base64",
+                "example": ""
+              }
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "accept",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/Accept"
+            }
+          },
+          {
+            "name": "content-disposition",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "$ref": "#/components/schemas/ContentDisposition"
+            }
+          },
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          },
+          {
+            "name": "storage-path",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "#ref": "#/components/schemas/StoragePath"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK"
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "storage"
+        ],
+        "description": "Deletes the matching StorageValue if one exists",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          },
+          {
+            "name": "storage-path",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "#ref": "#/components/schemas/StoragePath"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not found"
+          }
+        }
+      }
+    },
     "/api/validator": {
       "get": {
         "tags": [
@@ -3659,6 +3835,14 @@
       },
       "LocaleLanguageTag": {
         "type": "string"
+      },
+      "MediaType": {
+        "type": "string",
+        "minLength": 1,
+        "example": [
+          "application/octet-stream",
+          "text/plain"
+        ]
       },
       "MissingConverter": {
         "type": "object",
@@ -4277,6 +4461,31 @@
           "$2",
           "3:4"
         ]
+      },
+      "StoragePath": {
+        "type": "string",
+        "minLength": 1,
+        "example": "/path1/path2/file.txt"
+      },
+      "StorageValueInfo": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "$ref" : "#/components/schemas/StoragePath"
+          },
+          "value": {
+            "type" : "object"
+          },
+          "contentType": {
+            "$ref" : "#/components/schemas/MediaType"
+          }
+        }
+      },
+      "StorageValueInfoList": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/StorageValueInfo"
+        }
       },
       "TextNode": {
         "type": "object"
