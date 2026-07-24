@@ -30,6 +30,7 @@ import walkingkooka.currency.CurrencyContext;
 import walkingkooka.currency.CurrencyContexts;
 import walkingkooka.currency.CurrencyExchange;
 import walkingkooka.currency.CurrencyExchangeRater;
+import walkingkooka.currency.CurrencyLocaleContext;
 import walkingkooka.datetime.HasNow;
 import walkingkooka.environment.AuditInfo;
 import walkingkooka.environment.EnvironmentContext;
@@ -487,11 +488,13 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             )
         );
 
+        this.currencyLocaleContext = this.currencyContext.setLocaleContext(this.localeContext);
+
         this.jsonNodeMarshallUnmarshallContext = JsonNodeMarshallUnmarshallContexts.basic(
             JsonNodeMarshallContexts.basic(),
             JsonNodeUnmarshallContexts.basic(
                 ExpressionNumberKind.DEFAULT,
-                this.currencyContext.setLocaleContext(this.localeContext),
+                this.currencyLocaleContext,
                 MathContext.DECIMAL32
             )
         );
@@ -541,7 +544,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             SPREADSHEET_ENGINE,
             this::getOrCreateSpreadsheetStoreRepository,
             this.spreadsheetProvider,
-            this.currencyContext.setLocaleContext(this.localeContext),
+            this.currencyLocaleContext,
             this.spreadsheetEnvironmentContext(user),
             this.spreadsheetMetadataContext,
             this.hateosHandlerContext(),
@@ -596,7 +599,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             MULTIPLER,
             SPREADSHEET_ENGINE,
             spreadsheetServerContext, // SpreadsheetContextSupplier
-            this.currencyContext.setLocaleContext(this.localeContext),
+            this.currencyLocaleContext,
             SpreadsheetEnvironmentContexts.basic(
                 this.storage(user),
                 terminalContext
@@ -863,9 +866,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             MEDIA_TYPE_DETECTOR,
             MULTIPLER,
             pluginStore,
-            this.currencyContext.setLocaleContext(
-                localeContext(this.defaultLocale)
-            ),
+            this.currencyLocaleContext,
             this.spreadsheetEnvironmentContext(user),
             jsonNodeMarshallUnmarshallContext
         );
@@ -1026,7 +1027,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             SpreadsheetMetadataPropertyName.LOCALE,
             this.defaultLocale
         ).loadFromLocale(
-            this.currencyContext.setLocaleContext(this.localeContext)
+            this.currencyLocaleContext
         );
 
         for (final EnvironmentValueName<?> environmentValueName : SpreadsheetEnvironmentContextFactory.ENVIRONMENT_VALUE_NAMES) {
@@ -1069,6 +1070,8 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     }
 
     private final CurrencyContext currencyContext;
+
+    private final CurrencyLocaleContext currencyLocaleContext;
 
     private final LocaleContext localeContext;
 }
