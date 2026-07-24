@@ -777,11 +777,11 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                         SpreadsheetExpressionFunctionProviders.FIND
                     ).set(
                         SpreadsheetMetadataPropertyName.ROUNDING_MODE,
-                        RoundingMode.HALF_UP)
-                    .set(
+                        RoundingMode.HALF_UP
+                    ).set(
                         SpreadsheetMetadataPropertyName.TEXT_FORMATTER,
-                        SpreadsheetPattern.DEFAULT_TEXT_FORMAT_PATTERN.spreadsheetFormatterSelector())
-                    .set(
+                        SpreadsheetPattern.DEFAULT_TEXT_FORMAT_PATTERN.spreadsheetFormatterSelector()
+                    ).set(
                         SpreadsheetMetadataPropertyName.TWO_DIGIT_YEAR,
                         20
                     ).set(
