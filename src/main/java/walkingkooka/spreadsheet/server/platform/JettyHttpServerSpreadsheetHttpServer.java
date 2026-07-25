@@ -44,6 +44,7 @@ import walkingkooka.net.Url;
 import walkingkooka.net.UrlPath;
 import walkingkooka.net.UrlScheme;
 import walkingkooka.net.email.EmailAddress;
+import walkingkooka.net.header.ETagComputers;
 import walkingkooka.net.header.MediaTypeDetector;
 import walkingkooka.net.header.apache.tika.ApacheTikaMediaTypeDetectors;
 import walkingkooka.net.http.HttpStatus;
@@ -666,6 +667,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                 this.indentation,
                 this.lineEnding
             ).setCharset(this.charset),
+            ETagComputers.never(),
             jsonNodeMarshallUnmarshallContext
         );
     }
