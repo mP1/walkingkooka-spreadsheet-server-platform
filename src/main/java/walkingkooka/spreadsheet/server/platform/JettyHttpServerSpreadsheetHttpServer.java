@@ -667,7 +667,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                 this.indentation,
                 this.lineEnding
             ).setCharset(this.charset),
-            ETagComputers.never(),
+            ETagComputers.md5(),
             jsonNodeMarshallUnmarshallContext
         );
     }
