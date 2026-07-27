@@ -63,6 +63,7 @@ import walkingkooka.plugin.ProviderContext;
 import walkingkooka.plugin.store.Plugin;
 import walkingkooka.plugin.store.PluginStore;
 import walkingkooka.plugin.store.PluginStores;
+import walkingkooka.predicate.Predicates;
 import walkingkooka.spreadsheet.compare.provider.SpreadsheetComparatorProviders;
 import walkingkooka.spreadsheet.convert.SpreadsheetConverterContext;
 import walkingkooka.spreadsheet.convert.provider.SpreadsheetConvertersConverterProviders;
@@ -1067,7 +1068,10 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         spreadsheetEnvironmentContext.setLineEnding(TerminalContext.TERMINAL_LINE_ENDING);
         spreadsheetEnvironmentContext.setTimeOffset(ZoneOffset.UTC);
 
-        return SpreadsheetEnvironmentContexts.readOnly(spreadsheetEnvironmentContext);
+        return SpreadsheetEnvironmentContexts.readOnly(
+            Predicates.always(), // all values are readonly
+            spreadsheetEnvironmentContext
+        );
     }
 
     private final CurrencyContext currencyContext;
