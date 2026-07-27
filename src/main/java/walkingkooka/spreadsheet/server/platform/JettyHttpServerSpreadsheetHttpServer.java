@@ -105,6 +105,7 @@ import walkingkooka.spreadsheet.storage.SpreadsheetStorages;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepositories;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepository;
 import walkingkooka.storage.Storage;
+import walkingkooka.storage.StorageEnvironmentContexts;
 import walkingkooka.storage.Storages;
 import walkingkooka.terminal.TerminalContext;
 import walkingkooka.terminal.TerminalContexts;
@@ -603,7 +604,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             this.currencyLocaleContext,
             SpreadsheetEnvironmentContexts.basic(
                 this.storage(user),
-                terminalContext
+                StorageEnvironmentContexts.basic(terminalContext)
             ),
             this.spreadsheetMetadataContext,
             terminalContext,
@@ -910,7 +911,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         );
         return SpreadsheetEnvironmentContexts.basic(
             this.storage(user),
-            environmentContext
+            StorageEnvironmentContexts.basic(environmentContext)
         );
     }
 
