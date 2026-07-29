@@ -565,13 +565,15 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     private Storage<SpreadsheetStorageContext> storage(final Optional<EmailAddress> user) {
         Storage<SpreadsheetStorageContext> storage = this.userToStorage.get(user);
         if (null == storage) {
-            storage = SpreadsheetStorages.router(
-                SpreadsheetStorages.cell(),
-                SpreadsheetStorages.env(),
-                SpreadsheetStorages.form(),
-                SpreadsheetStorages.label(),
-                SpreadsheetStorages.metadata(),
-                Storages.treeMapStore()
+            storage = Storages.homeDirectory(
+                SpreadsheetStorages.router(
+                    SpreadsheetStorages.cell(),
+                    SpreadsheetStorages.env(),
+                    SpreadsheetStorages.form(),
+                    SpreadsheetStorages.label(),
+                    SpreadsheetStorages.metadata(),
+                    Storages.treeMapStore()
+                )
             );
 
             this.userToStorage.put(
