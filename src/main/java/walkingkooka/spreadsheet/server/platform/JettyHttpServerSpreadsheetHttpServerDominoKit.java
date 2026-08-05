@@ -39,7 +39,7 @@ public final class JettyHttpServerSpreadsheetHttpServerDominoKit {
                 fileSystemUris(
                     "file:///Users/miroslav/repos-github/walkingkooka-spreadsheet-server-platform/src/main/resources/", // api-doc etc
                     "file:///Users/miroslav/repos-github/walkingkooka-spreadsheet-dominokit/target/gwt/out/walkingkooka.spreadsheet.dominokit.App/", // gwt output
-                    "jar:file:///Users/miroslav/.m2/repository/org/dominokit/domino-ui/2.0.5/domino-ui-2.0.5.jar!META-INF/resources/webjars/" // domino-ui *.css
+                    "jar:file:///Users/miroslav/.m2/repository/org/dominokit/domino-ui/2.1.0/domino-ui-2.1.0.jar!META-INF/resources/webjars/" // domino-ui *.css
                 ),
                 "defaultAuthenticatedUser@example.com" // systemUser
             }
