@@ -36,20 +36,9 @@ public final class JettyHttpServerSpreadsheetHttpServerDominoKit {
                 Indentation.SPACES2.toString(), // indentation
                 LineEnding.NL.name(), // lineEnding
                 "en-AU", // defaultLocale
-                fileSystemUris(
-                    "file:///Users/miroslav/repos-github/walkingkooka-spreadsheet-server-platform/src/main/resources/", // api-doc etc
-                    "file:///Users/miroslav/repos-github/walkingkooka-spreadsheet-dominokit/target/gwt/out/walkingkooka.spreadsheet.dominokit.App/", // gwt output
-                    "jar:file:///Users/miroslav/.m2/repository/org/dominokit/domino-ui/2.1.0/domino-ui-2.1.0.jar!META-INF/resources/webjars/" // domino-ui *.css
-                ),
+                JettyHttpServerSpreadsheetHttpServer.DEV_MODE,
                 "defaultAuthenticatedUser@example.com" // systemUser
             }
-        );
-    }
-
-    private static String fileSystemUris(final String... uris) {
-        return String.join(
-            ",",
-            uris
         );
     }
 }

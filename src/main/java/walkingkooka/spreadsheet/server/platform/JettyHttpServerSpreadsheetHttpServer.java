@@ -20,8 +20,6 @@ package walkingkooka.spreadsheet.server.platform;
 import javaemul.internal.annotations.GwtIncompatible;
 import walkingkooka.Binary;
 import walkingkooka.Cast;
-import walkingkooka.Either;
-import walkingkooka.collect.list.Lists;
 import walkingkooka.collect.map.Maps;
 import walkingkooka.convert.BinaryNumberConverterFunction;
 import walkingkooka.convert.Converters;
@@ -47,13 +45,9 @@ import walkingkooka.net.email.EmailAddress;
 import walkingkooka.net.header.ETagComputers;
 import walkingkooka.net.header.MediaTypeDetector;
 import walkingkooka.net.header.apache.tika.ApacheTikaMediaTypeDetectors;
-import walkingkooka.net.http.HttpStatus;
-import walkingkooka.net.http.HttpStatusCode;
 import walkingkooka.net.http.server.HttpHandler;
-import walkingkooka.net.http.server.HttpHandlers;
 import walkingkooka.net.http.server.HttpServer;
 import walkingkooka.net.http.server.WebFile;
-import walkingkooka.net.http.server.WebFiles;
 import walkingkooka.net.http.server.hateos.HateosHandlerContext;
 import walkingkooka.net.http.server.hateos.HateosHandlerContexts;
 import walkingkooka.net.http.server.jetty.JettyHttpServer;
@@ -125,7 +119,6 @@ import walkingkooka.tree.json.marshall.JsonNodeMarshallContexts;
 import walkingkooka.tree.json.marshall.JsonNodeMarshallUnmarshallContext;
 import walkingkooka.tree.json.marshall.JsonNodeMarshallUnmarshallContexts;
 import walkingkooka.tree.json.marshall.JsonNodeUnmarshallContexts;
-import walkingkooka.util.SystemProperty;
 import walkingkooka.validation.form.provider.FormHandlerProviders;
 import walkingkooka.validation.provider.ValidatorProviders;
 
@@ -134,22 +127,15 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystem;
-import java.nio.file.FileSystems;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Currency;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicLong;
-import java.util.function.Function;
 
 /**
  * Creates a {@link SpreadsheetHttpServer} with memory stores using a Jetty server using the scheme/host/port from cmd line arguments.
@@ -168,21 +154,21 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     public static void main(final String[] args) throws Exception {
         switch (args.length) {
             case 0:
-                throw new IllegalArgumentException("Missing charset, httpServerUrl, sshdPort, indentation, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing charset, httpServerUrl, sshdPort, indentation, lineEnding, defaultLocale, publicHttpHandler, defaultUser for jetty HttpServer");
             case 1:
-                throw new IllegalArgumentException("Missing httpServerUrl, sshdPort, indentation, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing httpServerUrl, sshdPort, indentation, lineEnding, defaultLocale, publicHttpHandler, defaultUser for jetty HttpServer");
             case 2:
-                throw new IllegalArgumentException("Missing sshdPort, currency, indentation, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing sshdPort, currency, indentation, lineEnding, defaultLocale, publicHttpHandler, defaultUser for jetty HttpServer");
             case 3:
-                throw new IllegalArgumentException("Missing currency, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing currency, lineEnding, defaultLocale, publicHttpHandler, defaultUser for jetty HttpServer");
             case 4:
-                throw new IllegalArgumentException("Missing indentation, lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing indentation, lineEnding, defaultLocale, publicHttpHandler, defaultUser for jetty HttpServer");
             case 5:
-                throw new IllegalArgumentException("Missing lineEnding, defaultLocale, file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing lineEnding, defaultLocale, publicHttpHandler, defaultUser for jetty HttpServer");
             case 6:
-                throw new IllegalArgumentException("Missing default Locale, file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing default Locale, publicHttpHandler, defaultUser for jetty HttpServer");
             case 7:
-                throw new IllegalArgumentException("Missing file server root, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing publicHttpHandler, defaultUser for jetty HttpServer");
             case 8:
                 throw new IllegalArgumentException("Missing defaultUser for jetty HttpServer");
             default:
@@ -275,129 +261,28 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         return defaultLocale;
     }
 
+    final static String DEV_MODE = "devMode";
+
     /**
      * A factory that takes a string with uris (currently only a file and jar) creating a function that
      * returns a {@link WebFile} for a {@link UrlPath}.
      */
     private static HttpHandler<SpreadsheetServerContext> publicServer(final String string) throws IOException {
-        final List<Function<UrlPath, Either<WebFile, HttpStatus>>> fileSystems = Lists.array();
+        final HttpHandler<SpreadsheetServerContext> httpServer;
 
-        for (final String uri : string.split(",")) {
-            if (uri.startsWith("file://")) {
-                fileSystems.add(
-                    fileFileServer(uri)
-                );
-                continue;
-            }
-            if (uri.startsWith("jar:file://")) {
-                fileSystems.add(
-                    jarFileServer(uri)
-                );
-                continue;
-            }
-
-            throw new IllegalArgumentException("Unsupported uri: " + CharSequences.quoteAndEscape(uri));
+        switch(string) {
+            case DEV_MODE:
+                httpServer = DominoKitDevModeHttpHandler.INSTANCE;
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid publicServer: " + CharSequences.quoteAndEscape(string));
         }
 
-        return HttpHandlers.webFile(
-            UrlPath.ROOT,
-            (p) -> {
-                Either<WebFile, HttpStatus> result = NOT_FOUND;
-
-                for (final Function<UrlPath, Either<WebFile, HttpStatus>> possible : fileSystems) {
-                    result = possible.apply(p);
-                    if (result.isLeft()) {
-                        break;
-                    }
-                }
-
-                return result;
-            }
-        );
+        return httpServer;
     }
-
-    /**
-     * Creates a function which uses the path within the file uri as the base directory for file requests.
-     */
-    private static Function<UrlPath, Either<WebFile, HttpStatus>> fileFileServer(final String uri) {
-        final String basePath = uri.substring("file://".length());
-        if (false == Files.isDirectory(Paths.get(basePath))) {
-            throw new IllegalArgumentException("GWT codesrvr files directory not found: " + CharSequences.quoteAndEscape(basePath));
-        }
-
-        final String pathSeparator = SystemProperty.FILE_SEPARATOR.requiredPropertyValue();
-
-        final String base = basePath.endsWith(pathSeparator) ?
-            basePath :
-            basePath + pathSeparator;
-
-        return (p) -> {
-            Either<WebFile, HttpStatus> result = NOT_FOUND;
-
-            final String urlPath = p.value();
-            final String path = base +
-                (urlPath.startsWith("/") ?
-                    urlPath.substring(1) :
-                    urlPath
-                );
-
-            final Path file = Paths.get(path);
-            if (Files.isRegularFile(file)) {
-                result = Either.left(webFile(file));
-            }
-
-            return result;
-        };
-    }
-
-    /**
-     * Creates a function which sources files from within the jar within the file URI.
-     */
-    private static Function<UrlPath, Either<WebFile, HttpStatus>> jarFileServer(final String uri) throws IOException {
-        final int endOfJar = uri.indexOf('!');
-        if (-1 == endOfJar) {
-            throw new IllegalArgumentException("Missing end of jar file from " + CharSequences.quoteAndEscape(uri));
-        }
-
-        final FileSystem fileSystem = FileSystems.newFileSystem(
-            Paths.get(
-                uri.substring(
-                    "jar:file://".length(),
-                    endOfJar
-                )
-            ),
-            ClassLoader.getSystemClassLoader()
-        );
-
-        final String base = uri.substring(endOfJar + 1);
-
-        return (p) -> {
-            Either<WebFile, HttpStatus> result = NOT_FOUND;
-
-            final String path = base + p.value().substring(1);
-
-            final Path file = fileSystem.getPath(path);
-            if (Files.isRegularFile(file)) {
-                result = Either.left(webFile(file));
-            }
-
-            return result;
-        };
-    }
-
-
-    private final static Either<WebFile, HttpStatus> NOT_FOUND = Either.right(HttpStatusCode.NOT_FOUND.status());
 
     private final JsonNodeMarshallUnmarshallContext jsonNodeMarshallUnmarshallContext;
-
-    private static WebFile webFile(final Path file) {
-        return WebFiles.file(
-            file,
-            ApacheTikaMediaTypeDetectors.apacheTika(),
-            (b) -> Optional.empty()
-        );
-    }
-
+    
     private static Optional<EmailAddress> user(final String string) {
         final EmailAddress emailAddress;
 
@@ -453,7 +338,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         this.indentation = indentation;
         this.lineEnding = lineEnding;
         this.defaultLocale = defaultLocale;
-        this.publicServer = publicServer;
+        this.publicServer = DominoKitDevModeHttpHandler.INSTANCE;
         this.defaultUser = defaultUser;
         this.hasNow = hasNow;
 
