@@ -23,6 +23,8 @@ import walkingkooka.environment.AuditInfo;
 import walkingkooka.environment.ReadOnlyEnvironmentValueException;
 import walkingkooka.net.IpPort;
 import walkingkooka.net.email.EmailAddress;
+import walkingkooka.net.http.server.HttpHandler;
+import walkingkooka.net.http.server.HttpHandlers;
 import walkingkooka.reflect.ClassTesting2;
 import walkingkooka.reflect.JavaVisibility;
 import walkingkooka.spreadsheet.SpreadsheetContext;
@@ -50,6 +52,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTesting2<JettyHttpServerSpreadsheetHttpServer>,
     SpreadsheetMetadataTesting {
 
+    private final static HttpHandler<SpreadsheetServerContext> PUBLIC_HTTP_HANDLER = HttpHandlers.fake();
+
     @Test
     public void testSpreadsheetMetadataCreatorWithoutLocale() {
         final SpreadsheetMetadata metadata = JettyHttpServerSpreadsheetHttpServer.with(
@@ -60,9 +64,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             INDENTATION,
             LINE_ENDING,
             LOCALE,
-            (u) -> {
-                throw new UnsupportedOperationException();
-            },
+            PUBLIC_HTTP_HANDLER,
             Optional.of(
                 EmailAddress.parse("default-user@example.com")
             ),
@@ -105,9 +107,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             INDENTATION,
             LINE_ENDING,
             LOCALE,
-            (u) -> {
-                throw new UnsupportedOperationException();
-            },
+            PUBLIC_HTTP_HANDLER,
             Optional.of(
                 EmailAddress.parse("default-user@example.com")
             ),
@@ -143,9 +143,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             INDENTATION,
             LINE_ENDING,
             LOCALE,
-            (u) -> {
-                throw new UnsupportedOperationException();
-            },
+            PUBLIC_HTTP_HANDLER,
             Optional.of(
                 EmailAddress.parse("default-user@example.com")
             ),
@@ -199,9 +197,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             INDENTATION,
             LINE_ENDING,
             LOCALE,
-            (u) -> {
-                throw new UnsupportedOperationException();
-            },
+            PUBLIC_HTTP_HANDLER,
             Optional.of(
                 EmailAddress.parse("default-user@example.com")
             ),
