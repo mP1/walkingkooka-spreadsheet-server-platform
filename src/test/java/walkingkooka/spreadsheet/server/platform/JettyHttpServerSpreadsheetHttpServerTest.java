@@ -160,6 +160,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             Optional.of(LOCALE)
         );
 
+        spreadsheetContext.setCurrentWorkingDirectory(OPTIONAL_CURRENT_WORKING_DIRECTORY);
         spreadsheetContext.setHomeDirectory(OPTIONAL_HOME_DIRECTORY);
 
         final SpreadsheetEngineContext engineContext = spreadsheetContext.spreadsheetEngineContext();
