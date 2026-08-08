@@ -157,7 +157,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
     private final static MediaTypeDetector MEDIA_TYPE_DETECTOR = ApacheTikaMediaTypeDetectors.apacheTika();
 
-    private final static BinaryNumberConverterFunction<SpreadsheetConverterContext> MULTIPLER = ExpressionNumberBinaryNumberConverterFunctions.multiply();
+    private final static BinaryNumberConverterFunction<SpreadsheetConverterContext> MULTIPLIER = ExpressionNumberBinaryNumberConverterFunctions.multiply();
 
     private final static SpreadsheetEngine SPREADSHEET_ENGINE = SpreadsheetEngines.basic();
 
@@ -543,7 +543,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
     private SpreadsheetServerContext createSpreadsheetServerContext(final Optional<EmailAddress> user) {
         return SpreadsheetServerContexts.basic(
             MEDIA_TYPE_DETECTOR,
-            MULTIPLER,
+            MULTIPLIER,
             SPREADSHEET_ENGINE,
             this::getOrCreateSpreadsheetStoreRepository,
             this.spreadsheetProvider,
@@ -601,7 +601,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
         final SpreadsheetEngineContext engineContext = SpreadsheetEngineContexts.spreadsheetEnvironmentContext(
             MEDIA_TYPE_DETECTOR,
-            MULTIPLER,
+            MULTIPLIER,
             SPREADSHEET_ENGINE,
             spreadsheetServerContext, // SpreadsheetContextSupplier
             this.currencyLocaleContext,
@@ -870,7 +870,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
         return SpreadsheetProviderContexts.spreadsheet(
             MEDIA_TYPE_DETECTOR,
-            MULTIPLER,
+            MULTIPLIER,
             pluginStore,
             this.currencyLocaleContext,
             this.spreadsheetEnvironmentContext(user),
