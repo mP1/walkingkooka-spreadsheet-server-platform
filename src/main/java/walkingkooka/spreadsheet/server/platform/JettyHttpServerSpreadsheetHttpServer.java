@@ -267,7 +267,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
      * A factory that takes a string with uris (currently only a file and jar) creating a function that
      * returns a {@link WebFile} for a {@link UrlPath}.
      */
-    private static HttpHandler<SpreadsheetServerContext> publicServer(final String string) throws IOException {
+    private static HttpHandler<SpreadsheetServerContext> publicServer(final String string) {
         final HttpHandler<SpreadsheetServerContext> httpServer;
 
         switch(string) {
