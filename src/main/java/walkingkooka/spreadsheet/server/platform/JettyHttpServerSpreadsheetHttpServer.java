@@ -275,7 +275,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                 httpServer = DominoKitDevModeHttpHandler.INSTANCE;
                 break;
             default:
-                throw new IllegalArgumentException("Invalid publicServer: " + CharSequences.quoteAndEscape(string));
+                final String message = "Invalid public server: " + CharSequences.quoteAndEscape(string);
+                System.err.println(message);
+                throw new IllegalArgumentException(message);
         }
 
         return httpServer;
