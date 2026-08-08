@@ -102,6 +102,7 @@ import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepositories;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepository;
 import walkingkooka.storage.Storage;
 import walkingkooka.storage.StorageEnvironmentContexts;
+import walkingkooka.storage.StoragePath;
 import walkingkooka.storage.Storages;
 import walkingkooka.terminal.TerminalContext;
 import walkingkooka.terminal.TerminalContexts;
@@ -963,6 +964,10 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
         spreadsheetEnvironmentContext.setLineEnding(TerminalContext.TERMINAL_LINE_ENDING);
         spreadsheetEnvironmentContext.setTimeOffset(ZoneOffset.UTC);
+
+        spreadsheetEnvironmentContext.setCurrentWorkingDirectory(
+            Optional.of(StoragePath.ROOT)
+        );
 
         return SpreadsheetEnvironmentContexts.readOnly(
             Predicates.always(), // all values are readonly
