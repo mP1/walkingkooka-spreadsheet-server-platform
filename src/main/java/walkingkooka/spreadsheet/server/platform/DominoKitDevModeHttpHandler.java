@@ -52,7 +52,7 @@ final class DominoKitDevModeHttpHandler implements HttpHandler<SpreadsheetServer
             .normalize()
             .value();
         try {
-            final InputStream inputStream;
+            InputStream inputStream;
 
             final File file = Paths.get("../walkingkooka-spreadsheet-dominokit/target/gwt/out/walkingkooka.spreadsheet.dominokit.App/" + path)
                 .toFile()
@@ -61,7 +61,9 @@ final class DominoKitDevModeHttpHandler implements HttpHandler<SpreadsheetServer
             if (file.exists()) {
                 inputStream = new FileInputStream(file);
             } else {
-                inputStream = null;
+                // necessary to try other resources such as /src/main/resources/api-doc
+                inputStream = this.getClass()
+                    .getResourceAsStream(path);
             }
 
             if (null != inputStream) {
