@@ -340,7 +340,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         this.indentation = indentation;
         this.lineEnding = lineEnding;
         this.defaultLocale = defaultLocale;
-        this.publicServer = DominoKitDevModeHttpHandler.INSTANCE;
+        this.publicServer = publicServer;
         this.defaultUser = defaultUser;
         this.hasNow = hasNow;
 
