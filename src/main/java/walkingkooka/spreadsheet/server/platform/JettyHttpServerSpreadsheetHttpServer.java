@@ -563,7 +563,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                 this.lineEnding
             ).setCharset(this.charset),
             ETagComputers.md5(),
-            jsonNodeMarshallUnmarshallContext
+            this.jsonNodeMarshallUnmarshallContext
         );
     }
 
@@ -765,7 +765,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             pluginStore,
             this.currencyLocaleContext,
             this.spreadsheetEnvironmentContext(user),
-            jsonNodeMarshallUnmarshallContext
+            this.jsonNodeMarshallUnmarshallContext
         );
     }
 
