@@ -50,6 +50,7 @@ import walkingkooka.net.header.apache.tika.ApacheTikaMediaTypeDetectors;
 import walkingkooka.net.http.HttpStatus;
 import walkingkooka.net.http.HttpStatusCode;
 import walkingkooka.net.http.server.HttpHandler;
+import walkingkooka.net.http.server.HttpHandlers;
 import walkingkooka.net.http.server.HttpServer;
 import walkingkooka.net.http.server.WebFile;
 import walkingkooka.net.http.server.WebFiles;
@@ -193,7 +194,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                     indentation(args[4]),
                     lineEnding(args[5]),
                     locale(args[6]),
-                    fileServer(args[7]),
+                    publicServer(args[7]),
                     user(args[8]),
                     LocalDateTime::now
                 ).start();
@@ -278,7 +279,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
      * A factory that takes a string with uris (currently only a file and jar) creating a function that
      * returns a {@link WebFile} for a {@link UrlPath}.
      */
-    private static Function<UrlPath, Either<WebFile, HttpStatus>> fileServer(final String string) throws IOException {
+    private static HttpHandler<SpreadsheetServerContext> publicServer(final String string) throws IOException {
         final List<Function<UrlPath, Either<WebFile, HttpStatus>>> fileSystems = Lists.array();
 
         for (final String uri : string.split(",")) {
@@ -298,18 +299,21 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             throw new IllegalArgumentException("Unsupported uri: " + CharSequences.quoteAndEscape(uri));
         }
 
-        return (p) -> {
-            Either<WebFile, HttpStatus> result = NOT_FOUND;
+        return HttpHandlers.webFile(
+            UrlPath.ROOT,
+            (p) -> {
+                Either<WebFile, HttpStatus> result = NOT_FOUND;
 
-            for (final Function<UrlPath, Either<WebFile, HttpStatus>> possible : fileSystems) {
-                result = possible.apply(p);
-                if (result.isLeft()) {
-                    break;
+                for (final Function<UrlPath, Either<WebFile, HttpStatus>> possible : fileSystems) {
+                    result = possible.apply(p);
+                    if (result.isLeft()) {
+                        break;
+                    }
                 }
-            }
 
-            return result;
-        };
+                return result;
+            }
+        );
     }
 
     /**
@@ -413,7 +417,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                                                             final Indentation indentation,
                                                             final LineEnding lineEnding,
                                                             final Locale defaultLocale,
-                                                            final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer,
+                                                            final HttpHandler<SpreadsheetServerContext> publicServer,
                                                             final Optional<EmailAddress> defaultUser,
                                                             final HasNow hasNow) {
         return new JettyHttpServerSpreadsheetHttpServer(
@@ -424,7 +428,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             indentation,
             lineEnding,
             defaultLocale,
-            fileServer,
+            publicServer,
             defaultUser,
             hasNow
         );
@@ -437,7 +441,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                                                  final Indentation indentation,
                                                  final LineEnding lineEnding,
                                                  final Locale defaultLocale,
-                                                 final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer,
+                                                 final HttpHandler<SpreadsheetServerContext> publicServer,
                                                  final Optional<EmailAddress> defaultUser,
                                                  final HasNow hasNow) {
         super();
@@ -449,7 +453,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         this.indentation = indentation;
         this.lineEnding = lineEnding;
         this.defaultLocale = defaultLocale;
-        this.fileServer = fileServer;
+        this.publicServer = publicServer;
         this.defaultUser = defaultUser;
         this.hasNow = hasNow;
 
@@ -681,14 +685,14 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
      */
     private SpreadsheetHttpServer httpServer() {
         return SpreadsheetHttpServer.with(
-            this.fileServer,
+            this.publicServer,
             this::jettyHttpServer,
             this::getOrCreateSpreadsheetServerContext,
             (r) -> this.defaultUser // hard-coded web user because authentication is not yet implemented
         );
     }
 
-    private final Function<UrlPath, Either<WebFile, HttpStatus>> fileServer;
+    private final HttpHandler<SpreadsheetServerContext> publicServer;
 
     /**
      * Creates a {@link JettyHttpServer} given the given host and port.
