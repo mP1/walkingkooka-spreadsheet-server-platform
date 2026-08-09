@@ -462,7 +462,6 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                 SpreadsheetStorages.homeDirectory(
                     SpreadsheetStorages.router(
                         SpreadsheetStorages.cell(),
-                        SpreadsheetStorages.env(),
                         SpreadsheetStorages.form(),
                         SpreadsheetStorages.label(),
                         SpreadsheetStorages.metadata(),
