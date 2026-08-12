@@ -991,7 +991,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             );
         }
 
-        spreadsheetEnvironmentContext.setLineEnding(TerminalContext.TERMINAL_LINE_ENDING);
+        spreadsheetEnvironmentContext.setLineEnding(LineEnding.TERMINAL);
         spreadsheetEnvironmentContext.setTimeOffset(ZoneOffset.UTC);
 
         return SpreadsheetEnvironmentContexts.readOnly(
