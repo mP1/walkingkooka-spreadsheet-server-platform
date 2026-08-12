@@ -97,11 +97,13 @@ import walkingkooka.spreadsheet.server.SpreadsheetHttpServer;
 import walkingkooka.spreadsheet.server.SpreadsheetServerContext;
 import walkingkooka.spreadsheet.server.SpreadsheetServerContexts;
 import walkingkooka.spreadsheet.storage.SpreadsheetStorageContext;
+import walkingkooka.spreadsheet.storage.SpreadsheetStorageContexts;
 import walkingkooka.spreadsheet.storage.SpreadsheetStorages;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepositories;
 import walkingkooka.spreadsheet.store.repo.SpreadsheetStoreRepository;
 import walkingkooka.storage.Storage;
 import walkingkooka.storage.StorageEnvironmentContexts;
+import walkingkooka.storage.StorageMountPoint;
 import walkingkooka.storage.StorageName;
 import walkingkooka.storage.StoragePath;
 import walkingkooka.storage.Storages;
@@ -459,16 +461,25 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         Storage<SpreadsheetStorageContext> storage = this.userToStorage.get(user);
 
         if (null == storage) {
-            storage = SpreadsheetStorages.currentWorkingDirectory(
-                SpreadsheetStorages.homeDirectory(
-                    SpreadsheetStorages.router(
-                        SpreadsheetStorages.cell(),
-                        SpreadsheetStorages.form(),
-                        SpreadsheetStorages.label(),
-                        SpreadsheetStorages.metadata(),
-                        Storages.treeMapStore()
+            storage = SpreadsheetStorages.mount(
+                SpreadsheetStorages.currentWorkingDirectory(
+                    SpreadsheetStorages.homeDirectory(
+                        SpreadsheetStorages.router(
+                            SpreadsheetStorages.cell(),
+                            SpreadsheetStorages.form(),
+                            SpreadsheetStorages.label(),
+                            SpreadsheetStorages.metadata(),
+                            Storages.treeMapStore()
+                        )
                     )
                 )
+            );
+            storage.mount(
+                StorageMountPoint.with(
+                    StoragePath.ENV_PREFIX,
+                    SpreadsheetStorages.env()
+                ),
+                SpreadsheetStorageContexts.fake()
             );
 
             this.userToStorage.put(
