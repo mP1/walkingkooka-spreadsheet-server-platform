@@ -778,6 +778,9 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             MEDIA_TYPE_DETECTOR,
             MULTIPLIER,
             pluginStore,
+            Cast.to(
+                this.storage(user)
+            ),
             this.currencyLocaleContext,
             this.spreadsheetEnvironmentContext(user),
             this.jsonNodeMarshallUnmarshallContext
