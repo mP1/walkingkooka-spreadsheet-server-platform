@@ -814,30 +814,30 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
             user
         );
 
-        environmentContext.setEnvironmentValue(
-            SpreadsheetEnvironmentContext.CURRENT_WORKING_DIRECTORY,
-            StoragePath.ROOT
+        SpreadsheetEnvironmentContext.CURRENT_WORKING_DIRECTORY.setEnvironmentValue(
+            StoragePath.ROOT,
+            environmentContext
         );
 
-        if(user.isPresent()) {
-            environmentContext.setEnvironmentValue(
-                SpreadsheetEnvironmentContext.HOME_DIRECTORY,
+        if (user.isPresent()) {
+            SpreadsheetEnvironmentContext.HOME_DIRECTORY.setEnvironmentValue(
                 StoragePath.HOME_DIRECTORY_PREFIX.append(
                     StorageName.with(
                         user.get()
                             .value()
                     )
-                )
+                ),
+                environmentContext
             );
         }
 
-        environmentContext.setEnvironmentValue(
-            SpreadsheetEnvironmentContext.SERVER_URL,
-            this.httpServerUrl
+        SpreadsheetEnvironmentContext.SERVER_URL.setEnvironmentValue(
+            this.httpServerUrl,
+            environmentContext
         );
-        environmentContext.setEnvironmentValue(
-            SpreadsheetEnvironmentContext.TIME_OFFSET,
-            ZoneOffset.UTC
+        SpreadsheetEnvironmentContext.TIME_OFFSET.setEnvironmentValue(
+            ZoneOffset.UTC,
+            environmentContext
         );
         return SpreadsheetEnvironmentContexts.basic(
             this.storage(user),
