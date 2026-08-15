@@ -22,7 +22,6 @@ import walkingkooka.collect.list.Lists;
 import walkingkooka.environment.AuditInfo;
 import walkingkooka.environment.ReadOnlyEnvironmentValueException;
 import walkingkooka.net.IpPort;
-import walkingkooka.net.email.EmailAddress;
 import walkingkooka.net.http.server.HttpHandler;
 import walkingkooka.net.http.server.HttpHandlers;
 import walkingkooka.reflect.ClassTesting2;
@@ -43,8 +42,6 @@ import walkingkooka.spreadsheet.value.SpreadsheetCell;
 import walkingkooka.storage.StoragePath;
 import walkingkooka.storage.StorageValueInfo;
 
-import java.time.LocalDateTime;
-import java.util.Locale;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -56,20 +53,9 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
 
     @Test
     public void testSpreadsheetMetadataCreatorWithoutLocale() {
-        final SpreadsheetMetadata metadata = JettyHttpServerSpreadsheetHttpServer.with(
-            CHARSET,
-            SERVER_URL,
-            IpPort.with(2000), // sshdPort
-            CURRENCY,
-            INDENTATION,
-            LINE_ENDING,
-            LOCALE,
-            PUBLIC_HTTP_HANDLER,
-            Optional.of(
-                EmailAddress.parse("default-user@example.com")
-            ),
-            HAS_NOW
-        ).spreadsheetMetadataCreator(
+        final SpreadsheetServerContext spreadsheetServerContext = this.startServerAndSpreadsheetServerContext();
+
+        final SpreadsheetMetadata metadata = spreadsheetServerContext.createMetadata(
             USER,
             Optional.empty()
         );
@@ -92,29 +78,11 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
 
     @Test
     public void testSpreadsheetMetadataCreatorWithDifferentLocale() {
-        final Locale locale = Locale.forLanguageTag("en-NZ");
+        final SpreadsheetServerContext spreadsheetServerContext = this.startServerAndSpreadsheetServerContext();
 
-        this.checkNotEquals(
-            locale,
-            LOCALE
-        );
-
-        final SpreadsheetMetadata metadata = JettyHttpServerSpreadsheetHttpServer.with(
-            CHARSET,
-            SERVER_URL,
-            IpPort.with(2000), // sshdPort
-            CURRENCY,
-            INDENTATION,
-            LINE_ENDING,
-            LOCALE,
-            PUBLIC_HTTP_HANDLER,
-            Optional.of(
-                EmailAddress.parse("default-user@example.com")
-            ),
-            HAS_NOW
-        ).spreadsheetMetadataCreator(
+        final SpreadsheetMetadata metadata = spreadsheetServerContext.createMetadata(
             USER,
-            Optional.of(locale)
+            Optional.of(DIFFERENT_LOCALE)
         );
 
         metadata.spreadsheetConverterContext(
@@ -135,30 +103,9 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
 
     @Test
     public void testStorageListCurrentWorkingDirectory() {
-        final JettyHttpServerSpreadsheetHttpServer server = JettyHttpServerSpreadsheetHttpServer.with(
-            CHARSET,
-            SERVER_URL,
-            IpPort.with(2000), // sshdPort
-            CURRENCY,
-            INDENTATION,
-            LINE_ENDING,
-            LOCALE,
-            PUBLIC_HTTP_HANDLER,
-            Optional.of(
-                EmailAddress.parse("default-user@example.com")
-            ),
-            HAS_NOW
-        );
+        final SpreadsheetServerContext spreadsheetServerContext = this.startServerAndSpreadsheetServerContext();
 
-        final EmailAddress user = EmailAddress.parse("testStorageListCurrentWorkingDirectory@example.com");
-
-        final SpreadsheetServerContext spreadsheetServerContext = server.getOrCreateSpreadsheetServerContext(
-            Optional.of(user)
-        );
-
-        final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createEmptySpreadsheet(
-            Optional.of(LOCALE)
-        );
+        final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createEmptySpreadsheet(OPTIONAL_LOCALE);
 
         spreadsheetContext.setCurrentWorkingDirectory(OPTIONAL_CURRENT_WORKING_DIRECTORY);
         spreadsheetContext.setHomeDirectory(OPTIONAL_HOME_DIRECTORY);
@@ -180,30 +127,9 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
 
     @Test
     public void testStorageListHome() {
-        final JettyHttpServerSpreadsheetHttpServer server = JettyHttpServerSpreadsheetHttpServer.with(
-            CHARSET,
-            SERVER_URL,
-            IpPort.with(2000), // sshdPort
-            CURRENCY,
-            INDENTATION,
-            LINE_ENDING,
-            LOCALE,
-            PUBLIC_HTTP_HANDLER,
-            Optional.of(
-                EmailAddress.parse("default-user@example.com")
-            ),
-            HAS_NOW
-        );
+        final SpreadsheetServerContext spreadsheetServerContext = this.startServerAndSpreadsheetServerContext();
 
-        final EmailAddress user = EmailAddress.parse("testStorageListHome@example.com");
-
-        final SpreadsheetServerContext spreadsheetServerContext = server.getOrCreateSpreadsheetServerContext(
-            Optional.of(user)
-        );
-
-        final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createEmptySpreadsheet(
-            Optional.of(LOCALE)
-        );
+        final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createEmptySpreadsheet(OPTIONAL_LOCALE);
 
         spreadsheetContext.setCurrentWorkingDirectory(OPTIONAL_CURRENT_WORKING_DIRECTORY);
         spreadsheetContext.setHomeDirectory(OPTIONAL_HOME_DIRECTORY);
@@ -225,30 +151,9 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
 
     @Test
     public void testStorageListSpreadsheets() {
-        final JettyHttpServerSpreadsheetHttpServer server = JettyHttpServerSpreadsheetHttpServer.with(
-            CHARSET,
-            SERVER_URL,
-            IpPort.with(2000), // sshdPort
-            CURRENCY,
-            INDENTATION,
-            LINE_ENDING,
-            LOCALE,
-            PUBLIC_HTTP_HANDLER,
-            Optional.of(
-                EmailAddress.parse("default-user@example.com")
-            ),
-            HAS_NOW
-        );
+        final SpreadsheetServerContext spreadsheetServerContext = this.startServerAndSpreadsheetServerContext();
 
-        final EmailAddress user = EmailAddress.parse("testStorageListSpreadsheets@example.com");
-
-        final SpreadsheetServerContext spreadsheetServerContext = server.getOrCreateSpreadsheetServerContext(
-            Optional.of(user)
-        );
-
-        final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createEmptySpreadsheet(
-            Optional.of(LOCALE)
-        );
+        final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createEmptySpreadsheet(OPTIONAL_LOCALE);
 
         spreadsheetContext.setCurrentWorkingDirectory(OPTIONAL_CURRENT_WORKING_DIRECTORY);
         spreadsheetContext.setHomeDirectory(OPTIONAL_HOME_DIRECTORY);
@@ -260,8 +165,8 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
                 StorageValueInfo.with(
                     StoragePath.parse("/spreadsheet/1"),
                     AuditInfo.create(
-                        user,
-                        HAS_NOW.now()
+                        DIFFERENT_USER,
+                        NOW
                     )
                 )
             ),
@@ -278,32 +183,8 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
 
     @Test
     public void testStorageListCellsFails() {
-        final LocalDateTime now = LocalDateTime.MIN;
-
-        final JettyHttpServerSpreadsheetHttpServer server = JettyHttpServerSpreadsheetHttpServer.with(
-            CHARSET,
-            SERVER_URL,
-            IpPort.with(2000), // sshdPort
-            CURRENCY,
-            INDENTATION,
-            LINE_ENDING,
-            LOCALE,
-            PUBLIC_HTTP_HANDLER,
-            Optional.of(
-                EmailAddress.parse("default-user@example.com")
-            ),
-            HAS_NOW
-        );
-
-        final EmailAddress user = EmailAddress.parse("testStorageListCellsFails@example.com");
-
-        final SpreadsheetServerContext spreadsheetServerContext = server.getOrCreateSpreadsheetServerContext(
-            Optional.of(user)
-        );
-
-        final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createEmptySpreadsheet(
-            Optional.of(LOCALE)
-        );
+        final SpreadsheetServerContext spreadsheetServerContext = this.startServerAndSpreadsheetServerContext();
+        final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createEmptySpreadsheet(OPTIONAL_LOCALE);
 
         final SpreadsheetEngine engine = spreadsheetContext.spreadsheetEngine();
         final SpreadsheetEngineContext engineContext = spreadsheetContext.spreadsheetEngineContext();
@@ -324,8 +205,8 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
                     StorageValueInfo.with(
                         StoragePath.parse("/spreadsheet/1/cell/"),
                         AuditInfo.create(
-                            user,
-                            now
+                            DIFFERENT_USER,
+                            NOW
                         )
                     )
                 ),
@@ -338,6 +219,25 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
                     2
                 )
             )
+        );
+    }
+
+    private SpreadsheetServerContext startServerAndSpreadsheetServerContext() {
+        final JettyHttpServerSpreadsheetHttpServer server = JettyHttpServerSpreadsheetHttpServer.with(
+            CHARSET,
+            SERVER_URL,
+            IpPort.with(2000), // sshdPort
+            CURRENCY,
+            INDENTATION,
+            LINE_ENDING,
+            LOCALE,
+            PUBLIC_HTTP_HANDLER,
+            OPTIONAL_USER,
+            HAS_NOW
+        );
+
+        return server.getOrCreateSpreadsheetServerContext(
+            Optional.of(DIFFERENT_USER)
         );
     }
 
