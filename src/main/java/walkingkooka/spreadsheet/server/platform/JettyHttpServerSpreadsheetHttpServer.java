@@ -461,25 +461,40 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         Storage<SpreadsheetStorageContext> storage = this.userToStorage.get(user);
 
         if (null == storage) {
+            final SpreadsheetStorageContext context = SpreadsheetStorageContexts.fake();
+
             storage = SpreadsheetStorages.mount(
-                SpreadsheetStorages.currentWorkingDirectory(
-                    SpreadsheetStorages.homeDirectory(
-                        SpreadsheetStorages.router(
-                            SpreadsheetStorages.cell(),
-                            SpreadsheetStorages.form(),
-                            SpreadsheetStorages.label(),
-                            SpreadsheetStorages.metadata(),
-                            Storages.treeMapStore()
-                        )
-                    )
+                SpreadsheetStorages.router(
+                    SpreadsheetStorages.cell(),
+                    SpreadsheetStorages.form(),
+                    SpreadsheetStorages.label(),
+                    SpreadsheetStorages.metadata(),
+                    Storages.treeMapStore()
                 )
             );
+
+            storage.mount(
+                StorageMountPoint.with(
+                    StoragePath.CURRENT_WORKING_DIRECTORY_PREFIX,
+                    SpreadsheetStorages.currentWorkingDirectory()
+                ),
+                context
+            );
+
+            storage.mount(
+                StorageMountPoint.with(
+                    StoragePath.HOME_DIRECTORY_PREFIX,
+                    SpreadsheetStorages.homeDirectory()
+                ),
+                context
+            );
+
             storage.mount(
                 StorageMountPoint.with(
                     StoragePath.ENV_PREFIX,
                     SpreadsheetStorages.env()
                 ),
-                SpreadsheetStorageContexts.fake()
+                context
             );
 
             this.userToStorage.put(

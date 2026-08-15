@@ -134,6 +134,96 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
     }
 
     @Test
+    public void testStorageListCurrentWorkingDirectory() {
+        final JettyHttpServerSpreadsheetHttpServer server = JettyHttpServerSpreadsheetHttpServer.with(
+            CHARSET,
+            SERVER_URL,
+            IpPort.with(2000), // sshdPort
+            CURRENCY,
+            INDENTATION,
+            LINE_ENDING,
+            LOCALE,
+            PUBLIC_HTTP_HANDLER,
+            Optional.of(
+                EmailAddress.parse("default-user@example.com")
+            ),
+            HAS_NOW
+        );
+
+        final EmailAddress user = EmailAddress.parse("testStorageListSpreadsheets@example.com");
+
+        final SpreadsheetServerContext spreadsheetServerContext = server.getOrCreateSpreadsheetServerContext(
+            Optional.of(user)
+        );
+
+        final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createEmptySpreadsheet(
+            Optional.of(LOCALE)
+        );
+
+        spreadsheetContext.setCurrentWorkingDirectory(OPTIONAL_CURRENT_WORKING_DIRECTORY);
+        spreadsheetContext.setHomeDirectory(OPTIONAL_HOME_DIRECTORY);
+
+        final SpreadsheetEngineContext engineContext = spreadsheetContext.spreadsheetEngineContext();
+
+        this.checkEquals(
+            Lists.empty(),
+            engineContext.spreadsheetExpressionEvaluationContext(
+                SpreadsheetExpressionEvaluationContext.NO_CELL,
+                SpreadsheetExpressionReferenceLoaders.empty()
+            ).listStorage(
+                StoragePath.parse("/cwd"),
+                0,
+                2
+            )
+        );
+    }
+
+    @Test
+    public void testStorageListHome() {
+        final JettyHttpServerSpreadsheetHttpServer server = JettyHttpServerSpreadsheetHttpServer.with(
+            CHARSET,
+            SERVER_URL,
+            IpPort.with(2000), // sshdPort
+            CURRENCY,
+            INDENTATION,
+            LINE_ENDING,
+            LOCALE,
+            PUBLIC_HTTP_HANDLER,
+            Optional.of(
+                EmailAddress.parse("default-user@example.com")
+            ),
+            HAS_NOW
+        );
+
+        final EmailAddress user = EmailAddress.parse("testStorageListSpreadsheets@example.com");
+
+        final SpreadsheetServerContext spreadsheetServerContext = server.getOrCreateSpreadsheetServerContext(
+            Optional.of(user)
+        );
+
+        final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createEmptySpreadsheet(
+            Optional.of(LOCALE)
+        );
+
+        spreadsheetContext.setCurrentWorkingDirectory(OPTIONAL_CURRENT_WORKING_DIRECTORY);
+        spreadsheetContext.setHomeDirectory(OPTIONAL_HOME_DIRECTORY);
+
+        final SpreadsheetEngineContext engineContext = spreadsheetContext.spreadsheetEngineContext();
+
+        this.checkEquals(
+            Lists.empty(),
+            engineContext.spreadsheetExpressionEvaluationContext(
+                SpreadsheetExpressionEvaluationContext.NO_CELL,
+                SpreadsheetExpressionReferenceLoaders.empty()
+            ).listStorage(
+                StoragePath.parse("/home"),
+                0,
+                2
+            )
+        );
+    }
+
+    @Test
     public void testStorageListSpreadsheets() {
         final JettyHttpServerSpreadsheetHttpServer server = JettyHttpServerSpreadsheetHttpServer.with(
             CHARSET,
