@@ -836,7 +836,7 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
 
         if (user.isPresent()) {
             SpreadsheetEnvironmentContext.HOME_DIRECTORY.setEnvironmentValue(
-                StoragePath.HOME_DIRECTORY_PREFIX.append(
+                StoragePath.USERS_DIRECTORY_PREFIX.append(
                     StorageName.with(
                         user.get()
                             .value()

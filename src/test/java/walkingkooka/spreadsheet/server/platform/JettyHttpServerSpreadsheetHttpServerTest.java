@@ -41,6 +41,7 @@ import walkingkooka.spreadsheet.server.SpreadsheetServerContext;
 import walkingkooka.spreadsheet.value.SpreadsheetCell;
 import walkingkooka.storage.StorageContextTesting;
 import walkingkooka.storage.StoragePath;
+import walkingkooka.storage.StorageValue;
 import walkingkooka.storage.StorageValueInfo;
 
 import java.util.Optional;
@@ -123,21 +124,43 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
     }
 
     @Test
-    public void testStorageListHome() {
+    public void testStorageHomeDirectory() {
         final SpreadsheetServerContext spreadsheetServerContext = this.startServerAndSpreadsheetServerContext();
 
         final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createEmptySpreadsheet(OPTIONAL_LOCALE);
 
-        spreadsheetContext.setCurrentWorkingDirectory(OPTIONAL_CURRENT_WORKING_DIRECTORY);
-        spreadsheetContext.setHomeDirectory(OPTIONAL_HOME_DIRECTORY);
-
         final SpreadsheetEngineContext engineContext = spreadsheetContext.spreadsheetEngineContext();
 
-        this.listStorageAndCheck(
+        final StorageValue storageValue = StorageValue.with(
+            StoragePath.parse(
+                StoragePath.USERS_DIRECTORY_PREFIX + "/" + DIFFERENT_USER.value() + "/value111.txt"
+            )
+        ).setValue(
+            Optional.of("HelloWorld111")
+        );
+
+        this.saveStorageAndCheck(
             engineContext,
-            StoragePath.HOME_DIRECTORY_PREFIX,
-            0,
-            2
+            storageValue,
+            storageValue
+        );
+
+        this.loadStorageAndCheck(
+            engineContext,
+            storageValue.path(),
+            storageValue
+        );
+
+        final StoragePath homeStoragePath = StoragePath.parse(
+            StoragePath.HOME_DIRECTORY_PREFIX + "/value111.txt"
+        );
+
+        final StorageValue homeStorageValue = storageValue.setPath(homeStoragePath);
+
+        this.loadStorageAndCheck(
+            engineContext,
+            homeStoragePath,
+            homeStorageValue
         );
     }
 
