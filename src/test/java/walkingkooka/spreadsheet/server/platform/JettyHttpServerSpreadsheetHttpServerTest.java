@@ -150,7 +150,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             HAS_NOW
         );
 
-        final EmailAddress user = EmailAddress.parse("testStorageListSpreadsheets@example.com");
+        final EmailAddress user = EmailAddress.parse("testStorageListCurrentWorkingDirectory@example.com");
 
         final SpreadsheetServerContext spreadsheetServerContext = server.getOrCreateSpreadsheetServerContext(
             Optional.of(user)
@@ -195,7 +195,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             HAS_NOW
         );
 
-        final EmailAddress user = EmailAddress.parse("testStorageListSpreadsheets@example.com");
+        final EmailAddress user = EmailAddress.parse("testStorageListHome@example.com");
 
         final SpreadsheetServerContext spreadsheetServerContext = server.getOrCreateSpreadsheetServerContext(
             Optional.of(user)
