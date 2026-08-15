@@ -39,6 +39,7 @@ import walkingkooka.spreadsheet.reference.SpreadsheetExpressionReferenceLoaders;
 import walkingkooka.spreadsheet.reference.SpreadsheetSelection;
 import walkingkooka.spreadsheet.server.SpreadsheetServerContext;
 import walkingkooka.spreadsheet.value.SpreadsheetCell;
+import walkingkooka.storage.StorageContextTesting;
 import walkingkooka.storage.StoragePath;
 import walkingkooka.storage.StorageValueInfo;
 
@@ -47,7 +48,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTesting2<JettyHttpServerSpreadsheetHttpServer>,
-    SpreadsheetMetadataTesting {
+    SpreadsheetMetadataTesting,
+    StorageContextTesting {
 
     private final static HttpHandler<SpreadsheetServerContext> PUBLIC_HTTP_HANDLER = HttpHandlers.fake();
 
@@ -112,16 +114,11 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
 
         final SpreadsheetEngineContext engineContext = spreadsheetContext.spreadsheetEngineContext();
 
-        this.checkEquals(
-            Lists.empty(),
-            engineContext.spreadsheetExpressionEvaluationContext(
-                SpreadsheetExpressionEvaluationContext.NO_CELL,
-                SpreadsheetExpressionReferenceLoaders.empty()
-            ).listStorage(
-                StoragePath.parse("/cwd"),
-                0,
-                2
-            )
+        this.listStorageAndCheck(
+            engineContext,
+            StoragePath.CURRENT_WORKING_DIRECTORY_PREFIX,
+            0,
+            2
         );
     }
 
@@ -136,16 +133,11 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
 
         final SpreadsheetEngineContext engineContext = spreadsheetContext.spreadsheetEngineContext();
 
-        this.checkEquals(
-            Lists.empty(),
-            engineContext.spreadsheetExpressionEvaluationContext(
-                SpreadsheetExpressionEvaluationContext.NO_CELL,
-                SpreadsheetExpressionReferenceLoaders.empty()
-            ).listStorage(
-                StoragePath.parse("/home"),
-                0,
-                2
-            )
+        this.listStorageAndCheck(
+            engineContext,
+            StoragePath.HOME_DIRECTORY_PREFIX,
+            0,
+            2
         );
     }
 
@@ -160,23 +152,17 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
 
         final SpreadsheetEngineContext engineContext = spreadsheetContext.spreadsheetEngineContext();
 
-        this.checkEquals(
-            Lists.of(
-                StorageValueInfo.with(
-                    StoragePath.parse("/spreadsheet/1"),
-                    AuditInfo.create(
-                        DIFFERENT_USER,
-                        NOW
-                    )
+        this.listStorageAndCheck(
+            engineContext,
+            StoragePath.parse("/spreadsheet"),
+            0,
+            2,
+            StorageValueInfo.with(
+                StoragePath.parse("/spreadsheet/1"),
+                AuditInfo.create(
+                    DIFFERENT_USER,
+                    NOW
                 )
-            ),
-            engineContext.spreadsheetExpressionEvaluationContext(
-                SpreadsheetExpressionEvaluationContext.NO_CELL,
-                SpreadsheetExpressionReferenceLoaders.empty()
-            ).listStorage(
-                StoragePath.parse("/spreadsheet"),
-                0,
-                2
             )
         );
     }
