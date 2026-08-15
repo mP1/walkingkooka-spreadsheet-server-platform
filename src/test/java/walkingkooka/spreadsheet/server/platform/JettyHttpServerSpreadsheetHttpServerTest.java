@@ -105,21 +105,43 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
     }
 
     @Test
-    public void testStorageListCurrentWorkingDirectory() {
+    public void testStorageCurrentWorkingDirectory() {
         final SpreadsheetServerContext spreadsheetServerContext = this.startServerAndSpreadsheetServerContext();
 
         final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createEmptySpreadsheet(OPTIONAL_LOCALE);
 
-        spreadsheetContext.setCurrentWorkingDirectory(OPTIONAL_CURRENT_WORKING_DIRECTORY);
-        spreadsheetContext.setHomeDirectory(OPTIONAL_HOME_DIRECTORY);
-
         final SpreadsheetEngineContext engineContext = spreadsheetContext.spreadsheetEngineContext();
 
-        this.listStorageAndCheck(
+        final StorageValue storageValue = StorageValue.with(
+            StoragePath.parse(
+                "/value111.txt"
+            )
+        ).setValue(
+            Optional.of("HelloWorld111")
+        );
+
+        this.saveStorageAndCheck(
             engineContext,
-            StoragePath.CURRENT_WORKING_DIRECTORY_PREFIX,
-            0,
-            2
+            storageValue,
+            storageValue
+        );
+
+        this.loadStorageAndCheck(
+            engineContext,
+            storageValue.path(),
+            storageValue
+        );
+
+        final StoragePath homeStoragePath = StoragePath.parse(
+            StoragePath.CURRENT_WORKING_DIRECTORY_PREFIX + "/value111.txt"
+        );
+
+        final StorageValue homeStorageValue = storageValue.setPath(homeStoragePath);
+
+        this.loadStorageAndCheck(
+            engineContext,
+            homeStoragePath,
+            homeStorageValue
         );
     }
 
