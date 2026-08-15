@@ -44,6 +44,7 @@ import walkingkooka.storage.StoragePath;
 import walkingkooka.storage.StorageValue;
 import walkingkooka.storage.StorageValueInfo;
 
+import java.util.Locale;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -142,6 +143,30 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             engineContext,
             homeStoragePath,
             homeStorageValue
+        );
+    }
+
+    @Test
+    public void testStorageEnv() {
+        final SpreadsheetServerContext spreadsheetServerContext = this.startServerAndSpreadsheetServerContext();
+
+        final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createEmptySpreadsheet(OPTIONAL_LOCALE);
+
+        final SpreadsheetEngineContext engineContext = spreadsheetContext.spreadsheetEngineContext();
+
+        final StoragePath path = StoragePath.parse(
+            StoragePath.ENV_PREFIX + "/locale"
+        );
+
+        this.loadStorageAndCheck(
+            engineContext,
+            path,
+            StorageValue.with(path)
+                .setValue(
+                    Optional.of(
+                        Locale.forLanguageTag("en-AU")
+                    )
+                )
         );
     }
 
