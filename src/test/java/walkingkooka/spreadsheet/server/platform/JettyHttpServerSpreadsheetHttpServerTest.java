@@ -19,11 +19,14 @@ package walkingkooka.spreadsheet.server.platform;
 
 import org.junit.jupiter.api.Test;
 import walkingkooka.collect.list.Lists;
+import walkingkooka.currency.CurrencyExchangeRaters;
 import walkingkooka.environment.AuditInfo;
 import walkingkooka.environment.ReadOnlyEnvironmentValueException;
 import walkingkooka.net.IpPort;
+import walkingkooka.net.header.MediaType;
 import walkingkooka.net.http.server.HttpHandler;
 import walkingkooka.net.http.server.HttpHandlers;
+import walkingkooka.props.Properties;
 import walkingkooka.reflect.ClassTesting2;
 import walkingkooka.reflect.JavaVisibility;
 import walkingkooka.spreadsheet.SpreadsheetContext;
@@ -208,6 +211,38 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             engineContext,
             homeStoragePath,
             homeStorageValue
+        );
+    }
+
+    @Test
+    public void testStorageSamples() {
+        final SpreadsheetServerContext spreadsheetServerContext = this.startServerAndSpreadsheetServerContext();
+
+        final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createEmptySpreadsheet(OPTIONAL_LOCALE);
+
+        final SpreadsheetEngineContext engineContext = spreadsheetContext.spreadsheetEngineContext();
+
+        final StoragePath storagePath = StoragePath.parse("/samples/CurrencyExchange.properties");
+
+        final Properties properties = Properties.parse(
+            "AUD-NZD=0.9\n" +
+                "AUD-USD=1.5\n"
+        );
+
+        CurrencyExchangeRaters.properties(
+            properties,
+            (String text, Boolean invert) -> Double.parseDouble(text)
+        );
+
+        this.loadStorageAndCheck(
+            engineContext,
+            storagePath,
+            StorageValue.with(storagePath)
+                .setValue(
+                    Optional.of(properties)
+                ).setContentType(
+                    Optional.of(MediaType.TEXT_PROPERTIES)
+                )
         );
     }
 
