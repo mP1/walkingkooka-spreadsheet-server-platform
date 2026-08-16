@@ -106,7 +106,6 @@ import walkingkooka.storage.StorageEnvironmentContexts;
 import walkingkooka.storage.StorageMountPoint;
 import walkingkooka.storage.StorageName;
 import walkingkooka.storage.StoragePath;
-import walkingkooka.storage.Storages;
 import walkingkooka.terminal.TerminalContext;
 import walkingkooka.terminal.TerminalContexts;
 import walkingkooka.terminal.TerminalId;
@@ -471,7 +470,7 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
                     SpreadsheetStorages.form(),
                     SpreadsheetStorages.label(),
                     SpreadsheetStorages.metadata(),
-                    Storages.treeMapStore()
+                    SpreadsheetStorages.treeMapStore()
                 )
             );
 
