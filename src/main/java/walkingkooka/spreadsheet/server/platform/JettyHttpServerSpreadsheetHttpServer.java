@@ -131,6 +131,7 @@ import java.math.MathContext;
 import java.math.RoundingMode;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Currency;
@@ -144,7 +145,8 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * Creates a {@link SpreadsheetHttpServer} with memory stores using a Jetty server using the scheme/host/port from cmd line arguments.
  */
-public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTesting {
+public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerSpreadsheetHttpServerGwt
+    implements JarFileTesting {
 
     private final static MediaTypeDetector MEDIA_TYPE_DETECTOR = ApacheTikaMediaTypeDetectors.apacheTika();
 
@@ -497,6 +499,11 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
                 context
             );
 
+            mountSamples(
+                storage,
+                context
+            );
+
             this.userToStorage.put(
                 user,
                 storage
@@ -504,6 +511,29 @@ public final class JettyHttpServerSpreadsheetHttpServer implements JarFileTestin
         }
 
         return storage;
+    }
+
+    @GwtIncompatible
+    static void mountSamples(final Storage<SpreadsheetStorageContext> storage,
+                             final SpreadsheetStorageContext context) {
+        try {
+            storage.mount(
+                StorageMountPoint.with(
+                    StoragePath.parse("/samples"),
+                    SpreadsheetStorages.nativeFile(
+                        Path.of(
+                            Path.of("./src/main/resources/samples")
+                                .toFile()
+                                .getCanonicalPath()
+                        ),
+                        context
+                    )
+                ),
+                context
+            );
+        } catch (final IOException rethrow) {
+            throw new IllegalArgumentException(rethrow);
+        }
     }
 
     /**
