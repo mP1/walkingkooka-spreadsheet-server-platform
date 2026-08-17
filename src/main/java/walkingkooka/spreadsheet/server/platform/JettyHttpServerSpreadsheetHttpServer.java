@@ -498,6 +498,14 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
                 context
             );
 
+            storage.mount(
+                StorageMountPoint.with(
+                    StoragePath.MOUNT_POINT_PATHS,
+                    SpreadsheetStorages.mountPointPaths()
+                ),
+                context
+            );
+
             mountSamples(
                 storage,
                 context
