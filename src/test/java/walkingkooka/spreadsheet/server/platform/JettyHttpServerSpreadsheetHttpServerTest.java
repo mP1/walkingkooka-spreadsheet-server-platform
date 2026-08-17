@@ -44,6 +44,7 @@ import walkingkooka.spreadsheet.server.SpreadsheetServerContext;
 import walkingkooka.spreadsheet.value.SpreadsheetCell;
 import walkingkooka.storage.StorageContextTesting;
 import walkingkooka.storage.StoragePath;
+import walkingkooka.storage.StoragePathList;
 import walkingkooka.storage.StorageValue;
 import walkingkooka.storage.StorageValueInfo;
 
@@ -211,6 +212,46 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             engineContext,
             homeStoragePath,
             homeStorageValue
+        );
+    }
+
+    /**
+     * <pre>
+     * StoragePathList
+     *  /
+     *  /cwd
+     *  /env
+     *  /home
+     *  /mount-point-paths
+     *  /samples
+     * </pre>
+     */
+    @Test
+    public void testStorageMountPointPaths() {
+        final SpreadsheetServerContext spreadsheetServerContext = this.startServerAndSpreadsheetServerContext();
+
+        final SpreadsheetContext spreadsheetContext = spreadsheetServerContext.createEmptySpreadsheet(OPTIONAL_LOCALE);
+
+        final SpreadsheetEngineContext engineContext = spreadsheetContext.spreadsheetEngineContext();
+
+        this.loadStorageAndCheck(
+            engineContext,
+            StoragePath.MOUNT_POINT_PATHS,
+            StorageValue.with(StoragePath.MOUNT_POINT_PATHS)
+                .setValue(
+                    Optional.of(
+                        StoragePathList.EMPTY.setElements(
+                            Lists.of(
+                                StoragePath.ROOT,
+                                StoragePath.CURRENT_WORKING_DIRECTORY_PREFIX,
+                                StoragePath.ENV_PREFIX,
+                                StoragePath.HOME_DIRECTORY_PREFIX,
+                                StoragePath.MOUNT_POINT_PATHS,
+                                StoragePath.parse("/samples")
+                            )
+                        )
+                    )
+                )
         );
     }
 
