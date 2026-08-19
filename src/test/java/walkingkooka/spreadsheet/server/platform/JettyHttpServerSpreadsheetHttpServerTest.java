@@ -267,12 +267,14 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
 
         final Properties properties = Properties.parse(
             "AUD-NZD=0.9\n" +
-                "AUD-USD=1.5\n"
+                "AUD-USD=1.5\n" +
+                "NZD-AUD=1.1\n" +
+                "USD-AUD=0.7\n"
         );
 
         CurrencyExchangeRaters.properties(
             properties,
-            (String text, Boolean invert) -> Double.parseDouble(text)
+            Double::parseDouble
         );
 
         this.loadStorageAndCheck(
