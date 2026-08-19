@@ -28,6 +28,7 @@ import walkingkooka.currency.CurrencyContext;
 import walkingkooka.currency.CurrencyContexts;
 import walkingkooka.currency.CurrencyExchange;
 import walkingkooka.currency.CurrencyExchangeRater;
+import walkingkooka.currency.CurrencyExchangeRaterContext;
 import walkingkooka.currency.CurrencyLocaleContext;
 import walkingkooka.datetime.HasNow;
 import walkingkooka.environment.AuditInfo;
@@ -354,9 +355,9 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
         this.currencyContext = CurrencyContexts.readOnly(
             CurrencyContexts.jre(
                 Currency.getInstance(this.defaultLocale),
-                new CurrencyExchangeRater() {
+                new CurrencyExchangeRater<>() {
                     @Override
-                    public Set<CurrencyExchange> currencyExchanges() {
+                    public Set<CurrencyExchange> currencyExchanges(final CurrencyExchangeRaterContext context) {
                         return Set.of(
                             CurrencyExchange.with(
                                 CurrencyCode.parse("AUD"),
@@ -367,7 +368,8 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
 
                     @Override
                     public Optional<Number> currencyExchangeRate(final CurrencyExchange currencyExchange,
-                                                                 final Optional<LocalDateTime> dateTime) {
+                                                                 final Optional<LocalDateTime> dateTime,
+                                                                 final CurrencyExchangeRaterContext context) {
                         return Optional.of(
                             1.0f *
                                 Currency.getInstance(
