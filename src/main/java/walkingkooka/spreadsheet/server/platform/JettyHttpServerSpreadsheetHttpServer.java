@@ -32,6 +32,7 @@ import walkingkooka.currency.CurrencyExchangeRaterContext;
 import walkingkooka.currency.CurrencyLocaleContext;
 import walkingkooka.datetime.HasNow;
 import walkingkooka.environment.AuditInfo;
+import walkingkooka.environment.CanParseEnvironmentValueName;
 import walkingkooka.environment.EnvironmentContext;
 import walkingkooka.environment.EnvironmentContexts;
 import walkingkooka.environment.EnvironmentValueName;
@@ -289,8 +290,6 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
         return httpServer;
     }
 
-    private final JsonNodeMarshallUnmarshallContext jsonNodeMarshallUnmarshallContext;
-    
     private static Optional<EmailAddress> user(final String string) {
         final EmailAddress emailAddress;
 
@@ -391,15 +390,6 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
 
         this.currencyLocaleContext = this.currencyContext.setLocaleContext(this.localeContext);
 
-        this.jsonNodeMarshallUnmarshallContext = JsonNodeMarshallUnmarshallContexts.basic(
-            JsonNodeMarshallContexts.basic(),
-            JsonNodeUnmarshallContexts.basic(
-                ExpressionNumberKind.DEFAULT,
-                this.currencyLocaleContext,
-                MathContext.DECIMAL32
-            )
-        );
-
         this.metadataStore = SpreadsheetMetadataStores.spreadsheetCellStoreAction(
             SpreadsheetMetadataStores.treeMap(),
             (id) -> this.getOrCreateSpreadsheetStoreRepository(id)
@@ -439,6 +429,8 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
      * {@link EmailAddress user} across all spreadsheet instances.
      */
     private SpreadsheetServerContext createSpreadsheetServerContext(final Optional<EmailAddress> user) {
+        final SpreadsheetEnvironmentContext spreadsheetEnvironmentContext = this.spreadsheetEnvironmentContext(user);
+
         return SpreadsheetServerContexts.basic(
             MEDIA_TYPE_DETECTOR,
             MULTIPLIER,
@@ -446,9 +438,11 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
             this::getOrCreateSpreadsheetStoreRepository,
             this.spreadsheetProvider,
             this.currencyLocaleContext,
-            this.spreadsheetEnvironmentContext(user),
+            spreadsheetEnvironmentContext,
             this.spreadsheetMetadataContext,
-            this.hateosHandlerContext(),
+            this.hateosHandlerContext(
+                spreadsheetEnvironmentContext // CanParseEnvironmentValueName
+            ),
             this.providerContext(user),
             TerminalServerContexts.userFiltered(
                 user::equals, // only show current user TerminalContext.
@@ -625,14 +619,14 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
 
     private final Map<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository = Maps.concurrent();
 
-    private HateosHandlerContext hateosHandlerContext() {
+    private HateosHandlerContext hateosHandlerContext(final CanParseEnvironmentValueName canParseEnvironmentValueName) {
         return HateosHandlerContexts.basic(
             TextPrinting.with(
                 this.indentation,
                 this.lineEnding
             ).setCharset(this.charset),
             ETagComputers.md5(),
-            this.jsonNodeMarshallUnmarshallContext
+            this.jsonNodeMarshallUnmarshallContext(canParseEnvironmentValueName)
         );
     }
 
@@ -672,6 +666,18 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
     }
 
     private final AbsoluteUrl httpServerUrl;
+
+    private JsonNodeMarshallUnmarshallContext jsonNodeMarshallUnmarshallContext(final CanParseEnvironmentValueName canParseEnvironmentValueName) {
+        return JsonNodeMarshallUnmarshallContexts.basic(
+            JsonNodeMarshallContexts.basic(),
+            JsonNodeUnmarshallContexts.basic(
+                ExpressionNumberKind.DEFAULT,
+                canParseEnvironmentValueName,
+                this.currencyLocaleContext,
+                MathContext.DECIMAL32
+            )
+        );
+    }
 
     private static LocaleContext localeContext(final Locale locale) {
         return LocaleContexts.readOnly(
@@ -828,6 +834,8 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
             )
         );
 
+        final SpreadsheetEnvironmentContext spreadsheetEnvironmentContext = this.spreadsheetEnvironmentContext(user);
+
         return SpreadsheetProviderContexts.spreadsheet(
             MEDIA_TYPE_DETECTOR,
             MULTIPLIER,
@@ -836,8 +844,10 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
                 this.storage(user)
             ),
             this.currencyLocaleContext,
-            this.spreadsheetEnvironmentContext(user),
-            this.jsonNodeMarshallUnmarshallContext
+            spreadsheetEnvironmentContext,
+            this.jsonNodeMarshallUnmarshallContext(
+                spreadsheetEnvironmentContext // CanParseEnvironmentValueName
+            )
         );
     }
 
