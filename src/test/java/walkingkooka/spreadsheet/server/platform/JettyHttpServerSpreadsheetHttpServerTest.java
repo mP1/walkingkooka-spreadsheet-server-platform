@@ -48,7 +48,6 @@ import walkingkooka.storage.StoragePathList;
 import walkingkooka.storage.StorageValue;
 import walkingkooka.storage.StorageValueInfo;
 
-import java.util.Locale;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -169,9 +168,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             path,
             StorageValue.with(path)
                 .setValue(
-                    Optional.of(
-                        Locale.forLanguageTag("en-AU")
-                    )
+                    Optional.of(LOCALE)
                 )
         );
     }
