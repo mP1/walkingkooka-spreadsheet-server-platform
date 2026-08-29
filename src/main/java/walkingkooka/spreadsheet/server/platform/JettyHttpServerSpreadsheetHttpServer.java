@@ -962,6 +962,7 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
         );
 
         return SpreadsheetProviders.basic(
+            SpreadsheetComparatorProviders.spreadsheetComparators(),
             SpreadsheetConvertersConverterProviders.spreadsheetConverters(
                 (ProviderContext p) ->
                     metadata.dateTimeConverter(
@@ -970,9 +971,8 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
                         SpreadsheetMetadataTesting.PROVIDER_CONTEXT
                     )
             ), // converterProvider
-            SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(SpreadsheetExpressionFunctions.NAME_CASE_SENSITIVITY),
-            SpreadsheetComparatorProviders.spreadsheetComparators(),
             SpreadsheetExporterProviders.spreadsheetExport(),
+            SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(SpreadsheetExpressionFunctions.NAME_CASE_SENSITIVITY),
             spreadsheetFormatterProvider,
             FormHandlerProviders.validation(),
             SpreadsheetImporterProviders.spreadsheetImport(),
