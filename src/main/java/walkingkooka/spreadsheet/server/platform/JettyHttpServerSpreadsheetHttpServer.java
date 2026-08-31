@@ -30,6 +30,7 @@ import walkingkooka.currency.CurrencyExchange;
 import walkingkooka.currency.CurrencyExchangeRater;
 import walkingkooka.currency.CurrencyExchangeRaterContext;
 import walkingkooka.currency.CurrencyLocaleContext;
+import walkingkooka.currency.provider.CurrencyExchangeRaterProviders;
 import walkingkooka.datetime.HasNow;
 import walkingkooka.environment.AuditInfo;
 import walkingkooka.environment.CanParseEnvironmentValueName;
@@ -961,6 +962,8 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
             SpreadsheetMetadataTesting.METADATA_EN_AU.getOrFail(SpreadsheetMetadataPropertyName.TIME_PARSER)
         );
 
+        final ExpressionNumberKind expressionNumberKind = SpreadsheetMetadataTesting.METADATA_EN_AU.expressionNumberKind();
+
         return SpreadsheetProviders.basic(
             SpreadsheetComparatorProviders.spreadsheetComparators(),
             SpreadsheetConvertersConverterProviders.spreadsheetConverters(
@@ -971,6 +974,9 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
                         SpreadsheetMetadataTesting.PROVIDER_CONTEXT
                     )
             ), // converterProvider
+            CurrencyExchangeRaterProviders.currencyExchangeRaters(
+                expressionNumberKind::parse
+            ),
             SpreadsheetExporterProviders.spreadsheetExport(),
             SpreadsheetExpressionFunctionProviders.expressionFunctionProvider(SpreadsheetExpressionFunctions.NAME_CASE_SENSITIVITY),
             spreadsheetFormatterProvider,
