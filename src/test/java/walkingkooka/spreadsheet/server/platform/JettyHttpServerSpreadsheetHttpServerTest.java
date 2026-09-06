@@ -262,7 +262,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
 
         final SpreadsheetEngineContext engineContext = spreadsheetContext.spreadsheetEngineContext();
 
-        final StoragePath storagePath = StoragePath.parse("/samples/CurrencyExchange.properties");
+        final StoragePath storagePath = StoragePath.parse("/samples/CurrencyExchangeRates.properties");
 
         final Properties properties = Properties.parse(
             "AUD-NZD=0.9\n" +
