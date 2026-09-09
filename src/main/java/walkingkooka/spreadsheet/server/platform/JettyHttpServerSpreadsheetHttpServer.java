@@ -384,6 +384,13 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
                                     .length()
                         );
                     }
+
+                    @Override
+                    public Set<CurrencyExchange> findCurrencyExchangeByText(final String text,
+                                                                            final int offset,
+                                                                            final int count, CurrencyExchangeRaterContext context) {
+                        return Set.of();
+                    }
                 },
                 this.localeContext
             )
