@@ -56,11 +56,7 @@ import walkingkooka.net.http.server.hateos.HateosHandlerContexts;
 import walkingkooka.net.http.server.jetty.JettyHttpServer;
 import walkingkooka.plugin.JarFileTesting;
 import walkingkooka.plugin.PluginArchiveManifest;
-import walkingkooka.plugin.PluginName;
 import walkingkooka.plugin.ProviderContext;
-import walkingkooka.plugin.store.Plugin;
-import walkingkooka.plugin.store.PluginStore;
-import walkingkooka.plugin.store.PluginStores;
 import walkingkooka.predicate.Predicates;
 import walkingkooka.spreadsheet.compare.provider.SpreadsheetComparatorProviders;
 import walkingkooka.spreadsheet.convert.SpreadsheetConverterContext;
@@ -801,8 +797,6 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
      * state is common for all users
      */
     private ProviderContext providerContext(final Optional<EmailAddress> user) {
-        final PluginStore pluginStore = PluginStores.treeMap();
-
         final Map<String, byte[]> fileToContent = Maps.sorted();
         fileToContent.put(
             "dir111/file111.txt",
@@ -832,22 +826,11 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
             Binary.with(archive)
         );
 
-        pluginStore.save(
-            Plugin.with(
-                PluginName.with("test-plugin-123"),
-                "TestPlugin123-filename.jar", // filename
-                Binary.with(archive), // archive
-                EmailAddress.parse("plugin-author@example.com"),
-                this.hasNow.now()
-            )
-        );
-
         final SpreadsheetEnvironmentContext spreadsheetEnvironmentContext = this.spreadsheetEnvironmentContext(user);
 
         return SpreadsheetProviderContexts.spreadsheet(
             MEDIA_TYPE_DETECTOR,
             MULTIPLIER,
-            pluginStore,
             Cast.to(
                 this.storage(user)
             ),
