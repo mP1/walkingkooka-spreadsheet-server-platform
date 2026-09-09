@@ -436,7 +436,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/SpreadsheetMetadataSet"
+                  "$ref": "#/components/schemas/SpreadsheetMetadataHateosResourceSet"
                 }
               }
             }
@@ -4342,7 +4342,7 @@
           "timeFormatter"
         ]
       },
-      "SpreadsheetMetadataSet": {
+      "SpreadsheetMetadataHateosResourceSet": {
         "type": "array",
         "items": {
           "$ref" : "#/components/schemas/SpreadsheetMetadata"
