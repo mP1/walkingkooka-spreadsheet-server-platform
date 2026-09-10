@@ -92,7 +92,10 @@ final class DominoKitDevModeHttpHandler implements HttpHandler<SpreadsheetServer
             response.setVersion(request.protocolVersion());
             response.setStatus(HttpStatusCode.INTERNAL_SERVER_ERROR.status());
             response.setEntity(
-                HttpEntity.dumpStackTrace(cause)
+                HttpEntity.dumpStackTrace(
+                    cause,
+                    context.lineEnding()
+                )
             );
         }
     }
