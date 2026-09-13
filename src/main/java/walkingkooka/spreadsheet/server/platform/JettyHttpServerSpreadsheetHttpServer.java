@@ -39,6 +39,8 @@ import walkingkooka.environment.EnvironmentContexts;
 import walkingkooka.environment.EnvironmentValueName;
 import walkingkooka.locale.LocaleContext;
 import walkingkooka.locale.LocaleContexts;
+import walkingkooka.logging.CanLogs;
+import walkingkooka.logging.LoggingLevel;
 import walkingkooka.net.AbsoluteUrl;
 import walkingkooka.net.IpPort;
 import walkingkooka.net.Url;
@@ -158,22 +160,24 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
     public static void main(final String[] args) throws Exception {
         switch (args.length) {
             case 0:
-                throw new IllegalArgumentException("Missing charset, httpServerUrl, sshdPort, indentation, lineEnding, defaultLocale, publicHttpHandler, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing charset, httpServerUrl, sshdPort, indentation, lineEnding, defaultLocale, loggingLevel, publicHttpHandler, defaultUser for jetty HttpServer");
             case 1:
-                throw new IllegalArgumentException("Missing httpServerUrl, sshdPort, indentation, lineEnding, defaultLocale, publicHttpHandler, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing httpServerUrl, sshdPort, indentation, lineEnding, defaultLocale, loggingLevel, publicHttpHandler, defaultUser for jetty HttpServer");
             case 2:
-                throw new IllegalArgumentException("Missing sshdPort, currency, indentation, lineEnding, defaultLocale, publicHttpHandler, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing sshdPort, currency, indentation, lineEnding, defaultLocale, loggingLevel, publicHttpHandler, defaultUser for jetty HttpServer");
             case 3:
-                throw new IllegalArgumentException("Missing currency, lineEnding, defaultLocale, publicHttpHandler, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing currency, lineEnding, defaultLocale, loggingLevel, publicHttpHandler, defaultUser for jetty HttpServer");
             case 4:
-                throw new IllegalArgumentException("Missing indentation, lineEnding, defaultLocale, publicHttpHandler, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing indentation, lineEnding, defaultLocale, loggingLevel, publicHttpHandler, defaultUser for jetty HttpServer");
             case 5:
-                throw new IllegalArgumentException("Missing lineEnding, defaultLocale, publicHttpHandler, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing lineEnding, defaultLocale, loggingLevel, publicHttpHandler, defaultUser for jetty HttpServer");
             case 6:
-                throw new IllegalArgumentException("Missing default Locale, publicHttpHandler, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing default Locale, loggingLevel, publicHttpHandler, defaultUser for jetty HttpServer");
             case 7:
-                throw new IllegalArgumentException("Missing publicHttpHandler, defaultUser for jetty HttpServer");
+                throw new IllegalArgumentException("Missing default Locale, publicHttpHandler, defaultUser for jetty HttpServer");
             case 8:
+                throw new IllegalArgumentException("Missing publicHttpHandler, defaultUser for jetty HttpServer");
+            case 9:
                 throw new IllegalArgumentException("Missing defaultUser for jetty HttpServer");
             default:
                 with(
@@ -184,8 +188,9 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
                     indentation(args[4]),
                     lineEnding(args[5]),
                     locale(args[6]),
-                    publicServer(args[7]),
-                    user(args[8]),
+                    loggingLevel(args[7]),
+                    publicServer(args[8]),
+                    user(args[9]),
                     LocalDateTime::now
                 ).start();
                 break;
@@ -265,6 +270,17 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
         return defaultLocale;
     }
 
+    private static LoggingLevel loggingLevel(final String string) {
+        final LoggingLevel loggingLevel;
+        try {
+            loggingLevel = LoggingLevel.valueOf(string);
+        } catch (final RuntimeException cause) {
+            System.err.println("Invalid LoggingLevel: " + cause.getMessage());
+            throw cause;
+        }
+        return loggingLevel;
+    }
+
     final static String DEV_MODE = "devMode";
 
     /**
@@ -306,6 +322,7 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
                                                             final Indentation indentation,
                                                             final LineEnding lineEnding,
                                                             final Locale defaultLocale,
+                                                            final LoggingLevel loggingLevel,
                                                             final HttpHandler<SpreadsheetServerContext> publicServer,
                                                             final Optional<EmailAddress> defaultUser,
                                                             final HasNow hasNow) {
@@ -317,6 +334,7 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
             indentation,
             lineEnding,
             defaultLocale,
+            loggingLevel,
             publicServer,
             defaultUser,
             hasNow
@@ -330,6 +348,7 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
                                                  final Indentation indentation,
                                                  final LineEnding lineEnding,
                                                  final Locale defaultLocale,
+                                                 final LoggingLevel loggingLevel,
                                                  final HttpHandler<SpreadsheetServerContext> publicServer,
                                                  final Optional<EmailAddress> defaultUser,
                                                  final HasNow hasNow) {
@@ -342,6 +361,7 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
         this.indentation = indentation;
         this.lineEnding = lineEnding;
         this.defaultLocale = defaultLocale;
+        this.loggingLevel = loggingLevel;
         this.publicServer = publicServer;
         this.defaultUser = defaultUser;
         this.hasNow = hasNow;
@@ -860,11 +880,13 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
      */
     private SpreadsheetEnvironmentContext spreadsheetEnvironmentContext(final Optional<EmailAddress> user) {
         final EnvironmentContext environmentContext = EnvironmentContexts.map(
+            CanLogs.nullCanLog(),
             this.charset,
             this.currency,
             this.indentation,
             this.lineEnding,
             this.defaultLocale,
+            this.loggingLevel,
             this.hasNow,
             user
         );
@@ -905,6 +927,7 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
     private final Indentation indentation;
     private final LineEnding lineEnding;
     private final Locale defaultLocale;
+    private final LoggingLevel loggingLevel;
     private final Optional<EmailAddress> defaultUser;
     private final HasNow hasNow;
 

@@ -360,6 +360,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
             INDENTATION,
             LINE_ENDING,
             LOCALE,
+            LOGGING_LEVEL,
             PUBLIC_HTTP_HANDLER,
             OPTIONAL_USER,
             HAS_NOW
