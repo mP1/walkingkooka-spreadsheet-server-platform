@@ -17,6 +17,7 @@
 
 package walkingkooka.spreadsheet.server.platform;
 
+import walkingkooka.logging.LoggingLevel;
 import walkingkooka.text.Indentation;
 import walkingkooka.text.LineEnding;
 
@@ -36,6 +37,7 @@ public final class JettyHttpServerSpreadsheetHttpServerDominoKit {
                 Indentation.SPACES2.toString(), // indentation
                 LineEnding.NL.name(), // lineEnding
                 "en-AU", // defaultLocale
+                LoggingLevel.NONE.name(),
                 JettyHttpServerSpreadsheetHttpServer.DEV_MODE,
                 "defaultAuthenticatedUser@example.com" // systemUser
             }
