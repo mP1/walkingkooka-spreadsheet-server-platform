@@ -1935,6 +1935,69 @@
         }
       }
     },
+    "/api/currencyExchangeRater": {
+      "get": {
+        "tags": [
+          "currencyExchangeRaters"
+        ],
+        "summary": "Returns ALL CurrencyExchangeRater available to the system",
+        "parameters": [],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrencyExchangeRaterInfoSet"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/currencyExchangeRater/{currency-exchange-rater-name}": {
+      "get": {
+        "tags": [
+          "currencyExchangeRaters"
+        ],
+        "summary": "Returns the named CurrencyExchangeRaterInfo",
+        "parameters": [
+          {
+            "name": "currency-exchange-rater-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CurrencyExchangeRaterName"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrencyExchangeRaterInfo"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
     "/api/exporter": {
       "get": {
         "tags": [
@@ -3492,6 +3555,23 @@
       "CurrencyCode": {
         "type": "string",
         "example": "AUD"
+      },
+      "CurrencyExchangeRaterName": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 255,
+        "pattern": "^[A-Z,a-z][A-Z,a-z,0-9,-]*$",
+        "example": "day-of-month"
+      },
+      "CurrencyExchangeRaterInfoSet": {
+        "type": "array",
+        "items": {
+          "$ref" : "#/components/schemas/CurrencyExchangeRaterInfo"
+        }
+      },
+      "CurrencyExchangeRaterInfo": {
+        "type": "string",
+        "example": "https://github.com/mP1/walkingkooka-spreadsheet/CurrencyExchangeRater/empty empty"
       },
       "CurrencyHateosResource": {
         "type": "object",
