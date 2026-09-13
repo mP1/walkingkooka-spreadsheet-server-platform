@@ -5,374 +5,6 @@
     "version": "v1.0.0"
   },
   "paths": {
-    "/api/currency/*": {
-      "get": {
-        "tags": [
-          "currency"
-        ],
-        "summary": "Gets all the currencies for the requested range",
-        "parameters": [
-          {
-            "name": "offset",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "#ref": "#/components/schemas/Offset"
-            }
-          },
-          {
-            "name": "count",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "#ref": "#/components/schemas/Count"
-            }
-          },
-          {
-            "name": "locale",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "#ref": "#/components/schemas/LocaleLanguageTag"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CurrencyHateosResourceSet"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/api/currency/{currency-code}": {
-      "get": {
-        "tags": [
-          "currency"
-        ],
-        "summary": "Retrieves a Currency given a CurrencyCode",
-        "parameters": [
-          {
-            "name": "currency-code",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/CurrencyCode"
-            }
-          },
-          {
-            "name": "locale",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "#ref": "#/components/schemas/LocaleLanguageTag"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CurrencyHateosResource"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/api/dateTimeSymbols/*/localeStartsWith/{locale-starts-with}": {
-      "get": {
-        "tags": [
-          "dateTimeSymbols"
-        ],
-        "summary": "Retrieves all DateTimeSymbols that belong to the matched locales",
-        "parameters": [
-          {
-            "name": "locale-starts-with",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/LocaleLanguageTag"
-            }
-          },
-          {
-            "name": "offset",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "#ref": "#/components/schemas/Offset"
-            }
-          },
-          {
-            "name": "count",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "#ref": "#/components/schemas/Count"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DateTimeSymbolsHateosResourceSet"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/api/dateTimeSymbols/{locale-tag}": {
-      "get": {
-        "tags": [
-          "dateTimeSymbols"
-        ],
-        "summary": "Retrieves the DateTimeSymbols given a LocaleLanguageTag",
-        "parameters": [
-          {
-            "name": "locale-tag",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/LocaleLanguageTag"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DateTimeSymbolsHateosResource"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/api/decimalNumberSymbols/*/localeStartsWith/{locale-starts-with}": {
-      "get": {
-        "tags": [
-          "decimalNumberSymbols"
-        ],
-        "summary": "Retrieves all DecimalNumberSymbols that belong to the matched locales",
-        "parameters": [
-          {
-            "name": "locale-starts-with",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/LocaleLanguageTag"
-            }
-          },
-          {
-            "name": "offset",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "#ref": "#/components/schemas/Offset"
-            }
-          },
-          {
-            "name": "count",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "#ref": "#/components/schemas/Count"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DecimalNumberSymbolsHateosResourceSet"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/api/decimalNumberSymbols/{locale-tag}": {
-      "get": {
-        "tags": [
-          "decimalNumberSymbols"
-        ],
-        "summary": "Retrieves the DecimalNumberSymbols given a LocaleLanguageTag",
-        "parameters": [
-          {
-            "name": "locale-tag",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/LocaleLanguageTag"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/DecimalNumberSymbolsHateosResource"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/api/locale/*": {
-      "get": {
-        "tags": [
-          "locale"
-        ],
-        "summary": "Gets all the locales for the requested range",
-        "parameters": [
-          {
-            "name": "offset",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "#ref": "#/components/schemas/Offset"
-            }
-          },
-          {
-            "name": "count",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "#ref": "#/components/schemas/Count"
-            }
-          },
-          {
-            "name": "locale",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "#ref": "#/components/schemas/Locale"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LocaleHateosResourceSet"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/api/locale/{locale-tag}": {
-      "get": {
-        "tags": [
-          "locale"
-        ],
-        "summary": "Retrieves a Locale given a LocaleLanguageTag",
-        "parameters": [
-          {
-            "name": "locale-tag",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/LocaleLanguageTag"
-            }
-          },
-          {
-            "name": "locale",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "#ref": "#/components/schemas/Locale"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/LocaleHateosResource"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
     "/api/spreadsheet": {
       "post": {
         "tags": [
@@ -1806,261 +1438,6 @@
         }
       }
     },
-    "/api/comparator": {
-      "get": {
-        "tags": [
-          "comparators"
-        ],
-        "summary": "Returns ALL SpreadsheetComparator available to the system",
-        "parameters": [],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SpreadsheetComparatorInfoSet"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/comparator/{spreadsheet-comparator-name}": {
-      "get": {
-        "tags": [
-          "comparators"
-        ],
-        "summary": "Returns the named SpreadsheetComparatorInfo",
-        "parameters": [
-          {
-            "name": "spreadsheet-comparator-name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetComparatorName"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SpreadsheetComparatorInfo"
-                }
-              }
-            }
-          },
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/api/converter": {
-      "get": {
-        "tags": [
-          "converters"
-        ],
-        "summary": "Returns ALL Converter available to the system",
-        "parameters": [],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ConverterInfoSet"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/api/converter/{converter-name}": {
-      "get": {
-        "tags": [
-          "converters"
-        ],
-        "summary": "Returns the named ConverterInfo for the system",
-        "parameters": [
-          {
-            "name": "converter-name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/ConverterName"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ConverterInfo"
-                }
-              }
-            }
-          },
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/api/currencyExchangeRater": {
-      "get": {
-        "tags": [
-          "currencyExchangeRaters"
-        ],
-        "summary": "Returns ALL CurrencyExchangeRater available to the system",
-        "parameters": [],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CurrencyExchangeRaterInfoSet"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/currencyExchangeRater/{currency-exchange-rater-name}": {
-      "get": {
-        "tags": [
-          "currencyExchangeRaters"
-        ],
-        "summary": "Returns the named CurrencyExchangeRaterInfo",
-        "parameters": [
-          {
-            "name": "currency-exchange-rater-name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/CurrencyExchangeRaterName"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/CurrencyExchangeRaterInfo"
-                }
-              }
-            }
-          },
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/api/exporter": {
-      "get": {
-        "tags": [
-          "exporters"
-        ],
-        "summary": "Returns ALL SpreadsheetExporter available to the system",
-        "parameters": [],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SpreadsheetExporterInfoSet"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/api/exporter/{spreadsheet-exporter-name}": {
-      "get": {
-        "tags": [
-          "exporters"
-        ],
-        "summary": "Returns the named SpreadsheetExporterInfo",
-        "parameters": [
-          {
-            "name": "spreadsheet-exporter-name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetExporterName"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SpreadsheetExporterInfo"
-                }
-              }
-            }
-          },
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
-    },
     "/api/spreadsheet/{spreadsheet-id}/form/": {
       "post": {
         "tags": [
@@ -2357,275 +1734,6 @@
         }
       }
     },
-    "/api/formatter": {
-      "get": {
-        "tags": [
-          "formatters"
-        ],
-        "summary": "Returns ALL SpreadsheetFormatter available to the system",
-        "parameters": [],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SpreadsheetFormatterInfoSet"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/api/formatter/{spreadsheet-formatter-name}": {
-      "get": {
-        "tags": [
-          "formatters"
-        ],
-        "summary": "Returns the named SpreadsheetFormatterInfo if known to the system",
-        "parameters": [
-          {
-            "name": "spreadsheet-formatter-name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetFormatterName"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SpreadsheetFormatterInfo"
-                }
-              }
-            }
-          },
-          "204": {
-            "description": "No Content"
-          }
-        }
-      }
-    },
-    "/api/formHandler": {
-      "get": {
-        "tags": [
-          "formHandlers"
-        ],
-        "summary": "Returns ALL FormHandler(s) for the system",
-        "parameters": [],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FormHandlerInfoSet"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/api/formHandler/{form-handler-name}": {
-      "get": {
-        "tags": [
-          "formHandlers"
-        ],
-        "summary": "Returns the named FormHandlerInfo if available to the System",
-        "parameters": [
-          {
-            "name": "spreadsheet-id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetId"
-            }
-          },
-          {
-            "name": "form-handler-name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/FormHandlerName"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/FormHandlerInfo"
-                }
-              }
-            }
-          },
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/api/function": {
-      "get": {
-        "tags": [
-          "functions"
-        ],
-        "summary": "Returns ALL ExpressionFunction(s) available to the system",
-        "parameters": [],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExpressionFunctionInfoSet"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/api/function/{function-name}": {
-      "get": {
-        "tags": [
-          "functions"
-        ],
-        "summary": "Returns the named ExpressionFunctionInfo if available to the system",
-        "parameters": [
-          {
-            "name": "function-name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/FunctionExpressionName"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExpressionFunctionInfo"
-                }
-              }
-            }
-          },
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/api/importer": {
-      "get": {
-        "tags": [
-          "importers"
-        ],
-        "summary": "Returns ALL SpreadsheetImporter available to the system",
-        "parameters": [],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SpreadsheetImporterInfoSet"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/api/importer/{spreadsheet-importer-name}": {
-      "get": {
-        "tags": [
-          "importers"
-        ],
-        "summary": "Returns the named SpreadsheetImporterInfo if available to the system",
-        "parameters": [
-          {
-            "name": "spreadsheet-importer-name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetImporterName"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SpreadsheetImporterInfo"
-                }
-              }
-            }
-          },
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
     "/api/spreadsheet/{spreadsheet-id}/label/": {
       "post": {
         "tags": [
@@ -2914,76 +2022,10 @@
         }
       }
     },
-    "/api/parser": {
-      "get": {
-        "tags": [
-          "parsers"
-        ],
-        "summary": "Returns ALL Parser available to the system",
-        "parameters": [],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SpreadsheetParserInfoSet"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
-    "/api/parser/{spreadsheet-parser-name}": {
-      "get": {
-        "tags": [
-          "parsers"
-        ],
-        "summary": "Returns the named SpreadsheetParserInfo if available to system",
-        "parameters": [
-          {
-            "name": "spreadsheet-parser-name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "$ref": "#/components/schemas/SpreadsheetParserName"
-            }
-          }
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "200 OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SpreadsheetParserInfo"
-                }
-              }
-            }
-          },
-          "204": {
-            "description": "No Content"
-          },
-          "400": {
-            "description": "Bad Request"
-          }
-        }
-      }
-    },
     "/api/spreadsheet/{spreadsheet-id}/parser/*/edit/{spreadsheet-parser-selector}": {
       "get": {
         "tags": [
-          "parsers"
+          "spreadsheet parsers"
         ],
         "summary": "Accepts a SpreadsheetParserSelector and gives an error message, tokens, next and samples",
         "parameters": [
@@ -3432,6 +2474,964 @@
           },
           "404": {
             "description": "Not found"
+          }
+        }
+      }
+    },
+    "/api/comparator": {
+      "get": {
+        "tags": [
+          "comparators"
+        ],
+        "summary": "Returns ALL SpreadsheetComparator available to the system",
+        "parameters": [],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetComparatorInfoSet"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/comparator/{spreadsheet-comparator-name}": {
+      "get": {
+        "tags": [
+          "comparators"
+        ],
+        "summary": "Returns the named SpreadsheetComparatorInfo",
+        "parameters": [
+          {
+            "name": "spreadsheet-comparator-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetComparatorName"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetComparatorInfo"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/converter": {
+      "get": {
+        "tags": [
+          "converters"
+        ],
+        "summary": "Returns ALL Converter available to the system",
+        "parameters": [],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConverterInfoSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/converter/{converter-name}": {
+      "get": {
+        "tags": [
+          "converters"
+        ],
+        "summary": "Returns the named ConverterInfo for the system",
+        "parameters": [
+          {
+            "name": "converter-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ConverterName"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConverterInfo"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/currencyExchangeRater": {
+      "get": {
+        "tags": [
+          "currencyExchangeRaters"
+        ],
+        "summary": "Returns ALL CurrencyExchangeRater available to the system",
+        "parameters": [],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrencyExchangeRaterInfoSet"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/currencyExchangeRater/{currency-exchange-rater-name}": {
+      "get": {
+        "tags": [
+          "currencyExchangeRaters"
+        ],
+        "summary": "Returns the named CurrencyExchangeRaterInfo",
+        "parameters": [
+          {
+            "name": "currency-exchange-rater-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CurrencyExchangeRaterName"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrencyExchangeRaterInfo"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/currency/*": {
+      "get": {
+        "tags": [
+          "currency"
+        ],
+        "summary": "Gets all the currencies for the requested range",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Offset"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Count"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/LocaleLanguageTag"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrencyHateosResourceSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/currency/{currency-code}": {
+      "get": {
+        "tags": [
+          "currency"
+        ],
+        "summary": "Retrieves a Currency given a CurrencyCode",
+        "parameters": [
+          {
+            "name": "currency-code",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/CurrencyCode"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/LocaleLanguageTag"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrencyHateosResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/dateTimeSymbols/*/localeStartsWith/{locale-starts-with}": {
+      "get": {
+        "tags": [
+          "dateTimeSymbols"
+        ],
+        "summary": "Retrieves all DateTimeSymbols that belong to the matched locales",
+        "parameters": [
+          {
+            "name": "locale-starts-with",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/LocaleLanguageTag"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Offset"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Count"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DateTimeSymbolsHateosResourceSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/dateTimeSymbols/{locale-tag}": {
+      "get": {
+        "tags": [
+          "dateTimeSymbols"
+        ],
+        "summary": "Retrieves the DateTimeSymbols given a LocaleLanguageTag",
+        "parameters": [
+          {
+            "name": "locale-tag",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/LocaleLanguageTag"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DateTimeSymbolsHateosResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/decimalNumberSymbols/*/localeStartsWith/{locale-starts-with}": {
+      "get": {
+        "tags": [
+          "decimalNumberSymbols"
+        ],
+        "summary": "Retrieves all DecimalNumberSymbols that belong to the matched locales",
+        "parameters": [
+          {
+            "name": "locale-starts-with",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/LocaleLanguageTag"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Offset"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Count"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DecimalNumberSymbolsHateosResourceSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/decimalNumberSymbols/{locale-tag}": {
+      "get": {
+        "tags": [
+          "decimalNumberSymbols"
+        ],
+        "summary": "Retrieves the DecimalNumberSymbols given a LocaleLanguageTag",
+        "parameters": [
+          {
+            "name": "locale-tag",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/LocaleLanguageTag"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DecimalNumberSymbolsHateosResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/exporter": {
+      "get": {
+        "tags": [
+          "exporters"
+        ],
+        "summary": "Returns ALL SpreadsheetExporter available to the system",
+        "parameters": [],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetExporterInfoSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/exporter/{spreadsheet-exporter-name}": {
+      "get": {
+        "tags": [
+          "exporters"
+        ],
+        "summary": "Returns the named SpreadsheetExporterInfo",
+        "parameters": [
+          {
+            "name": "spreadsheet-exporter-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetExporterName"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetExporterInfo"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/formatter": {
+      "get": {
+        "tags": [
+          "formatters"
+        ],
+        "summary": "Returns ALL SpreadsheetFormatter available to the system",
+        "parameters": [],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetFormatterInfoSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/formatter/{spreadsheet-formatter-name}": {
+      "get": {
+        "tags": [
+          "formatters"
+        ],
+        "summary": "Returns the named SpreadsheetFormatterInfo if known to the system",
+        "parameters": [
+          {
+            "name": "spreadsheet-formatter-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetFormatterName"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetFormatterInfo"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          }
+        }
+      }
+    },
+    "/api/formHandler": {
+      "get": {
+        "tags": [
+          "formHandlers"
+        ],
+        "summary": "Returns ALL FormHandler(s) for the system",
+        "parameters": [],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FormHandlerInfoSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/formHandler/{form-handler-name}": {
+      "get": {
+        "tags": [
+          "formHandlers"
+        ],
+        "summary": "Returns the named FormHandlerInfo if available to the System",
+        "parameters": [
+          {
+            "name": "spreadsheet-id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetId"
+            }
+          },
+          {
+            "name": "form-handler-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/FormHandlerName"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FormHandlerInfo"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/function": {
+      "get": {
+        "tags": [
+          "functions"
+        ],
+        "summary": "Returns ALL ExpressionFunction(s) available to the system",
+        "parameters": [],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpressionFunctionInfoSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/function/{function-name}": {
+      "get": {
+        "tags": [
+          "functions"
+        ],
+        "summary": "Returns the named ExpressionFunctionInfo if available to the system",
+        "parameters": [
+          {
+            "name": "function-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/FunctionExpressionName"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExpressionFunctionInfo"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/importer": {
+      "get": {
+        "tags": [
+          "importers"
+        ],
+        "summary": "Returns ALL SpreadsheetImporter available to the system",
+        "parameters": [],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetImporterInfoSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/importer/{spreadsheet-importer-name}": {
+      "get": {
+        "tags": [
+          "importers"
+        ],
+        "summary": "Returns the named SpreadsheetImporterInfo if available to the system",
+        "parameters": [
+          {
+            "name": "spreadsheet-importer-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetImporterName"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetImporterInfo"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/locale/*": {
+      "get": {
+        "tags": [
+          "locale"
+        ],
+        "summary": "Gets all the locales for the requested range",
+        "parameters": [
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Offset"
+            }
+          },
+          {
+            "name": "count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Count"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Locale"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocaleHateosResourceSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/locale/{locale-tag}": {
+      "get": {
+        "tags": [
+          "locale"
+        ],
+        "summary": "Retrieves a Locale given a LocaleLanguageTag",
+        "parameters": [
+          {
+            "name": "locale-tag",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/LocaleLanguageTag"
+            }
+          },
+          {
+            "name": "locale",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "#ref": "#/components/schemas/Locale"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LocaleHateosResource"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/parser": {
+      "get": {
+        "tags": [
+          "parsers"
+        ],
+        "summary": "Returns ALL Parser available to the system",
+        "parameters": [],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetParserInfoSet"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          }
+        }
+      }
+    },
+    "/api/parser/{spreadsheet-parser-name}": {
+      "get": {
+        "tags": [
+          "parsers"
+        ],
+        "summary": "Returns the named SpreadsheetParserInfo if available to system",
+        "parameters": [
+          {
+            "name": "spreadsheet-parser-name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/SpreadsheetParserName"
+            }
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "200 OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SpreadsheetParserInfo"
+                }
+              }
+            }
+          },
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Bad Request"
           }
         }
       }
