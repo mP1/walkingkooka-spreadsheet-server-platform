@@ -30,7 +30,6 @@ import walkingkooka.currency.CurrencyExchange;
 import walkingkooka.currency.CurrencyExchangeRater;
 import walkingkooka.currency.CurrencyExchangeRaterContext;
 import walkingkooka.currency.CurrencyLocaleContext;
-import walkingkooka.currency.provider.CurrencyExchangeRaterProviders;
 import walkingkooka.datetime.HasNow;
 import walkingkooka.environment.AuditInfo;
 import walkingkooka.environment.CanParseEnvironmentValueName;
@@ -63,6 +62,7 @@ import walkingkooka.predicate.Predicates;
 import walkingkooka.spreadsheet.compare.provider.SpreadsheetComparatorProviders;
 import walkingkooka.spreadsheet.convert.SpreadsheetConverterContext;
 import walkingkooka.spreadsheet.convert.provider.SpreadsheetConvertersConverterProviders;
+import walkingkooka.spreadsheet.currency.provider.SpreadsheetCurrencyExchangeRaterProviders;
 import walkingkooka.spreadsheet.engine.SpreadsheetEngine;
 import walkingkooka.spreadsheet.engine.SpreadsheetEngineContext;
 import walkingkooka.spreadsheet.engine.SpreadsheetEngineContexts;
@@ -987,7 +987,7 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
                         SpreadsheetMetadataTesting.PROVIDER_CONTEXT
                     )
             ), // converterProvider
-            CurrencyExchangeRaterProviders.currencyExchangeRaters(
+            SpreadsheetCurrencyExchangeRaterProviders.spreadsheetCurrency(
                 expressionNumberKind::parse
             ),
             SpreadsheetExporterProviders.spreadsheetExport(),
