@@ -39,6 +39,7 @@ import walkingkooka.environment.EnvironmentValueName;
 import walkingkooka.locale.LocaleContext;
 import walkingkooka.locale.LocaleContexts;
 import walkingkooka.logging.CanLogs;
+import walkingkooka.logging.LoggingContext;
 import walkingkooka.logging.LoggingLevel;
 import walkingkooka.net.AbsoluteUrl;
 import walkingkooka.net.IpPort;
@@ -465,7 +466,8 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
             spreadsheetEnvironmentContext,
             this.spreadsheetMetadataContext,
             this.hateosHandlerContext(
-                spreadsheetEnvironmentContext // CanParseEnvironmentValueName
+                spreadsheetEnvironmentContext, // CanParseEnvironmentValueName
+                spreadsheetEnvironmentContext // LoggingContext
             ),
             this.providerContext(user),
             TerminalServerContexts.userFiltered(
@@ -643,14 +645,16 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
 
     private final Map<SpreadsheetId, SpreadsheetStoreRepository> spreadsheetIdToStoreRepository = Maps.concurrent();
 
-    private HateosHandlerContext hateosHandlerContext(final CanParseEnvironmentValueName canParseEnvironmentValueName) {
+    private HateosHandlerContext hateosHandlerContext(final CanParseEnvironmentValueName canParseEnvironmentValueName,
+                                                      final LoggingContext loggingContext) {
         return HateosHandlerContexts.basic(
             TextPrinting.with(
                 this.indentation,
                 this.lineEnding
             ).setCharset(this.charset),
             ETagComputers.md5(),
-            this.jsonNodeMarshallUnmarshallContext(canParseEnvironmentValueName)
+            this.jsonNodeMarshallUnmarshallContext(canParseEnvironmentValueName),
+            loggingContext
         );
     }
 
