@@ -4405,9 +4405,10 @@
       "SpreadsheetMetadataPropertyNameConverterSelector": {
         "type": "string",
         "enum": [
-          "findConverter",
           "formattingConverter",
           "formulaConverter",
+          "queryConverter",
+          "scriptingConverter",
           "sortConverter",
           "validationConverter"
         ]
