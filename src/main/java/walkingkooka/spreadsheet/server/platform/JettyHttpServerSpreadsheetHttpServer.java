@@ -79,13 +79,13 @@ import walkingkooka.spreadsheet.format.provider.SpreadsheetFormatterProvider;
 import walkingkooka.spreadsheet.format.provider.SpreadsheetFormatterProviders;
 import walkingkooka.spreadsheet.format.provider.SpreadsheetFormatterSelector;
 import walkingkooka.spreadsheet.importer.provider.SpreadsheetImporterProviders;
+import walkingkooka.spreadsheet.meta.HasSpreadsheetMetadataTesting;
 import walkingkooka.spreadsheet.meta.SpreadsheetId;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataContext;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataContexts;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataCreator;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataPropertyName;
-import walkingkooka.spreadsheet.meta.SpreadsheetMetadataTesting;
 import walkingkooka.spreadsheet.meta.SpreadsheetName;
 import walkingkooka.spreadsheet.meta.store.SpreadsheetMetadataStore;
 import walkingkooka.spreadsheet.meta.store.SpreadsheetMetadataStores;
@@ -949,37 +949,37 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
             this.defaultLocale
         ).set(
             SpreadsheetMetadataPropertyName.DATE_FORMATTER,
-            SpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.DATE_FORMATTER)
+            HasSpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.DATE_FORMATTER)
         ).set(
             SpreadsheetMetadataPropertyName.DATE_PARSER,
-            SpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.DATE_PARSER)
+            HasSpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.DATE_PARSER)
         ).set(
             SpreadsheetMetadataPropertyName.DATE_TIME_FORMATTER,
-            SpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.DATE_TIME_FORMATTER)
+            HasSpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.DATE_TIME_FORMATTER)
         ).set(
             SpreadsheetMetadataPropertyName.DATE_TIME_PARSER,
-            SpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.DATE_TIME_PARSER)
+            HasSpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.DATE_TIME_PARSER)
         ).set(
             SpreadsheetMetadataPropertyName.ERROR_FORMATTER,
-            SpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.ERROR_FORMATTER)
+            HasSpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.ERROR_FORMATTER)
         ).set(
             SpreadsheetMetadataPropertyName.NUMBER_FORMATTER,
-            SpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.NUMBER_FORMATTER)
+            HasSpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.NUMBER_FORMATTER)
         ).set(
             SpreadsheetMetadataPropertyName.NUMBER_PARSER,
-            SpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.NUMBER_PARSER)
+            HasSpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.NUMBER_PARSER)
         ).set(
             SpreadsheetMetadataPropertyName.TEXT_FORMATTER,
-            SpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.TEXT_FORMATTER)
+            HasSpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.TEXT_FORMATTER)
         ).set(
             SpreadsheetMetadataPropertyName.TIME_FORMATTER,
-            SpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.TIME_FORMATTER)
+            HasSpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.TIME_FORMATTER)
         ).set(
             SpreadsheetMetadataPropertyName.TIME_PARSER,
-            SpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.TIME_PARSER)
+            HasSpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.TIME_PARSER)
         );
 
-        final ExpressionNumberKind expressionNumberKind = SpreadsheetMetadataTesting.SPREADSHEET_METADATA.expressionNumberKind();
+        final ExpressionNumberKind expressionNumberKind = HasSpreadsheetMetadataTesting.SPREADSHEET_METADATA.expressionNumberKind();
 
         return SpreadsheetProviders.basic(
             SpreadsheetComparatorProviders.spreadsheetComparators(),
@@ -988,7 +988,7 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
                     metadata.dateTimeConverter(
                         spreadsheetFormatterProvider,
                         spreadsheetParserProvider,
-                        SpreadsheetMetadataTesting.PROVIDER_CONTEXT
+                        HasSpreadsheetMetadataTesting.PROVIDER_CONTEXT
                     )
             ), // converterProvider
             SpreadsheetCurrencyExchangeRaterProviders.spreadsheetCurrency(
