@@ -949,37 +949,37 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
             this.defaultLocale
         ).set(
             SpreadsheetMetadataPropertyName.DATE_FORMATTER,
-            SpreadsheetMetadataTesting.METADATA_EN_AU.getOrFail(SpreadsheetMetadataPropertyName.DATE_FORMATTER)
+            SpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.DATE_FORMATTER)
         ).set(
             SpreadsheetMetadataPropertyName.DATE_PARSER,
-            SpreadsheetMetadataTesting.METADATA_EN_AU.getOrFail(SpreadsheetMetadataPropertyName.DATE_PARSER)
+            SpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.DATE_PARSER)
         ).set(
             SpreadsheetMetadataPropertyName.DATE_TIME_FORMATTER,
-            SpreadsheetMetadataTesting.METADATA_EN_AU.getOrFail(SpreadsheetMetadataPropertyName.DATE_TIME_FORMATTER)
+            SpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.DATE_TIME_FORMATTER)
         ).set(
             SpreadsheetMetadataPropertyName.DATE_TIME_PARSER,
-            SpreadsheetMetadataTesting.METADATA_EN_AU.getOrFail(SpreadsheetMetadataPropertyName.DATE_TIME_PARSER)
+            SpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.DATE_TIME_PARSER)
         ).set(
             SpreadsheetMetadataPropertyName.ERROR_FORMATTER,
-            SpreadsheetMetadataTesting.METADATA_EN_AU.getOrFail(SpreadsheetMetadataPropertyName.ERROR_FORMATTER)
+            SpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.ERROR_FORMATTER)
         ).set(
             SpreadsheetMetadataPropertyName.NUMBER_FORMATTER,
-            SpreadsheetMetadataTesting.METADATA_EN_AU.getOrFail(SpreadsheetMetadataPropertyName.NUMBER_FORMATTER)
+            SpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.NUMBER_FORMATTER)
         ).set(
             SpreadsheetMetadataPropertyName.NUMBER_PARSER,
-            SpreadsheetMetadataTesting.METADATA_EN_AU.getOrFail(SpreadsheetMetadataPropertyName.NUMBER_PARSER)
+            SpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.NUMBER_PARSER)
         ).set(
             SpreadsheetMetadataPropertyName.TEXT_FORMATTER,
-            SpreadsheetMetadataTesting.METADATA_EN_AU.getOrFail(SpreadsheetMetadataPropertyName.TEXT_FORMATTER)
+            SpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.TEXT_FORMATTER)
         ).set(
             SpreadsheetMetadataPropertyName.TIME_FORMATTER,
-            SpreadsheetMetadataTesting.METADATA_EN_AU.getOrFail(SpreadsheetMetadataPropertyName.TIME_FORMATTER)
+            SpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.TIME_FORMATTER)
         ).set(
             SpreadsheetMetadataPropertyName.TIME_PARSER,
-            SpreadsheetMetadataTesting.METADATA_EN_AU.getOrFail(SpreadsheetMetadataPropertyName.TIME_PARSER)
+            SpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.TIME_PARSER)
         );
 
-        final ExpressionNumberKind expressionNumberKind = SpreadsheetMetadataTesting.METADATA_EN_AU.expressionNumberKind();
+        final ExpressionNumberKind expressionNumberKind = SpreadsheetMetadataTesting.SPREADSHEET_METADATA.expressionNumberKind();
 
         return SpreadsheetProviders.basic(
             SpreadsheetComparatorProviders.spreadsheetComparators(),
