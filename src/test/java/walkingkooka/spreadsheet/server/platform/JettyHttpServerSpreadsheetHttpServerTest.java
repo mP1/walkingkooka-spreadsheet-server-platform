@@ -340,7 +340,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
                     )
                 ),
                 engineContext.spreadsheetExpressionEvaluationContext(
-                    SpreadsheetExpressionEvaluationContext.NO_CELL,
+                    SpreadsheetExpressionEvaluationContext.NO_SPREADSHEET_CELL,
                     SpreadsheetExpressionReferenceLoaders.empty()
                 ).listStorage(
                     StoragePath.parse("/spreadsheet/1/cell"),
