@@ -750,7 +750,7 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
                         SpreadsheetMetadataPropertyName.CELL_CHARACTER_WIDTH,
                         1
                     ).set(
-                        SpreadsheetMetadataPropertyName.DATE_TIME_OFFSET,
+                        SpreadsheetMetadataPropertyName.DATE_OFFSET,
                         Converters.EXCEL_1900_DATE_SYSTEM_OFFSET
                     ).set(
                         SpreadsheetMetadataPropertyName.DEFAULT_YEAR,
