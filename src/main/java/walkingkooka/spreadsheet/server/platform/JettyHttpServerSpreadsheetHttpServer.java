@@ -577,6 +577,7 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
                                               final TerminalContext terminalContext) {
         final Optional<EmailAddress> user = terminalContext.user();
 
+        final SpreadsheetMetadataContext spreadsheetMetadataContext = this.spreadsheetMetadataContext;
         final SpreadsheetServerContext spreadsheetServerContext = this.getOrCreateSpreadsheetServerContext(user);
 
         final SpreadsheetEngineContext engineContext = SpreadsheetEngineContexts.spreadsheetEnvironmentContext(
@@ -586,10 +587,11 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
             spreadsheetServerContext, // SpreadsheetContextSupplier
             this.currencyLocaleContext,
             SpreadsheetEnvironmentContexts.basic(
+                spreadsheetMetadataContext, // SpreadsheetMetadataLoader
                 this.storage(user),
                 StorageEnvironmentContexts.basic(terminalContext)
             ),
-            this.spreadsheetMetadataContext,
+            spreadsheetMetadataContext,
             terminalContext,
             this.spreadsheetProvider,
             this.providerContext(user)
@@ -921,6 +923,7 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
             environmentContext
         );
         return SpreadsheetEnvironmentContexts.basic(
+            this.spreadsheetMetadataContext, // SpreadsheetMetadataLoader
             this.storage(user),
             StorageEnvironmentContexts.basic(environmentContext)
         );
