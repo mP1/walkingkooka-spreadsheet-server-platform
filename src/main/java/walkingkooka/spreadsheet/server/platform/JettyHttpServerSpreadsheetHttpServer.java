@@ -20,6 +20,7 @@ package walkingkooka.spreadsheet.server.platform;
 import javaemul.internal.annotations.GwtIncompatible;
 import walkingkooka.Binary;
 import walkingkooka.Cast;
+import walkingkooka.collect.list.Lists;
 import walkingkooka.collect.map.Maps;
 import walkingkooka.convert.BinaryNumberConverterFunction;
 import walkingkooka.convert.Converters;
@@ -136,6 +137,7 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Currency;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -854,6 +856,22 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
 
         final SpreadsheetEnvironmentContext spreadsheetEnvironmentContext = this.spreadsheetEnvironmentContext(user);
 
+        final SpreadsheetMetadata spreadsheetMetadataDefaults = SpreadsheetMetadata.NON_LOCALE_DEFAULTS.set(
+            SpreadsheetMetadataPropertyName.LOCALE,
+            this.defaultLocale
+        ).loadFromLocale(this.currencyLocaleContext);
+
+        // copy required environment value such as date-offset
+        for (final SpreadsheetMetadataPropertyName<?> spreadsheetMetadataPropertyName : PROVIDER_CONTEXT_SPREADSHEET_METADATA_PROPERTY_NAMES) {
+            spreadsheetMetadataPropertyName.toEnvironmentValueName()
+                .setEnvironmentValue(
+                    Cast.to(
+                        spreadsheetMetadataDefaults.getOrFail(spreadsheetMetadataPropertyName)
+                    ),
+                    spreadsheetEnvironmentContext
+                );
+        }
+
         return SpreadsheetProviderContexts.spreadsheet(
             MEDIA_TYPE_DETECTOR,
             MULTIPLIER,
@@ -861,12 +879,23 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
                 this.storage(user)
             ),
             this.currencyLocaleContext,
-            spreadsheetEnvironmentContext,
+            spreadsheetEnvironmentContext, // StorageEnvironmentContext
             this.jsonNodeMarshallUnmarshallContext(
                 spreadsheetEnvironmentContext // CanParseEnvironmentValueName
             )
         );
     }
+
+    private final static List<SpreadsheetMetadataPropertyName<?>> PROVIDER_CONTEXT_SPREADSHEET_METADATA_PROPERTY_NAMES = Lists.of(
+        SpreadsheetMetadataPropertyName.DATE_OFFSET,
+        SpreadsheetMetadataPropertyName.DECIMAL_NUMBER_DIGIT_COUNT,
+        SpreadsheetMetadataPropertyName.DEFAULT_YEAR,
+        SpreadsheetMetadataPropertyName.EXPRESSION_NUMBER_KIND,
+        SpreadsheetMetadataPropertyName.PRECISION,
+        SpreadsheetMetadataPropertyName.ROUNDING_MODE,
+        SpreadsheetMetadataPropertyName.TWO_DIGIT_YEAR,
+        SpreadsheetMetadataPropertyName.VALUE_SEPARATOR
+    );
 
     /**
      * Starts both the http and terminal servers.
