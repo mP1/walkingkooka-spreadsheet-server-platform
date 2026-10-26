@@ -885,6 +885,9 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
         );
     }
 
+    /**
+     * These {@link SpreadsheetMetadataPropertyName} values will be copied from the {@link SpreadsheetMetadata#NON_LOCALE_DEFAULTS} to the {@link ProviderContext}.
+     */
     private final static List<SpreadsheetMetadataPropertyName<?>> PROVIDER_CONTEXT_SPREADSHEET_METADATA_PROPERTY_NAMES = Lists.of(
         SpreadsheetMetadataPropertyName.DATE_OFFSET,
         SpreadsheetMetadataPropertyName.DECIMAL_NUMBER_DIGIT_COUNT,
