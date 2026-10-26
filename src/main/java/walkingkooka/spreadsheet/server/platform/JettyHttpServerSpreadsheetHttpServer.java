@@ -470,7 +470,10 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
                 spreadsheetEnvironmentContext, // CanParseEnvironmentValueName
                 spreadsheetEnvironmentContext // LoggingContext
             ),
-            this.providerContext(user),
+            this.providerContext(
+                user,
+                Optional.empty() // TODO https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/553
+            ),
             TerminalServerContexts.userFiltered(
                 user::equals, // only show current user TerminalContext.
                 this.terminalServerContext
@@ -595,7 +598,10 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
             spreadsheetMetadataContext,
             terminalContext,
             this.spreadsheetProvider,
-            this.providerContext(user)
+            this.providerContext(
+                user,
+                Optional.empty() // TODO accept $terminalContext locale
+            )
         );
 
         return SPREADSHEET_ENGINE.evaluate(
@@ -823,7 +829,8 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
      * Creates a {@link ProviderContext} with the given {@link EmailAddress user} and {@link Locale}, all other
      * state is common for all users
      */
-    private ProviderContext providerContext(final Optional<EmailAddress> user) {
+    private ProviderContext providerContext(final Optional<EmailAddress> user,
+                                            final Optional<Locale> locale) {
         final Map<String, byte[]> fileToContent = Maps.sorted();
         fileToContent.put(
             "dir111/file111.txt",
@@ -857,7 +864,7 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
 
         final SpreadsheetMetadata spreadsheetMetadataDefaults = SpreadsheetMetadata.NON_LOCALE_DEFAULTS.set(
             SpreadsheetMetadataPropertyName.LOCALE,
-            this.defaultLocale
+            locale.orElse(this.defaultLocale)
         ).loadFromLocale(this.currencyLocaleContext);
 
         // copy required environment value such as date-offset
