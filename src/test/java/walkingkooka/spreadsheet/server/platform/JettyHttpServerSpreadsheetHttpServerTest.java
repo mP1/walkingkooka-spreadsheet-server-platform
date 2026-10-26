@@ -27,8 +27,7 @@ import walkingkooka.net.header.MediaType;
 import walkingkooka.net.http.server.HttpHandler;
 import walkingkooka.net.http.server.HttpHandlers;
 import walkingkooka.props.Properties;
-import walkingkooka.reflect.ClassTesting2;
-import walkingkooka.reflect.JavaVisibility;
+import walkingkooka.reflect.PublicClassTesting;
 import walkingkooka.spreadsheet.SpreadsheetContext;
 import walkingkooka.spreadsheet.convert.SpreadsheetConverterContexts;
 import walkingkooka.spreadsheet.engine.SpreadsheetEngine;
@@ -52,7 +51,7 @@ import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTesting2<JettyHttpServerSpreadsheetHttpServer>,
+public final class JettyHttpServerSpreadsheetHttpServerTest implements PublicClassTesting<JettyHttpServerSpreadsheetHttpServer>,
     SpreadsheetEnvironmentContextTesting,
     StorageContextTesting {
 
@@ -376,10 +375,5 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements ClassTest
     @Override
     public Class<JettyHttpServerSpreadsheetHttpServer> type() {
         return JettyHttpServerSpreadsheetHttpServer.class;
-    }
-
-    @Override
-    public JavaVisibility typeVisibility() {
-        return JavaVisibility.PUBLIC;
     }
 }
