@@ -132,7 +132,6 @@ import java.io.IOException;
 import java.math.MathContext;
 import java.math.RoundingMode;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
@@ -828,7 +827,7 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
         final Map<String, byte[]> fileToContent = Maps.sorted();
         fileToContent.put(
             "dir111/file111.txt",
-            "Hello".getBytes(StandardCharsets.UTF_8)
+            "Hello".getBytes(this.charset)
         );
         fileToContent.put(
             "file-2.bin",
@@ -837,7 +836,7 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
         for (int i = 3; i < 100; i++) {
             fileToContent.put(
                 "file" + i + ".txt",
-                "Hello".getBytes(StandardCharsets.UTF_8)
+                "Hello".getBytes(this.charset)
             );
         }
 
