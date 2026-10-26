@@ -1053,7 +1053,7 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
             apacheSshdServerTerminalContext.error(),
             this::evaluateTerminalExpression,
             apacheSshdServerTerminalContext::exitTerminal,
-            apacheSshdServerTerminalContext
+            apacheSshdServerTerminalContext // StorageEnvironmentContext
         );
 
         try {
