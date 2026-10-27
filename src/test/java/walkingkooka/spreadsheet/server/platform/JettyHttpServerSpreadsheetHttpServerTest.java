@@ -18,6 +18,7 @@
 package walkingkooka.spreadsheet.server.platform;
 
 import org.junit.jupiter.api.Test;
+import walkingkooka.Cast;
 import walkingkooka.collect.list.Lists;
 import walkingkooka.currency.CurrencyExchangeRaters;
 import walkingkooka.environment.AuditInfo;
@@ -87,7 +88,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements PublicCla
 
         final SpreadsheetMetadata metadata = spreadsheetServerContext.createMetadata(
             USER,
-            Optional.of(DIFFERENT_LOCALE)
+            OPTIONAL_DIFFERENT_LOCALE
         );
 
         metadata.spreadsheetConverterContext(
@@ -163,7 +164,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements PublicCla
             path,
             StorageValue.with(path)
                 .setValue(
-                    Optional.of(LOCALE)
+                    Cast.to(OPTIONAL_LOCALE)
                 )
         );
     }
@@ -366,7 +367,7 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements PublicCla
         );
 
         return server.getOrCreateSpreadsheetServerContext(
-            Optional.of(DIFFERENT_USER),
+            OPTIONAL_DIFFERENT_USER,
             OPTIONAL_DIFFERENT_LOCALE
         );
     }
