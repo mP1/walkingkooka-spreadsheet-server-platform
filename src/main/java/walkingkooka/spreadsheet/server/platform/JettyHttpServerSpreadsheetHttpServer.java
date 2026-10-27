@@ -20,7 +20,6 @@ package walkingkooka.spreadsheet.server.platform;
 import javaemul.internal.annotations.GwtIncompatible;
 import walkingkooka.Binary;
 import walkingkooka.Cast;
-import walkingkooka.collect.list.Lists;
 import walkingkooka.collect.map.Maps;
 import walkingkooka.convert.BinaryNumberConverterFunction;
 import walkingkooka.convert.Converters;
@@ -86,6 +85,7 @@ import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataContext;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataContexts;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataCreator;
+import walkingkooka.spreadsheet.meta.SpreadsheetMetadataMissingComponents;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataPropertyName;
 import walkingkooka.spreadsheet.meta.SpreadsheetName;
 import walkingkooka.spreadsheet.meta.store.SpreadsheetMetadataStore;
@@ -136,7 +136,6 @@ import java.nio.file.Path;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Currency;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
@@ -895,16 +894,59 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
             )
         );
 
-        // copy required environment value such as date-offset
-        for (final SpreadsheetMetadataPropertyName<?> spreadsheetMetadataPropertyName : PROVIDER_CONTEXT_SPREADSHEET_METADATA_PROPERTY_NAMES) {
-            spreadsheetMetadataPropertyName.toEnvironmentValueName()
-                .setEnvironmentValue(
-                    Cast.to(
-                        spreadsheetMetadataDefaults.getOrFail(spreadsheetMetadataPropertyName)
-                    ),
-                    spreadsheetEnvironmentContext
-                );
-        }
+        final SpreadsheetMetadataMissingComponents missing = spreadsheetMetadataDefaults.spreadsheetMetadataMissingComponents();
+
+        final Long dateOffset = missing.getOrNull(SpreadsheetMetadataPropertyName.DATE_OFFSET);
+        final Integer decimalNumberDigitCount = missing.getOrNull(SpreadsheetMetadataPropertyName.DECIMAL_NUMBER_DIGIT_COUNT);
+        final Integer defaultYear = missing.getOrNull(SpreadsheetMetadataPropertyName.DEFAULT_YEAR);
+        final ExpressionNumberKind expressionNumberKind = missing.getOrNull(SpreadsheetMetadataPropertyName.EXPRESSION_NUMBER_KIND);
+        final Integer precision = missing.getOrNull(SpreadsheetMetadataPropertyName.PRECISION);
+        final RoundingMode roundingMode = missing.getOrNull(SpreadsheetMetadataPropertyName.ROUNDING_MODE);
+        final Integer twoDigitYear = missing.getOrNull(SpreadsheetMetadataPropertyName.TWO_DIGIT_YEAR);
+        final Character valueSeparator = missing.getOrNull(SpreadsheetMetadataPropertyName.VALUE_SEPARATOR);
+
+        missing.reportIfMissing();
+
+        SpreadsheetMetadataPropertyName.DATE_OFFSET.toEnvironmentValueName()
+            .setEnvironmentValue(
+                dateOffset,
+                spreadsheetEnvironmentContext
+            );
+        SpreadsheetMetadataPropertyName.DECIMAL_NUMBER_DIGIT_COUNT.toEnvironmentValueName()
+            .setEnvironmentValue(
+                decimalNumberDigitCount,
+                spreadsheetEnvironmentContext
+            );
+        SpreadsheetMetadataPropertyName.DEFAULT_YEAR.toEnvironmentValueName()
+            .setEnvironmentValue(
+                defaultYear,
+                spreadsheetEnvironmentContext
+            );
+        SpreadsheetMetadataPropertyName.EXPRESSION_NUMBER_KIND.toEnvironmentValueName()
+            .setEnvironmentValue(
+                expressionNumberKind,
+                spreadsheetEnvironmentContext
+            );
+        SpreadsheetMetadataPropertyName.PRECISION.toEnvironmentValueName()
+            .setEnvironmentValue(
+                precision,
+                spreadsheetEnvironmentContext
+            );
+        SpreadsheetMetadataPropertyName.ROUNDING_MODE.toEnvironmentValueName()
+            .setEnvironmentValue(
+                roundingMode,
+                spreadsheetEnvironmentContext
+            );
+        SpreadsheetMetadataPropertyName.TWO_DIGIT_YEAR.toEnvironmentValueName()
+            .setEnvironmentValue(
+                twoDigitYear,
+                spreadsheetEnvironmentContext
+            );
+        SpreadsheetMetadataPropertyName.VALUE_SEPARATOR.toEnvironmentValueName()
+            .setEnvironmentValue(
+                valueSeparator,
+                spreadsheetEnvironmentContext
+            );
 
         return SpreadsheetProviderContexts.spreadsheet(
             MEDIA_TYPE_DETECTOR,
@@ -919,20 +961,6 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
             )
         );
     }
-
-    /**
-     * These {@link SpreadsheetMetadataPropertyName} values will be copied from the {@link SpreadsheetMetadata#NON_LOCALE_DEFAULTS} to the {@link ProviderContext}.
-     */
-    private final static List<SpreadsheetMetadataPropertyName<?>> PROVIDER_CONTEXT_SPREADSHEET_METADATA_PROPERTY_NAMES = Lists.of(
-        SpreadsheetMetadataPropertyName.DATE_OFFSET,
-        SpreadsheetMetadataPropertyName.DECIMAL_NUMBER_DIGIT_COUNT,
-        SpreadsheetMetadataPropertyName.DEFAULT_YEAR,
-        SpreadsheetMetadataPropertyName.EXPRESSION_NUMBER_KIND,
-        SpreadsheetMetadataPropertyName.PRECISION,
-        SpreadsheetMetadataPropertyName.ROUNDING_MODE,
-        SpreadsheetMetadataPropertyName.TWO_DIGIT_YEAR,
-        SpreadsheetMetadataPropertyName.VALUE_SEPARATOR
-    );
 
     /**
      * Starts both the http and terminal servers.
