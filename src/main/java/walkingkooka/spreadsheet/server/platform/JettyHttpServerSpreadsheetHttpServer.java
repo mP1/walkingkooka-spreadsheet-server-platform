@@ -455,8 +455,16 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
      * Creates the {@link SpreadsheetServerContext} for the given user. Note this instance will be shared by the
      * {@link EmailAddress user} across all spreadsheet instances.
      */
-    private SpreadsheetServerContext createSpreadsheetServerContext(final Optional<EmailAddress> user) {
+    private SpreadsheetServerContext createSpreadsheetServerContext(final Optional<EmailAddress> user,
+                                                                    final Optional<Locale> locale) {
         final SpreadsheetEnvironmentContext spreadsheetEnvironmentContext = this.spreadsheetEnvironmentContext(user);
+
+        if(locale.isPresent()) {
+            EnvironmentValueName.LOCALE.setEnvironmentValue(
+                locale.get(),
+                spreadsheetEnvironmentContext
+            );
+        }
 
         return SpreadsheetServerContexts.basic(
             MEDIA_TYPE_DETECTOR,
@@ -473,7 +481,7 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
             ),
             this.providerContext(
                 user,
-                Optional.empty() // TODO https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/553
+                locale
             ),
             TerminalServerContexts.userFiltered(
                 user::equals, // only show current user TerminalContext.
@@ -581,9 +589,14 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
     private Object evaluateTerminalExpression(final String expression,
                                               final TerminalContext terminalContext) {
         final Optional<EmailAddress> user = terminalContext.user();
+        final Optional<Locale> locale = EnvironmentValueName.LOCALE.getEnvironmentValue(terminalContext);
 
         final SpreadsheetMetadataContext spreadsheetMetadataContext = this.spreadsheetMetadataContext;
-        final SpreadsheetServerContext spreadsheetServerContext = this.getOrCreateSpreadsheetServerContext(user);
+
+        final SpreadsheetServerContext spreadsheetServerContext = this.getOrCreateSpreadsheetServerContext(
+            user,
+            locale
+        );
 
         final SpreadsheetEngineContext engineContext = SpreadsheetEngineContexts.spreadsheetEnvironmentContext(
             MEDIA_TYPE_DETECTOR,
@@ -601,7 +614,7 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
             this.spreadsheetProvider,
             this.providerContext(
                 user,
-                EnvironmentValueName.LOCALE.getEnvironmentValue(terminalContext)
+                locale
             )
         );
 
@@ -615,10 +628,14 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
      * Gets an existing or create a {@link SpreadsheetServerContext} for the given {@link EmailAddress}.
      */
     // @VisibleForTesting
-    SpreadsheetServerContext getOrCreateSpreadsheetServerContext(final Optional<EmailAddress> user) {
+    SpreadsheetServerContext getOrCreateSpreadsheetServerContext(final Optional<EmailAddress> user,
+                                                                 final Optional<Locale> createContextLocale) {
         SpreadsheetServerContext spreadsheetServerContext = this.userEmailAddressToSpreadsheetServerContext.get(user);
         if (null == spreadsheetServerContext) {
-            spreadsheetServerContext = this.createSpreadsheetServerContext(user);
+            spreadsheetServerContext = this.createSpreadsheetServerContext(
+                user,
+                createContextLocale
+            );
 
             this.userEmailAddressToSpreadsheetServerContext.put(
                 user,
@@ -699,7 +716,10 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
                         IpPort.HTTPS
                 ),
             httpHandler,
-            this.createSpreadsheetServerContext(this.defaultUser)
+            this.createSpreadsheetServerContext(
+                this.defaultUser,
+                Optional.of(this.defaultLocale)
+            )
         );
     }
 
@@ -863,10 +883,17 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
 
         final SpreadsheetEnvironmentContext spreadsheetEnvironmentContext = this.spreadsheetEnvironmentContext(user);
 
+        final Locale localeOrDefault = locale.orElse(this.defaultLocale);
+
         final SpreadsheetMetadata spreadsheetMetadataDefaults = SpreadsheetMetadata.NON_LOCALE_DEFAULTS.set(
             SpreadsheetMetadataPropertyName.LOCALE,
-            locale.orElse(this.defaultLocale)
-        ).loadFromLocale(this.currencyLocaleContext);
+            localeOrDefault
+        ).loadFromLocale(
+            // new temporary instance required because this.currentLocaleContext.setLocale will fail
+            this.currencyContext.setLocaleContext(
+                LocaleContexts.jre(localeOrDefault)
+            )
+        );
 
         // copy required environment value such as date-offset
         for (final SpreadsheetMetadataPropertyName<?> spreadsheetMetadataPropertyName : PROVIDER_CONTEXT_SPREADSHEET_METADATA_PROPERTY_NAMES) {

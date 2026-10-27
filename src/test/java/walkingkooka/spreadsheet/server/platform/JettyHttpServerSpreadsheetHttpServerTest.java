@@ -366,7 +366,8 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements PublicCla
         );
 
         return server.getOrCreateSpreadsheetServerContext(
-            Optional.of(DIFFERENT_USER)
+            Optional.of(DIFFERENT_USER),
+            OPTIONAL_DIFFERENT_LOCALE
         );
     }
 
