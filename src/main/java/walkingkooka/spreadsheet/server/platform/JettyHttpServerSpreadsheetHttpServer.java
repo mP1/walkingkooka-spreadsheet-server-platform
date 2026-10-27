@@ -601,7 +601,7 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
             this.spreadsheetProvider,
             this.providerContext(
                 user,
-                Optional.empty() // TODO accept $terminalContext locale
+                EnvironmentValueName.LOCALE.getEnvironmentValue(terminalContext)
             )
         );
 
