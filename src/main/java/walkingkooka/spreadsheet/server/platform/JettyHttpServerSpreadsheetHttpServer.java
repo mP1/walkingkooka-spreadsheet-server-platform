@@ -440,6 +440,7 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
             this.sshdPort,
             (u, p) -> p.length() > 0, // TODO password authenticator https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/355
             (u, pubKey) -> false, // TODO public key authentication not currently supported https://github.com/mP1/walkingkooka-spreadsheet-server-platform/issues/356
+            this.localeContext, // CanLocaleForLanguageTag
             this::terminalContext,
             this.terminalSpreadsheetEnvironmentContext(),
             this.terminalServerContext
