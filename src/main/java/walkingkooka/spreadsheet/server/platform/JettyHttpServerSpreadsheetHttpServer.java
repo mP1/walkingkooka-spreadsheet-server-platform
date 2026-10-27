@@ -92,6 +92,7 @@ import walkingkooka.spreadsheet.meta.store.SpreadsheetMetadataStore;
 import walkingkooka.spreadsheet.meta.store.SpreadsheetMetadataStores;
 import walkingkooka.spreadsheet.parser.provider.SpreadsheetParserProvider;
 import walkingkooka.spreadsheet.parser.provider.SpreadsheetParserProviders;
+import walkingkooka.spreadsheet.parser.provider.SpreadsheetParserSelector;
 import walkingkooka.spreadsheet.provider.SpreadsheetProvider;
 import walkingkooka.spreadsheet.provider.SpreadsheetProviderContexts;
 import walkingkooka.spreadsheet.provider.SpreadsheetProviders;
@@ -1041,42 +1042,62 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
             spreadsheetFormatterProvider
         );
 
+        final SpreadsheetMetadataMissingComponents missing = HasSpreadsheetMetadataTesting.SPREADSHEET_METADATA.spreadsheetMetadataMissingComponents();
+
+        final SpreadsheetFormatterSelector dateFormatter = missing.getOrNull(SpreadsheetMetadataPropertyName.DATE_FORMATTER);
+        final SpreadsheetParserSelector dateParser = missing.getOrNull(SpreadsheetMetadataPropertyName.DATE_PARSER);
+
+        final SpreadsheetFormatterSelector dateTimeFormatter = missing.getOrNull(SpreadsheetMetadataPropertyName.DATE_TIME_FORMATTER);
+        final SpreadsheetParserSelector dateTimeParser = missing.getOrNull(SpreadsheetMetadataPropertyName.DATE_TIME_PARSER);
+
+        final SpreadsheetFormatterSelector errorFormatter = missing.getOrNull(SpreadsheetMetadataPropertyName.ERROR_FORMATTER);
+
+        final SpreadsheetFormatterSelector numberFormatter = missing.getOrNull(SpreadsheetMetadataPropertyName.NUMBER_FORMATTER);
+        final SpreadsheetParserSelector numberParser = missing.getOrNull(SpreadsheetMetadataPropertyName.NUMBER_PARSER);
+
+        final SpreadsheetFormatterSelector textFormatter = missing.getOrNull(SpreadsheetMetadataPropertyName.TEXT_FORMATTER);
+
+        final SpreadsheetFormatterSelector timeFormatter = missing.getOrNull(SpreadsheetMetadataPropertyName.TIME_FORMATTER);
+        final SpreadsheetParserSelector timeParser = missing.getOrNull(SpreadsheetMetadataPropertyName.TIME_PARSER);
+
+        final ExpressionNumberKind expressionNumberKind = missing.getOrNull(SpreadsheetMetadataPropertyName.EXPRESSION_NUMBER_KIND);
+
+        missing.reportIfMissing();
+
         final SpreadsheetMetadata metadata = SpreadsheetMetadata.EMPTY.set(
             SpreadsheetMetadataPropertyName.LOCALE,
             this.defaultLocale
         ).set(
             SpreadsheetMetadataPropertyName.DATE_FORMATTER,
-            HasSpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.DATE_FORMATTER)
+            dateFormatter
         ).set(
             SpreadsheetMetadataPropertyName.DATE_PARSER,
-            HasSpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.DATE_PARSER)
+            dateParser
         ).set(
             SpreadsheetMetadataPropertyName.DATE_TIME_FORMATTER,
-            HasSpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.DATE_TIME_FORMATTER)
+            dateTimeFormatter
         ).set(
             SpreadsheetMetadataPropertyName.DATE_TIME_PARSER,
-            HasSpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.DATE_TIME_PARSER)
+            dateTimeParser
         ).set(
             SpreadsheetMetadataPropertyName.ERROR_FORMATTER,
-            HasSpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.ERROR_FORMATTER)
+            errorFormatter
         ).set(
             SpreadsheetMetadataPropertyName.NUMBER_FORMATTER,
-            HasSpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.NUMBER_FORMATTER)
+            numberFormatter
         ).set(
             SpreadsheetMetadataPropertyName.NUMBER_PARSER,
-            HasSpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.NUMBER_PARSER)
+            numberParser
         ).set(
             SpreadsheetMetadataPropertyName.TEXT_FORMATTER,
-            HasSpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.TEXT_FORMATTER)
+            textFormatter
         ).set(
             SpreadsheetMetadataPropertyName.TIME_FORMATTER,
-            HasSpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.TIME_FORMATTER)
+            timeFormatter
         ).set(
             SpreadsheetMetadataPropertyName.TIME_PARSER,
-            HasSpreadsheetMetadataTesting.SPREADSHEET_METADATA.getOrFail(SpreadsheetMetadataPropertyName.TIME_PARSER)
+            timeParser
         );
-
-        final ExpressionNumberKind expressionNumberKind = HasSpreadsheetMetadataTesting.SPREADSHEET_METADATA.expressionNumberKind();
 
         return SpreadsheetProviders.basic(
             SpreadsheetComparatorProviders.spreadsheetComparators(),
