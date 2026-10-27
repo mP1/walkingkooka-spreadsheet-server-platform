@@ -35,13 +35,10 @@ import walkingkooka.spreadsheet.engine.SpreadsheetEngine;
 import walkingkooka.spreadsheet.engine.SpreadsheetEngineContext;
 import walkingkooka.spreadsheet.environment.SpreadsheetEnvironmentContextTesting;
 import walkingkooka.spreadsheet.expression.SpreadsheetExpressionEvaluationContext;
-import walkingkooka.spreadsheet.formula.SpreadsheetFormula;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadata;
 import walkingkooka.spreadsheet.meta.SpreadsheetMetadataPropertyName;
 import walkingkooka.spreadsheet.reference.SpreadsheetExpressionReferenceLoaders;
-import walkingkooka.spreadsheet.reference.SpreadsheetSelection;
 import walkingkooka.spreadsheet.server.SpreadsheetServerContext;
-import walkingkooka.spreadsheet.value.SpreadsheetCell;
 import walkingkooka.storage.StorageContextTesting;
 import walkingkooka.storage.StoragePath;
 import walkingkooka.storage.StoragePathList;
@@ -317,15 +314,6 @@ public final class JettyHttpServerSpreadsheetHttpServerTest implements PublicCla
 
         final SpreadsheetEngine engine = spreadsheetContext.spreadsheetEngine();
         final SpreadsheetEngineContext engineContext = spreadsheetContext.spreadsheetEngineContext();
-
-        final SpreadsheetCell cell = engine.saveCell(
-                SpreadsheetSelection.A1.setFormula(
-                    SpreadsheetFormula.EMPTY.setText("=1+2")
-                ),
-                engineContext
-            ).cells()
-            .iterator()
-            .next();
 
         assertThrows(
             ReadOnlyEnvironmentValueException.class,
