@@ -37,7 +37,7 @@ public final class JettyHttpServerSpreadsheetHttpServerDominoKit {
                 Indentation.SPACES2.toString(), // indentation
                 LineEnding.NL.name(), // lineEnding
                 "en-AU", // defaultLocale
-                LoggingLevel.NONE.name(),
+                LoggingLevel.DEBUG.name(),
                 JettyHttpServerSpreadsheetHttpServer.DEV_MODE,
                 "defaultAuthenticatedUser@example.com" // systemUser
             }

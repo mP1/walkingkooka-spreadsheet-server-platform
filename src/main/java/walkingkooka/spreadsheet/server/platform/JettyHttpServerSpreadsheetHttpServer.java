@@ -120,6 +120,7 @@ import walkingkooka.text.CharSequences;
 import walkingkooka.text.Indentation;
 import walkingkooka.text.LineEnding;
 import walkingkooka.text.TextPrinting;
+import walkingkooka.text.printer.Printers;
 import walkingkooka.tree.expression.ExpressionNumberKind;
 import walkingkooka.tree.expression.convert.ExpressionNumberBinaryNumberConverterFunctions;
 import walkingkooka.tree.json.marshall.JsonNodeMarshallContexts;
@@ -981,7 +982,9 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
      */
     private SpreadsheetEnvironmentContext spreadsheetEnvironmentContext(final Optional<EmailAddress> user) {
         final EnvironmentContext environmentContext = EnvironmentContexts.map(
-            CanLogs.nullCanLog(),
+            CanLogs.printer(
+                Printers.sysOut()
+            ),
             this.charset,
             this.currency,
             this.indentation,
