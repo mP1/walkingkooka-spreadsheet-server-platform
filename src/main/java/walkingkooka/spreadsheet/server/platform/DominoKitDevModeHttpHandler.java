@@ -52,12 +52,11 @@ final class DominoKitDevModeHttpHandler implements HttpHandler<SpreadsheetServer
             .normalize()
             .value();
         try {
-            InputStream inputStream;
-
             final File file = Paths.get("../walkingkooka-spreadsheet-dominokit/target/gwt/out/walkingkooka.spreadsheet.dominokit.App/" + path)
                 .toFile()
                 .getAbsoluteFile();
 
+            InputStream inputStream;
             if (file.exists()) {
                 inputStream = new FileInputStream(file);
             } else {
@@ -65,27 +64,29 @@ final class DominoKitDevModeHttpHandler implements HttpHandler<SpreadsheetServer
                 inputStream = this.getClass()
                     .getResourceAsStream(path);
             }
+            try(inputStream) {
 
-            if (null != inputStream) {
-                final Binary content = Binary.with(
-                    inputStream.readAllBytes()
-                );
-                response.setVersion(request.protocolVersion());
-                response.setStatus(HttpStatusCode.OK.status());
-                response.setEntity(
-                    HttpEntity.EMPTY.setBody(content)
-                        .setContentType(
-                            ApacheTikaMediaTypeDetectors.apacheTika()
-                                .detect(
-                                    path,
-                                    content
-                                )
-                        ).setContentLength()
-                );
-            } else {
-                response.setVersion(request.protocolVersion());
-                response.setStatus(HttpStatusCode.NOT_FOUND.status());
-                response.clearEntity();
+                if (null != inputStream) {
+                    final Binary content = Binary.with(
+                        inputStream.readAllBytes()
+                    );
+                    response.setVersion(request.protocolVersion());
+                    response.setStatus(HttpStatusCode.OK.status());
+                    response.setEntity(
+                        HttpEntity.EMPTY.setBody(content)
+                            .setContentType(
+                                ApacheTikaMediaTypeDetectors.apacheTika()
+                                    .detect(
+                                        path,
+                                        content
+                                    )
+                            ).setContentLength()
+                    );
+                } else {
+                    response.setVersion(request.protocolVersion());
+                    response.setStatus(HttpStatusCode.NOT_FOUND.status());
+                    response.clearEntity();
+                }
             }
 
         } catch (final IOException cause) {
