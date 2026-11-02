@@ -39,6 +39,7 @@ import walkingkooka.environment.EnvironmentValueName;
 import walkingkooka.locale.LocaleContext;
 import walkingkooka.locale.LocaleContexts;
 import walkingkooka.logging.CanLogs;
+import walkingkooka.logging.LoggerPath;
 import walkingkooka.logging.LoggingContext;
 import walkingkooka.logging.LoggingLevel;
 import walkingkooka.net.AbsoluteUrl;
@@ -150,6 +151,8 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerSpreadsheetHttpServerGwt
     implements JarFileTesting {
+
+    LoggerPath SERVER_LOGGER = LoggerPath.parse("server");
 
     private final static MediaTypeDetector MEDIA_TYPE_DETECTOR = ApacheTikaMediaTypeDetectors.apacheTika();
 
