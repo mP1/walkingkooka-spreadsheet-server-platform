@@ -52,6 +52,7 @@ import walkingkooka.net.header.ETagComputers;
 import walkingkooka.net.header.MediaTypeDetector;
 import walkingkooka.net.header.apache.tika.ApacheTikaMediaTypeDetectors;
 import walkingkooka.net.http.server.HttpHandler;
+import walkingkooka.net.http.server.HttpHandlers;
 import walkingkooka.net.http.server.HttpServer;
 import walkingkooka.net.http.server.WebFile;
 import walkingkooka.net.http.server.hateos.HateosHandlerContext;
@@ -719,7 +720,7 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
                         IpPort.HTTP :
                         IpPort.HTTPS
                 ),
-            httpHandler,
+            HttpHandlers.logging(httpHandler),
             this.createSpreadsheetServerContext(
                 this.defaultUser,
                 Optional.of(this.defaultLocale)
