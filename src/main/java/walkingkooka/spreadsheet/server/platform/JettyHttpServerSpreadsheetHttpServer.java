@@ -159,7 +159,9 @@ public final class JettyHttpServerSpreadsheetHttpServer extends JettyHttpServerS
 
     private final static BinaryNumberConverterFunction<SpreadsheetConverterContext> MULTIPLIER = ExpressionNumberBinaryNumberConverterFunctions.multiply();
 
-    private final static SpreadsheetEngine SPREADSHEET_ENGINE = SpreadsheetEngines.basic();
+    private final static SpreadsheetEngine SPREADSHEET_ENGINE = SpreadsheetEngines.logging(
+        SpreadsheetEngines.basic()
+    );
 
     /**
      * Starts a server on the scheme/host/port passed as arguments, serving files from the current directory.
