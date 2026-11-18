@@ -3992,14 +3992,14 @@
           "formatter": {
             "$ref" : "#/components/schemas/SpreadsheetFormatterSelector"
           },
+          "putput": {
+            "$ref" : "#/components/schemas/TextNode"
+          },
           "parser": {
             "$ref" : "#/components/schemas/SpreadsheetParserSelector"
           },
           "style": {
             "$ref" : "#/components/schemas/TextStyle"
-          },
-          "formattedValue": {
-            "$ref" : "#/components/schemas/TextNode"
           },
           "validator": {
             "$ref" : "#/components/schemas/ValidatorSelector"
